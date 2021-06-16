@@ -1,0 +1,34 @@
+{
+    "name": "mitydigital/statamic-rss-feed",
+    "description": "A simple RSS feed generator for a given collection in Statamic 3.",
+    "type": "statamic-addon",
+    "keywords": [
+        "statamic",
+        "sitemap"
+    ],
+    "autoload": {
+        "psr-4": {
+            "MityDigital\\StatamicRssFeed\\": "src"
+        }
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Marty Friedel"
+        }
+    ],
+    "require": {
+        "statamic/cms": "^3.0"
+    },
+    "extra": {
+        "statamic": {
+            "name": "Statamic RSS Feed",
+            "description": "A simple RSS feed for a given collection in Statamic 3."
+        },
+        "laravel": {
+            "providers": [
+                "MityDigital\\StatamicRssFeed\\ServiceProvider"
+            ]
+        }
+    }
+}
