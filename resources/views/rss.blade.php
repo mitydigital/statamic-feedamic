@@ -14,6 +14,8 @@
             <pubDate>{{ $entry->published->toRfc822String() }}</pubDate>
             @if ($entry->summary)<description><![CDATA[{{ $entry->summary }}]]></description>@endif
 
+            @if (config('statamic.rss.author.email'))<author>{{ $entry->author->email() }}</author>@endif
+
         </item>@endforeach
 
     </channel>
