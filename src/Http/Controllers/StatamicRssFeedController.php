@@ -2,6 +2,7 @@
 
 namespace MityDigital\StatamicRssFeed\Http\Controllers;
 
+
 use Carbon\Carbon;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Cache;
@@ -19,11 +20,13 @@ class StatamicRssFeedController extends Controller
      */
     public function rss()
     {
-        $entries = Cache::rememberForever(config('statamic.rss.cache'), function () {
-            return $this->loadFeedEntries();
-        });
+        $xml = Cache::rememberForever(config('statamic.rss.cache').'.rss', function () {
+            // get the entries
+            $entries = Cache::rememberForever(config('statamic.rss.cache'), function () {
+                return $this->loadFeedEntries();
+            });
 
-        $xml = Cache::rememberForever(config('statamic.rss.cache').'.rss', function () use ($entries) {
+            // render the RSS view
             return view('mitydigital/statamic-rss-feed::rss', $entries)->render();
         });
 
@@ -37,18 +40,19 @@ class StatamicRssFeedController extends Controller
      */
     public function atom()
     {
-        $entries = Cache::rememberForever(config('statamic.rss.cache'), function () {
-            return $this->loadFeedEntries();
-        });
+        $xml = Cache::rememberForever(config('statamic.rss.cache').'.atom', function ()  {
+            // get the entries
+            $entries = Cache::rememberForever(config('statamic.rss.cache'), function () {
+                return $this->loadFeedEntries();
+            });
 
-        $xml = Cache::rememberForever(config('statamic.rss.cache').'.atom', function () use ($entries) {
             // get the base url for the feed - this is the <id>, and must be a canonical representation
             $uri = config('app.url');
             if (substr($uri, -1) != '/') {
                 $uri .= '/';
             }
 
-            // return the xml
+            // return the Atom view
             return view('mitydigital/statamic-rss-feed::atom', array_merge([
                 'id' => $uri
             ], $entries))->render();
