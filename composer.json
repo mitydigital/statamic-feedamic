@@ -4,7 +4,8 @@
     "type": "statamic-addon",
     "keywords": [
         "statamic",
-        "sitemap"
+        "rss",
+        "atom"
     ],
     "autoload": {
         "psr-4": {
