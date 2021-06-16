@@ -15,8 +15,8 @@ class ClearStatamicRssFeedCache implements ShouldQueue
     {
         if (in_array($event->entry->collection()->handle(), config('statamic.rss.collections'))) {
             Cache::forget(config('statamic.rss.cache'));
-            Cache::forget(config('statamic.rss.cache.atom'));
-            Cache::forget(config('statamic.rss.cache.rss'));
+            Cache::forget(config('statamic.rss.cache').'.atom');
+            Cache::forget(config('statamic.rss.cache').'.rss');
         }
     }
 }

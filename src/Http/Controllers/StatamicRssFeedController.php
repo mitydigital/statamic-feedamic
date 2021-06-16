@@ -23,8 +23,8 @@ class StatamicRssFeedController extends Controller
             return $this->loadFeedEntries();
         });
 
-        $xml = Cache::rememberForever(config('statamic.rss.cache.rss'), function () use ($entries) {
-            return $xml = view('mitydigital/statamic-rss-feed::rss', $entries)->render();
+        $xml = Cache::rememberForever(config('statamic.rss.cache').'.rss', function () use ($entries) {
+            return view('mitydigital/statamic-rss-feed::rss', $entries)->render();
         });
 
         return response($xml, 200, ['Content-Type' => 'application/rss+xml']);
@@ -41,7 +41,7 @@ class StatamicRssFeedController extends Controller
             return $this->loadFeedEntries();
         });
 
-        $xml = Cache::rememberForever(config('statamic.rss.cache.atom'), function () use ($entries) {
+        $xml = Cache::rememberForever(config('statamic.rss.cache').'.atom', function () use ($entries) {
             // get the base url for the feed - this is the <id>, and must be a canonical representation
             $uri = config('app.url');
             if (substr($uri, -1) != '/') {
@@ -49,7 +49,7 @@ class StatamicRssFeedController extends Controller
             }
 
             // return the xml
-            return $xml = view('mitydigital/statamic-rss-feed::atom', array_merge([
+            return view('mitydigital/statamic-rss-feed::atom', array_merge([
                 'id' => $uri
             ], $entries))->render();
         });
