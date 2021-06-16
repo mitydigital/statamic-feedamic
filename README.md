@@ -46,6 +46,16 @@ The `name` attribute allows you to configure how the name is output. Each User f
 by default is looking for the "name". If you were to have a first and last name (two fields), your template may look
 like: `[name_first] [name_first]`. If you're using the default Statamic User, `[name]` will just work.
 
+## Auto-discovery for your site
+
+A Statamic tag is included that will output your configured feeds to your site's markup for auto-discovery assistance.
+
+In your `<head>` tag of your layout, simply call the tag:
+
+```{{ rss_auto_discovery }} ```
+
+This will output the configured feed URLs and mimetypes to assist with readers auto-discovering the feed.
+
 ## Clearing the cache
 
 Your feeds when rendered are cached forever
