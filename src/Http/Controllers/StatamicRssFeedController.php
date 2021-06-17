@@ -40,7 +40,7 @@ class StatamicRssFeedController extends Controller
      */
     public function atom()
     {
-        $xml = Cache::rememberForever(config('statamic.rss.cache').'.atom', function ()  {
+        $xml = Cache::rememberForever(config('statamic.rss.cache').'.atom', function () {
             // get the entries
             $entries = Cache::rememberForever(config('statamic.rss.cache'), function () {
                 return $this->loadFeedEntries();
@@ -76,6 +76,29 @@ class StatamicRssFeedController extends Controller
                 ->queryEntries()
                 ->orderBy('updated_at', 'desc')
                 ->get()
+                ->filter(function (\Statamic\Entries\Entry $entry) {
+                    // is the entry published?
+                    if (!$entry->published()) {
+                        return false;
+                    }
+
+                    // if future listings are private, do not include
+                    if ($entry->collection()->futureDateBehavior() == 'private') {
+                        if ($entry->date() > now()) {
+                            return false;
+                        }
+                    }
+
+                    // if past listings are private, do not include
+                    if ($entry->collection()->pastDateBehavior() == 'private') {
+                        if ($entry->date() < now()) {
+                            return false;
+                        }
+                    }
+
+                    // this far, we keep it
+                    return true;
+                })
                 ->map(function (\Statamic\Entries\Entry $entry) {
                     // get summary fields
                     $summaryFields = config('statamic.rss.summary');
