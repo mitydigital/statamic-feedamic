@@ -46,6 +46,13 @@ The `name` attribute allows you to configure how the name is output. Each User f
 by default is looking for the "name". If you were to have a first and last name (two fields), your template may look
 like: `[name_first] [name_first]`. If you're using the default Statamic User, `[name]` will just work.
 
+The `language` option allows you to define a valid language code for your feeds. Given XML can accept more values than
+the RSS specification, refer to the [RSS-Specific Language Codes](https://www.rssboard.org/rss-language-codes) for valid
+options. The default is `en`.
+
+The `copyright` option is a string that will output the copyright (or rights for Atom) to the start of the feed. False,
+default, will exclude this tag.
+
 ## Auto-discovery for your site
 
 A Statamic tag is included that will output your configured feeds to your site's markup for auto-discovery assistance.

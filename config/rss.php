@@ -120,5 +120,35 @@ return [
 
         // the name pattern to use for the author name
         'name'   => '[name]',
-    ]
+    ],
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Copyright
+    |--------------------------------------------------------------------------
+    |
+    | A string to output to the <copyright> (RSS) or <rights> (Atom) feed.
+    |
+    | False will exclude this element.
+    |
+    */
+
+    'copyright' => '&copy; Marty Friedel',
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Language
+    |--------------------------------------------------------------------------
+    |
+    | Marks the feed as being in a specific language.
+    |
+    | As Atom, using xml:lang, can use more language definitions than the RSS specification, refer to the
+    | RSS specification for suitable codes:
+    |   https://www.rssboard.org/rss-language-codes
+    |
+    */
+
+    'language' => 'en'
 ];

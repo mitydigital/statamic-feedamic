@@ -30,7 +30,7 @@ class StatamicRssFeedController extends Controller
             return view('mitydigital/statamic-rss-feed::rss', $entries)->render();
         });
 
-        return response($xml, 200, ['Content-Type' => 'application/rss+xml']);
+        return response($xml, 200, ['Content-Type' => 'application/rss+xml; charset=UTF-8']);
     }
 
     /**
@@ -58,7 +58,7 @@ class StatamicRssFeedController extends Controller
             ], $entries))->render();
         });
 
-        return response($xml, 200, ['Content-Type' => 'application/atom+xml']);
+        return response($xml, 200, ['Content-Type' => 'application/atom+xml; charset=UTF-8']);
     }
 
     /**
@@ -96,6 +96,7 @@ class StatamicRssFeedController extends Controller
                         }
                     }
 
+
                     // this far, we keep it
                     return true;
                 })
@@ -103,6 +104,9 @@ class StatamicRssFeedController extends Controller
                     // get summary fields
                     $summaryFields = config('statamic.rss.summary');
                     $authorField   = config('statamic.rss.author.handle');
+
+                    // add the title to the augmented fields
+                    $summaryFields[] = 'title';
 
                     // only augment the required fields
                     $augmentedFields = $summaryFields;
@@ -118,7 +122,7 @@ class StatamicRssFeedController extends Controller
                     foreach ($summaryFields as $summaryField) {
                         if ($entryArray[$summaryField] && get_class($entryArray[$summaryField]) == 'Statamic\Fields\Value') {
                             // process the value - this will process the Bard fieldtype if it is one
-                            $summary = strip_tags($entryArray[$summaryField]->value());
+                            $summary = $entryArray[$summaryField]->value();
 
                             // if we have a value, exit the queue
                             if ($summary) {
@@ -139,7 +143,7 @@ class StatamicRssFeedController extends Controller
 
                     // create a feed entry object
                     return new FeedEntry([
-                        'title'     => $entry->title,
+                        'title'     => $entryArray['title']->value(),
                         'author'    => $author,
                         'uri'       => config('app.url').$entry->uri(),
                         'summary'   => $summary,
