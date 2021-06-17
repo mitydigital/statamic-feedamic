@@ -23,7 +23,7 @@
     },
     "extra": {
         "statamic": {
-            "name": "Statamic RSS Feed",
+            "name": "Atom and RSS Feed for Statamic 3",
             "description": "A simple RSS feed for a given collection in Statamic 3."
         },
         "laravel": {
