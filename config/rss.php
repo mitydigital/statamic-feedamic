@@ -134,7 +134,7 @@ return [
     |
     */
 
-    'copyright' => '&copy; Marty Friedel',
+    'copyright' => false,
 
 
     /*

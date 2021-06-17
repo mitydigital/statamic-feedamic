@@ -80,6 +80,11 @@ You can force the cache to clear by running:
 php please rss-cache:clear
 ```
 
+## Upgrade Notes
+
+If upgrading from v1.2 or below, ensure you add the `language` and `copyright` configuration options to your config
+file.
+
 ## License
 
 This addon is licensed under the MIT license.
