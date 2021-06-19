@@ -86,6 +86,8 @@ php please rss-cache:clear
 
 ## Upgrade Notes
 
+When upgrading from v1.3, ensure you add the `image` configuration options to your config file.
+
 If upgrading from v1.2 or below, ensure you add the `language` and `copyright` configuration options to your config
 file.
 
