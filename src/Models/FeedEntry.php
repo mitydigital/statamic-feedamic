@@ -81,9 +81,7 @@ class FeedEntry
             ]);
             $glide->generate();
 
-            $summary = '<p><img src="'.$glide->index().'" alt="'.$this->title(true).'" width="'.config('statamic.rss.image.width',
-                    1280).'" height="'.config('statamic.rss.image.height',
-                    720).'" style="display:block; width:100%; max-width:100%; height:auto;"></p>'.$summary;
+            $summary = '<p><img src="'.$glide->index().'" alt="'.$this->title(true).'" width="'.config('statamic.rss.image.width', 1280).'" height="'.config('statamic.rss.image.height', 720).'" style="display:block; width:100%; max-width:100%; height:auto;" /></p>'.$summary;
         }
 
         // do we encode?
