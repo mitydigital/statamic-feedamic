@@ -18,7 +18,7 @@
         <id>{{ $entry->uri }}</id>
         <published>{{ $entry->published->toRfc3339String() }}</published>
         <updated>{{ $entry->updated->toRfc3339String() }}</updated>
-        @if ($entry->summary)<summary>{!! $entry->summary() !!}</summary>@endif
+        @if ($entry->hasSummaryOrImage())<summary type="html">{!! $entry->summary() !!}</summary>@endif
 
         <content src="{{ $entry->uri }}" type="text/html"></content>
         @if ($entry->author)<author>

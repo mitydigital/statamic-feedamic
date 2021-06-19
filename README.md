@@ -37,6 +37,10 @@ The `summary` gives you an array of fields to look at to get the content for the
 These are checked in order, and when content is found, it will be used for the `<summary>` and the other fields will not
 be checked. The default is looking for `introduction` then `meta_description`.
 
+The `image` gives you the ability to pick a field (or array of fields, like `summary`) to look for to find the image to
+be included with the summary content. You can also set the width and height of the rendered image, otherwise will
+default to 1280 x 720. Set `image` to false or null to not include images.
+
 You can also adjust the `<author>` behaviour. Set this to `false` to disable outputting an author at all.
 
 Within the array, set `email` to `true` to output the `<email>` in your Atom feed. When `false` (the default), `<email>`

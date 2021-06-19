@@ -17,7 +17,7 @@
             <link>{{ $entry->uri }}</link>
             <guid isPermaLink="true">{{ $entry->uri }}</guid>
             <pubDate>{{ $entry->published->toRfc822String() }}</pubDate>
-            @if ($entry->summary)<description><![CDATA[{!! $entry->summary() !!}]]></description>@endif
+            @if ($entry->hasSummaryOrImage())<description><![CDATA[{!! $entry->summary(false) !!}]]></description>@endif
 
             @if (config('statamic.rss.author.email'))<author>{{ $entry->author->email() }}</author>@endif
 

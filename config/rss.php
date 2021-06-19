@@ -94,6 +94,32 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Image
+    |--------------------------------------------------------------------------
+    |
+    | Configuration options for the image to be injected in to the "summary" for the entry.
+    |
+    | This only applies when Summary is being used.
+    |
+    | The Fields behave like summary - a cascading list of image fields to look at. You can specify the width
+    | and height too to use for the image generation. If omitted, will be 1280 x 720.
+    |
+    | Disable this by setting to false.
+    |
+    */
+
+    'image' => [
+        'fields' => [
+            'hero',
+            'meta_og_image'
+        ],
+        'width'  => 1280,
+        'height' => 720
+    ],
+
+
+    /*
+    |--------------------------------------------------------------------------
     | Author
     |--------------------------------------------------------------------------
     |

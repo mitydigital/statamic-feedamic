@@ -2,14 +2,11 @@
 
 namespace MityDigital\StatamicRssFeed\Http\Controllers;
 
-
-use Carbon\Carbon;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Cache;
 use MityDigital\StatamicRssFeed\Models\FeedEntry;
 use MityDigital\StatamicRssFeed\Models\FeedEntryAuthor;
 use Statamic\Facades\Collection;
-use Statamic\View\View;
 
 class StatamicRssFeedController extends Controller
 {
@@ -103,15 +100,30 @@ class StatamicRssFeedController extends Controller
                 ->map(function (\Statamic\Entries\Entry $entry) {
                     // get summary fields
                     $summaryFields = config('statamic.rss.summary');
-                    $authorField   = config('statamic.rss.author.handle');
+                    if (is_string($summaryFields)) {
+                        $summaryFields = [$summaryFields];
+                    } elseif (is_bool($summaryFields)) {
+                        $summaryFields = []; // always want it as an array
+                    }
+
+                    // get image fields
+                    $imageFields = config('statamic.rss.image.fields');
+                    if (is_string($imageFields)) {
+                        $imageFields = [$imageFields];
+                    } elseif (is_bool($imageFields) || is_null($imageFields)) {
+                        $imageFields = []; // always want it as an array
+                    }
+
+                    // get author field
+                    $authorField = config('statamic.rss.author.handle');
 
                     // add the title to the augmented fields
                     $summaryFields[] = 'title';
 
                     // only augment the required fields
-                    $augmentedFields = $summaryFields;
+                    $augmentedFields = array_merge($imageFields, $summaryFields);
                     if ($authorField) {
-                        $augmentedFields = array_merge([$authorField], $summaryFields);
+                        $augmentedFields = array_merge([$authorField], $imageFields, $summaryFields);
                     }
 
                     // augment the entry
@@ -131,6 +143,19 @@ class StatamicRssFeedController extends Controller
                         }
                     }
 
+                    // find the image - just like the summary
+                    $image = false;
+                    foreach ($imageFields as $imageField) {
+                        if ($entryArray[$imageField] && get_class($entryArray[$imageField]) == 'Statamic\Fields\Value') {
+                            // process the value
+                            $image = $entryArray[$imageField]->value();
+
+                            // if we have a value, exit the queue
+                            if ($image) {
+                                break;
+                            }
+                        }
+                    }
 
                     // if we have an authorField, try to find the author
                     $author = false;
@@ -147,6 +172,7 @@ class StatamicRssFeedController extends Controller
                         'author'    => $author,
                         'uri'       => config('app.url').$entry->uri(),
                         'summary'   => $summary,
+                        'image'     => $image,
                         'published' => $entry->date(),
                         'updated'   => $entry->fileLastModified()
                     ]);
