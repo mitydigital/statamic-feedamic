@@ -27,6 +27,9 @@ class StatamicRssFeedController extends Controller
             return view('mitydigital/statamic-rss-feed::rss', $entries)->render();
         });
 
+        // add the XML header
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>' . $xml;
+
         return response($xml, 200, ['Content-Type' => 'application/rss+xml; charset=UTF-8']);
     }
 
@@ -54,6 +57,9 @@ class StatamicRssFeedController extends Controller
                 'id' => $uri
             ], $entries))->render();
         });
+
+        // add the XML header
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>' . $xml;
 
         return response($xml, 200, ['Content-Type' => 'application/atom+xml; charset=UTF-8']);
     }
