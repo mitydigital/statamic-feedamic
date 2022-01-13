@@ -63,9 +63,24 @@ class FeedEntry
         // get the summary
         $summary = $this->summary;
 
-        // if the summary is not a paragraph already, wrap it
-        if ($summary && substr($summary, 0, 3) != '<p>') {
-            $summary = '<p>'.$summary.'</p>';
+        // if it is an array, it is a bard block with sets that needs processing
+        if (is_array($summary)) {
+            $summaryContent = [];
+
+            // add text sets to the summary content
+            foreach ($summary as $bardSet) {
+                if (!empty($bardSet['type']) && $bardSet['type'] === 'text') {
+                    $summaryContent[] = $bardSet['text'];
+                }
+            }
+
+            // bring the content together to the summary variable as a string
+            $summary = implode(' ', $summaryContent);
+        } else {
+            // if the summary is not a paragraph already, wrap it
+            if ($summary && substr($summary, 0, 3) != '<p>') {
+                $summary = '<p>'.$summary.'</p>';
+            }
         }
 
         // do we have an image?
