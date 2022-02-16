@@ -155,6 +155,11 @@ class StatamicRssFeedController extends Controller
                         if ($entryArray[$imageField] && get_class($entryArray[$imageField]) == 'Statamic\Fields\Value') {
                             // process the value
                             $image = $entryArray[$imageField]->value();
+                            
+                            // if the image asset allows multiple to be selected, just pick the first one
+                            if (get_class($image) == \Illuminate\Support\Collection::class) {
+                                $image = $image->first();
+                            }
 
                             // if we have a value, exit the queue
                             if ($image) {

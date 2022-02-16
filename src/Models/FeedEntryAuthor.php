@@ -53,13 +53,18 @@ class FeedEntryAuthor
 
     public function getProperty($handle)
     {
+        $author = $this->author;
+        if (get_class($author) == \Illuminate\Support\Collection::class) {
+            $author = $author->first();
+        }
+
         switch ($handle) {
             case 'email':
-                return $this->author->email();
+                return $author->email();
             case 'id':
-                return $this->author->id();
+                return $author->id();
             default:
-                return $this->author->value($handle);
+                return $author->value($handle);
         }
     }
 }
