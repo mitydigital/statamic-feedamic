@@ -1,14 +1,14 @@
 <?php
 
-namespace MityDigital\StatamicRssFeed\Http\Controllers;
+namespace MityDigital\Feedamic\Http\Controllers;
 
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Cache;
-use MityDigital\StatamicRssFeed\Models\FeedEntry;
-use MityDigital\StatamicRssFeed\Models\FeedEntryAuthor;
+use MityDigital\Feedamic\Models\FeedEntry;
+use MityDigital\Feedamic\Models\FeedEntryAuthor;
 use Statamic\Facades\Collection;
 
-class StatamicRssFeedController extends Controller
+class FeedamicController extends Controller
 {
     /**
      * Gets the cached rss feed (or renders if it needs to)
@@ -17,14 +17,14 @@ class StatamicRssFeedController extends Controller
      */
     public function rss()
     {
-        $xml = Cache::rememberForever(config('statamic.rss.cache').'.rss', function () {
+        $xml = Cache::rememberForever(config('statamic.feedamic.cache').'.rss', function () {
             // get the entries
-            $entries = Cache::rememberForever(config('statamic.rss.cache'), function () {
+            $entries = Cache::rememberForever(config('statamic.feedamic.cache'), function () {
                 return $this->loadFeedEntries();
             });
 
             // render the RSS view
-            return view('mitydigital/statamic-rss-feed::rss', $entries)->render();
+            return view('mitydigital/feedamic::rss', $entries)->render();
         });
 
         // add the XML header
@@ -40,9 +40,9 @@ class StatamicRssFeedController extends Controller
      */
     public function atom()
     {
-        $xml = Cache::rememberForever(config('statamic.rss.cache').'.atom', function () {
+        $xml = Cache::rememberForever(config('statamic.feedamic.cache').'.atom', function () {
             // get the entries
-            $entries = Cache::rememberForever(config('statamic.rss.cache'), function () {
+            $entries = Cache::rememberForever(config('statamic.feedamic.cache'), function () {
                 return $this->loadFeedEntries();
             });
 
@@ -53,7 +53,7 @@ class StatamicRssFeedController extends Controller
             }
 
             // return the Atom view
-            return view('mitydigital/statamic-rss-feed::atom', array_merge([
+            return view('mitydigital/feedamic::atom', array_merge([
                 'id' => $uri
             ], $entries))->render();
         });
@@ -73,7 +73,7 @@ class StatamicRssFeedController extends Controller
      */
     protected function loadFeedEntries()
     {
-        $entries = collect(config('statamic.rss.collections'))->flatMap(function ($handle) {
+        $entries = collect(config('statamic.feedamic.collections'))->flatMap(function ($handle) {
             // load the entries for this collection
             return Collection::findByHandle($handle)
                 ->queryEntries()
@@ -105,7 +105,7 @@ class StatamicRssFeedController extends Controller
                 })
                 ->map(function (\Statamic\Entries\Entry $entry) {
                     // get summary fields
-                    $summaryFields = config('statamic.rss.summary');
+                    $summaryFields = config('statamic.feedamic.summary');
                     if (is_string($summaryFields)) {
                         $summaryFields = [$summaryFields];
                     } elseif (is_bool($summaryFields)) {
@@ -113,7 +113,7 @@ class StatamicRssFeedController extends Controller
                     }
 
                     // get image fields
-                    $imageFields = config('statamic.rss.image.fields');
+                    $imageFields = config('statamic.feedamic.image.fields');
                     if (is_string($imageFields)) {
                         $imageFields = [$imageFields];
                     } elseif (is_bool($imageFields) || is_null($imageFields)) {
@@ -121,7 +121,7 @@ class StatamicRssFeedController extends Controller
                     }
 
                     // get author field
-                    $authorField = config('statamic.rss.author.handle');
+                    $authorField = config('statamic.feedamic.author.handle');
 
                     // add the title to the augmented fields
                     $summaryFields[] = 'title';

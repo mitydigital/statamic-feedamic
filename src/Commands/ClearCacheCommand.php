@@ -1,6 +1,6 @@
 <?php
 
-namespace MityDigital\StatamicRssFeed\Commands;
+namespace MityDigital\Feedamic\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
@@ -16,14 +16,14 @@ class ClearCacheCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'statamic:rss-cache:clear';
+    protected $signature = 'statamic:feedamic:clear';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Clear the Statamic RSS Feed caches';
+    protected $description = 'Clear the Feedamic caches';
 
     /**
      * Execute the console command.
@@ -32,9 +32,9 @@ class ClearCacheCommand extends Command
      */
     public function handle()
     {
-        Cache::forget(config('statamic.rss.cache'));
-        Cache::forget(config('statamic.rss.cache').'.atom');
-        Cache::forget(config('statamic.rss.cache').'.rss');
+        Cache::forget(config('statamic.feedamic.cache'));
+        Cache::forget(config('statamic.feedamic.cache').'.atom');
+        Cache::forget(config('statamic.feedamic.cache').'.rss');
 
         $this->info('Ah-choo... it\'s all gone.');
     }

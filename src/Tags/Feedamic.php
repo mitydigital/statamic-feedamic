@@ -1,20 +1,20 @@
 <?php
 
-namespace MityDigital\StatamicRssFeed\Tags;
+namespace MityDigital\Feedamic\Tags;
 
 use Statamic\Tags\Tags;
 
-class RssAutoDiscovery extends Tags
+class Feedamic extends Tags
 {
     /**
-     * Tag {{ rss_auto_discovery }} outputs the configured feeds for auto-discovery
+     * Tag {{ feedamic }} outputs the configured feeds for auto-discovery
      *
      * @return string
      */
     public function index()
     {
         $links = [];
-        foreach (config('statamic.rss.routes') as $type => $route) {
+        foreach (config('statamic.feedamic.routes') as $type => $route) {
             $mime = 'application/xml';
             switch($type)
             {
@@ -26,7 +26,7 @@ class RssAutoDiscovery extends Tags
                     break;
             }
 
-            $links[] = '<link rel="alternate" type="'.$mime.'" title="'.config('statamic.rss.title').'"  href="'.$route.'" />';
+            $links[] = '<link rel="alternate" type="'.$mime.'" title="'.config('statamic.feedamic.title').'"  href="'.$route.'" />';
         }
 
         return implode("\r\n", $links);

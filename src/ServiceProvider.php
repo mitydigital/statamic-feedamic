@@ -1,16 +1,16 @@
 <?php
 
-namespace MityDigital\StatamicRssFeed;
+namespace MityDigital\Feedamic;
 
-use MityDigital\StatamicRssFeed\Commands\ClearCacheCommand;
-use MityDigital\StatamicRssFeed\Listeners\ClearStatamicRssFeedCache;
-use MityDigital\StatamicRssFeed\Tags\RssAutoDiscovery;
+use MityDigital\Feedamic\Commands\ClearCacheCommand;
+use MityDigital\Feedamic\Listeners\ClearFeedamicCache;
+use MityDigital\Feedamic\Tags\Feedamic;
 use Statamic\Events\EntrySaved;
 use Statamic\Providers\AddonServiceProvider;
 
 class ServiceProvider extends AddonServiceProvider
 {
-    protected $viewNamespace = 'mitydigital/statamic-rss-feed';
+    protected $viewNamespace = 'mitydigital/feedamic';
 
     protected $commands = [
         ClearCacheCommand::class
@@ -18,7 +18,7 @@ class ServiceProvider extends AddonServiceProvider
 
     protected $listen = [
         EntrySaved::class => [
-            ClearStatamicRssFeedCache::class,
+            ClearFeedamicCache::class,
         ]
     ];
 
@@ -27,17 +27,17 @@ class ServiceProvider extends AddonServiceProvider
     ];
 
     protected $tags = [
-        RssAutoDiscovery::class,
+        Feedamic::class,
     ];
 
     public function boot()
     {
         parent::boot();
 
-        $this->mergeConfigFrom(__DIR__.'/../config/rss.php', 'statamic.rss');
+        $this->mergeConfigFrom(__DIR__.'/../config/feedamic.php', 'statamic.feedamic');
 
         $this->publishes([
-            __DIR__.'/../config/rss.php' => config_path('statamic/rss.php')
+            __DIR__.'/../config/feedamic.php' => config_path('statamic/feedamic.php')
         ], 'config');
     }
 }

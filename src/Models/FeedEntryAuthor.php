@@ -1,6 +1,6 @@
 <?php
 
-namespace MityDigital\StatamicRssFeed\Models;
+namespace MityDigital\Feedamic\Models;
 
 class FeedEntryAuthor
 {
@@ -16,7 +16,7 @@ class FeedEntryAuthor
         $this->author = $author;
 
         // get the name template
-        $this->template = config('statamic.rss.author.name');
+        $this->template = config('statamic.feedamic.author.name');
 
         // find the tokens needed for the template
         preg_match_all("/\[[^\]]*\]/", $this->template, $authorNameTokens);

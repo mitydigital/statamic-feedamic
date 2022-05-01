@@ -1,14 +1,14 @@
-<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="{{ config('statamic.rss.language') }}">
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="{{ config('statamic.feedamic.language') }}">
     <id>{{ $id }}</id>
-    <title type="text">{!! config('statamic.rss.title') !!}</title>
-    <subtitle type="text">{!! config('statamic.rss.description') !!}</subtitle>
+    <title type="text">{!! config('statamic.feedamic.title') !!}</title>
+    <subtitle type="text">{!! config('statamic.feedamic.description') !!}</subtitle>
     <link rel="alternate" type="text/html" hreflang="en" href="{{ config('app.url') }}"/>
-    <link rel="self" type="application/atom+xml" xmlns="http://www.w3.org/2005/Atom" href="{{ config('app.url') }}{{ config('statamic.rss.routes.atom') }}"/>
+    <link rel="self" type="application/atom+xml" xmlns="http://www.w3.org/2005/Atom" href="{{ config('app.url') }}{{ config('statamic.feedamic.routes.atom') }}"/>
     @if ($updated)<updated>{{ $updated->toRfc3339String() }}</updated>@endif
 
-    @if (config('statamic.rss.copyright'))<rights>{!! config('statamic.rss.copyright') !!}</rights>@endif
+    @if (config('statamic.feedamic.copyright'))<rights>{!! config('statamic.feedamic.copyright') !!}</rights>@endif
 
-    <generator uri="https://github.com/mitydigital/statamic-rss-feed" version="1.3">Atom and RSS Feed for Statamic 3</generator>
+    <generator uri="https://github.com/mitydigital/feedamic" version="2.0">Feedamic: the Atom and RSS Feed generator for Statamic</generator>
 
     @foreach ($entries as $entry)
 <entry>
@@ -21,7 +21,7 @@
 
         <content src="{{ $entry->uri }}" type="text/html"></content>
         @if ($entry->author)<author>
-            <name>{{ $entry->author->name() }}</name>@if (config('statamic.rss.author.email'))<email>{{ $entry->author->email() }}</email>@endif
+            <name>{{ $entry->author->name() }}</name>@if (config('statamic.feedamic.author.email'))<email>{{ $entry->author->email() }}</email>@endif
 
         </author>@endif
 

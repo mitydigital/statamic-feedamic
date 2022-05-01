@@ -1,5 +1,5 @@
 {
-    "name": "mitydigital/statamic-rss-feed",
+    "name": "mitydigital/feedamic",
     "description": "A simple RSS feed generator for a given collection in Statamic 3.",
     "type": "statamic-addon",
     "keywords": [
@@ -9,7 +9,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "MityDigital\\StatamicRssFeed\\": "src"
+            "MityDigital\\Feedamic\\": "src"
         }
     },
     "license": "MIT",
@@ -19,16 +19,16 @@
         }
     ],
     "require": {
-        "statamic/cms": "^3.0"
+        "statamic/cms": "^3.3"
     },
     "extra": {
         "statamic": {
-            "name": "Atom and RSS Feed for Statamic 3",
+            "name": "Feedamic",
             "description": "A simple RSS feed for a given collection in Statamic 3."
         },
         "laravel": {
             "providers": [
-                "MityDigital\\StatamicRssFeed\\ServiceProvider"
+                "MityDigital\\Feedamic\\ServiceProvider"
             ]
         }
     }

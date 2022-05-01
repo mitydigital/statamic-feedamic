@@ -1,13 +1,22 @@
-# Atom and RSS Feed for Statamic 3
+# Feedamic
 
-![Statamic 3.0+](https://img.shields.io/badge/Statamic-3.0+-FF269E?style=for-the-badge&link=https://statamic.com)
+<!-- statamic:hide -->
+
+![Statamic 3.3+](https://img.shields.io/badge/Statamic-3.3+-FF269E?style=for-the-badge&link=https://statamic.com)
+[![Iconamic on Packagist](https://img.shields.io/packagist/v/mitydigital/feedamic?style=for-the-badge)](https://packagist.org/packages/mitydigital/iconamic/stats)
+
+---
+
+<!-- /statamic:hide -->
+
+> Feedamic is an Atom and RSS feed for Statamic 3
 
 ## Installation
 
 Install it via the composer command
 
 ```
-composer require mitydigital/statamic-rss-feed
+composer require mitydigital/feedamic
 ```
 
 ## Configuration
@@ -15,7 +24,7 @@ composer require mitydigital/statamic-rss-feed
 You will need to publish the configuration file:
 
 ```
-php artisan vendor:publish --provider="MityDigital\StatamicRssFeed\ServiceProvider" --tag=config
+php artisan vendor:publish --provider="MityDigital\Feedamic\ServiceProvider" --tag=config
 ```
 
 You **must** set the `title` and `description` values for the feed.
@@ -63,7 +72,7 @@ A Statamic tag is included that will output your configured feeds to your site's
 
 In your `<head>` tag of your layout, simply call the tag:
 
-```{{ rss_auto_discovery }} ```
+```{{ feedamic }} ```
 
 This will output the configured feed URLs and mimetypes to assist with readers auto-discovering the feed.
 
@@ -81,15 +90,74 @@ Saving an entry in a configured collection will automatically clear the feed cac
 You can force the cache to clear by running:
 
 ```
-php please rss-cache:clear
+php please feedamic:clear
 ```
 
 ## Upgrade Notes
 
+### Upgrading from version 1.*
+
+Version 2 brings with it a new name. Isn't it great?
+
+However there are some ***breaking changes*** with this update.
+
+You will need to check some things to get yourself up and running:
+
+- the config file
+- the views
+- tag usage
+- command usage
+
+Please note that from v2, Statamic 3.3 or later is required.
+
+#### Config
+
+First of all, rename your config file from `rss.php` to `feedamic.php`. You'll find this in the `config/statamic`
+folder, if you are using your own config file.
+
+#### Views
+
+If you have published the `atom.blade.php` or `rss.blade.php` views you will need to make sure that any references to
+the configuration file is correctly updated now to be `feedamic` instead of `rss`.
+
+#### Tag
+
+If you were using the `{{ rss_auto_discovery }}` tag, this has been renamed to be `{{ feedamic }}`.
+
+#### Command
+
+If you used the `rss-cache` command previously, this has been renamed to `feedamic`.
+
+```bash
+# v1.* command only
+php please rss-cache:clear
+
+# v2 command
+php please feedamic:clear
+```
+
+### Upgrading from v1.3
+
 When upgrading from v1.3, ensure you add the `image` configuration options to your config file.
+
+### Upgrading from v1.2 or below
 
 If upgrading from v1.2 or below, ensure you add the `language` and `copyright` configuration options to your config
 file.
+
+## Support
+
+We love to share work like this, and help the community. However it does take time, effort and work.
+
+The best thing you can do is [log an issue](../../issues).
+
+Please try to be detailed when logging an issue, including a clear description of the problem, steps to reproduce the
+issue, and any steps you may have tried or taken to overcome the issue too. This is an awesome first step to helping us
+help you. So be awesome - it'll feel fantastic.
+
+## Credits
+
+- [Marty Friedel](https://github.com/martyf)
 
 ## License
 

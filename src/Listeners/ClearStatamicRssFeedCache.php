@@ -1,22 +1,22 @@
 <?php
 
-namespace MityDigital\StatamicRssFeed\Listeners;
+namespace MityDigital\Feedamic\Listeners;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Cache;
 use Statamic\Events\EntrySaved;
 
-class ClearStatamicRssFeedCache implements ShouldQueue
+class ClearFeedamicCache implements ShouldQueue
 {
     /**
-     * Simply clear the Statamic RSS Feed caches
+     * Simply clear the Feedamic RSS Feed caches
      */
     public function handle(EntrySaved $event)
     {
-        if (in_array($event->entry->collection()->handle(), config('statamic.rss.collections'))) {
-            Cache::forget(config('statamic.rss.cache'));
-            Cache::forget(config('statamic.rss.cache').'.atom');
-            Cache::forget(config('statamic.rss.cache').'.rss');
+        if (in_array($event->entry->collection()->handle(), config('statamic.feedamic.collections'))) {
+            Cache::forget(config('statamic.feedamic.cache'));
+            Cache::forget(config('statamic.feedamic.cache').'.atom');
+            Cache::forget(config('statamic.feedamic.cache').'.rss');
         }
     }
 }
