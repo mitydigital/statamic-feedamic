@@ -1,6 +1,6 @@
 {
     "name": "mitydigital/feedamic",
-    "description": "A simple RSS feed generator for a given collection in Statamic 3.",
+    "description": "The Atom and RSS feed generator for Statamic.",
     "type": "statamic-addon",
     "keywords": [
         "statamic",
