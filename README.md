@@ -101,6 +101,18 @@ Version 2 brings with it a new name. Isn't it great?
 
 However there are some ***breaking changes*** with this update.
 
+First of all, update your composer.json file:
+
+```json
+# Change from:
+"mitydigital/statamic-rss-feed": "^1.0",
+
+# Update to:
+"mitydigital/feedamic": "^2.0",
+```
+
+The run `composer update`.
+
 You will need to check some things to get yourself up and running:
 
 - the config file
@@ -112,13 +124,16 @@ Please note that from v2, Statamic 3.3 or later is required.
 
 #### Config
 
-First of all, rename your config file from `rss.php` to `feedamic.php`. You'll find this in the `config/statamic`
+Rename your config file from `rss.php` to `feedamic.php`. You'll find this in the `config/statamic`
 folder, if you are using your own config file.
 
 #### Views
 
 If you have published the `atom.blade.php` or `rss.blade.php` views you will need to make sure that any references to
 the configuration file is correctly updated now to be `feedamic` instead of `rss`.
+
+You may want to also update the `<generator>` tag to include the new name and version. Check out the views in the source
+of the component for what we've set as the defaults.
 
 #### Tag
 
