@@ -54,6 +54,11 @@ class FeedEntryAuthor
     public function getProperty($handle)
     {
         $author = $this->author;
+
+        if (!$author) {
+            return '';
+        }
+
         if (get_class($author) == \Illuminate\Support\Collection::class) {
             $author = $author->first();
         }

@@ -157,7 +157,7 @@ class FeedamicController extends Controller
                             $image = $entryArray[$imageField]->value();
                             
                             // if the image asset allows multiple to be selected, just pick the first one
-                            if (get_class($image) == \Illuminate\Support\Collection::class) {
+                            if ($image && get_class($image) == \Illuminate\Support\Collection::class) {
                                 $image = $image->first();
                             }
 
