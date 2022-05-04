@@ -46,7 +46,7 @@ return [
     |
     */
 
-    'cache' => 'statamic-xml-sitemap',
+    'cache' => 'feedamic',
 
 
     /*
