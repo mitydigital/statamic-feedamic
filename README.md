@@ -160,6 +160,19 @@ When upgrading from v1.3, ensure you add the `image` configuration options to yo
 If upgrading from v1.2 or below, ensure you add the `language` and `copyright` configuration options to your config
 file.
 
+## Route caching / conflicts with other addons
+
+If you have cached your routes and are changing your config, don't forget to clear the cache too.
+
+Some other addons may also want to have a "feed" path. You can change the path you use in the config for the Feedamic
+addon - or you could change your other addon's path if it supports it.
+
+If needed you may also need to clear your route cache:
+
+```bash
+php artisan route:clear
+```
+
 ## Support
 
 We love to share work like this, and help the community. However it does take time, effort and work.
