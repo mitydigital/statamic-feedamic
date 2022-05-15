@@ -19,6 +19,9 @@ class MoveConfigFile extends UpdateScript
             Artisan::call('config:clear');
         }
 
+        // clear Feedamic cache
+        Artisan::call('feedamic:clear');
+
         // if the config file exists within the 'config/statamic' path, move it just to 'config'
         if (file_exists(config_path('statamic/feedamic.php'))) {
             if (file_exists(config_path('feedamic.php'))) {
