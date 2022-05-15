@@ -1,6 +1,6 @@
 <?php
 
-namespace MityDigital\Feedamic\UpdateScripts\v2_0_1;
+namespace MityDigital\Feedamic\UpdateScripts\v2_1_0;
 
 use Illuminate\Support\Facades\Artisan;
 use Statamic\UpdateScripts\UpdateScript;
@@ -9,7 +9,7 @@ class MoveConfigFile extends UpdateScript
 {
     public function shouldUpdate($newVersion, $oldVersion)
     {
-        return $this->isUpdatingTo('2.0.1');
+        return $this->isUpdatingTo('2.1.0');
     }
 
     public function update()

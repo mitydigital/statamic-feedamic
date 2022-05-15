@@ -17,9 +17,9 @@ class FeedamicController extends Controller
      */
     public function rss()
     {
-        $xml = Cache::rememberForever(feedamic.cache').'.rss', function () {
+        $xml = Cache::rememberForever(config('feedamic.cache').'.rss', function () {
             // get the entries
-            $entries = Cache::rememberForever(feedamic.cache'), function () {
+            $entries = Cache::rememberForever(config('feedamic.cache'), function () {
                 return $this->loadFeedEntries();
             });
 
@@ -40,9 +40,9 @@ class FeedamicController extends Controller
      */
     public function atom()
     {
-        $xml = Cache::rememberForever(feedamic.cache').'.atom', function () {
+        $xml = Cache::rememberForever(config('feedamic.cache').'.atom', function () {
             // get the entries
-            $entries = Cache::rememberForever(feedamic.cache'), function () {
+            $entries = Cache::rememberForever(config('feedamic.cache'), function () {
                 return $this->loadFeedEntries();
             });
 
@@ -73,7 +73,7 @@ class FeedamicController extends Controller
      */
     protected function loadFeedEntries()
     {
-        $entries = collect(feedamic.collections'))->flatMap(function ($handle) {
+        $entries = collect(config('feedamic.collections'))->flatMap(function ($handle) {
             // load the entries for this collection
             return Collection::findByHandle($handle)
                 ->queryEntries()
@@ -105,7 +105,7 @@ class FeedamicController extends Controller
                 })
                 ->map(function (\Statamic\Entries\Entry $entry) {
                     // get summary fields
-                    $summaryFields = feedamic.summary');
+                    $summaryFields = config('feedamic.summary');
                     if (is_string($summaryFields)) {
                         $summaryFields = [$summaryFields];
                     } elseif (is_bool($summaryFields)) {
@@ -113,7 +113,7 @@ class FeedamicController extends Controller
                     }
 
                     // get image fields
-                    $imageFields = feedamic.image.fields');
+                    $imageFields = config('feedamic.image.fields');
                     if (is_string($imageFields)) {
                         $imageFields = [$imageFields];
                     } elseif (is_bool($imageFields) || is_null($imageFields)) {
@@ -121,7 +121,7 @@ class FeedamicController extends Controller
                     }
 
                     // get author field
-                    $authorField = feedamic.author.handle');
+                    $authorField = config('feedamic.author.handle');
 
                     // add the title to the augmented fields
                     $summaryFields[] = 'title';

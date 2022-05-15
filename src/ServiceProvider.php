@@ -31,7 +31,7 @@ class ServiceProvider extends AddonServiceProvider
     ];
 
     protected $updateScripts = [
-        // v2.0.1
-        \MityDigital\Feedamic\UpdateScripts\v2_0_1\MoveConfigFile::class
+        // v2.1.0
+        \MityDigital\Feedamic\UpdateScripts\v2_1_0\MoveConfigFile::class
     ];
 }

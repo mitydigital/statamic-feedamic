@@ -16,7 +16,7 @@ class FeedEntryAuthor
         $this->author = $author;
 
         // get the name template
-        $this->template = feedamic.author.name');
+        $this->template = config('feedamic.author.name');
 
         // find the tokens needed for the template
         preg_match_all("/\[[^\]]*\]/", $this->template, $authorNameTokens);

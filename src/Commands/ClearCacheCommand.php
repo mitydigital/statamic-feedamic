@@ -32,9 +32,9 @@ class ClearCacheCommand extends Command
      */
     public function handle()
     {
-        Cache::forget(feedamic.cache'));
-        Cache::forget(feedamic.cache').'.atom');
-        Cache::forget(feedamic.cache').'.rss');
+        Cache::forget(config('feedamic.cache'));
+        Cache::forget(config('feedamic.cache').'.atom');
+        Cache::forget(config('feedamic.cache').'.rss');
 
         $this->info('Ah-choo... it\'s all gone.');
     }
