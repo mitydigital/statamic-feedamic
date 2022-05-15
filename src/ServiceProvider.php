@@ -34,4 +34,11 @@ class ServiceProvider extends AddonServiceProvider
         // v2.1.0
         \MityDigital\Feedamic\UpdateScripts\v2_1_0\MoveConfigFile::class
     ];
+
+    public function bootAddon()
+    {
+        $this->publishes([
+            __DIR__.'/../resources/views' => resource_path('views/vendor/mitydigital/feedamic'),
+        ], 'feedamic-views');
+    }
 }

@@ -93,6 +93,17 @@ You can force the cache to clear by running:
 php please feedamic:clear
 ```
 
+## Views
+
+The standard views will give you nice and neat RSS and Atom feeds. But if you want to customise the output, you can
+publish the views, and Feedamic will use yours instead:
+
+```
+php artisan vendor:publish --tag=feedamic-views
+```
+
+These will publish to your `resources/views/vendor/mitydigital/feedamic` folder.
+
 ## Upgrade Notes
 
 ### Upgrading from v2.0.0 to v2.1.0
