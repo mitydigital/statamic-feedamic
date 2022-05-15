@@ -95,6 +95,18 @@ php please feedamic:clear
 
 ## Upgrade Notes
 
+### Upgrading from v2.0.0 to v2.1.0
+
+There are two changes - one minor, the config file, and one potentially more major, the views.
+
+The **config file** has moved. This will be done as part of the upgrade process. Update your composer, and everything
+should be smooth sailing.
+
+Refer to the console output for any issues.
+
+If you are using Feedamic's default views, you're all set. But if you have published the views, make sure the config
+references are correct - they should be `feedamic.handle`, not `statamic.feedamic.handle`.
+
 ### Upgrading from version 1.*
 
 Version 2 brings with it a new name. Isn't it great?
@@ -104,8 +116,11 @@ However there are some ***breaking changes*** with this update.
 First of all, update your composer.json file:
 
 ```json
-# Change from: "mitydigital/statamic-rss-feed": "^1.0",
-# Update to: "mitydigital/feedamic": "^2.0",
+# Change from: 
+"mitydigital/statamic-rss-feed": "^1.0",
+        
+# Update to: 
+"mitydigital/feedamic": "^2.0",
 ```
 
 The run `composer update`.
@@ -147,13 +162,6 @@ php please rss-cache:clear
 # v2 command
 php please feedamic:clear
 ```
-
-### Upgrading from v2.0.0 to v2.0.1
-
-The config file has moved. This will be done as part of the upgrade process. Update your composer, and everything should
-be smooth sailing.
-
-Refer to the console output for any issues.
 
 ### Upgrading from v1.3
 
