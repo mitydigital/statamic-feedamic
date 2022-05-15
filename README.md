@@ -24,7 +24,7 @@ composer require mitydigital/feedamic
 You will need to publish the configuration file:
 
 ```
-php artisan vendor:publish --provider="MityDigital\Feedamic\ServiceProvider" --tag=config
+php artisan vendor:publish --tag=feedamic-config
 ```
 
 You **must** set the `title` and `description` values for the feed.
@@ -104,11 +104,8 @@ However there are some ***breaking changes*** with this update.
 First of all, update your composer.json file:
 
 ```json
-# Change from:
-"mitydigital/statamic-rss-feed": "^1.0",
-
-# Update to:
-"mitydigital/feedamic": "^2.0",
+# Change from: "mitydigital/statamic-rss-feed": "^1.0",
+# Update to: "mitydigital/feedamic": "^2.0",
 ```
 
 The run `composer update`.
@@ -150,6 +147,13 @@ php please rss-cache:clear
 # v2 command
 php please feedamic:clear
 ```
+
+### Upgrading from v2.0.0 to v2.0.1
+
+The config file has moved. This will be done as part of the upgrade process. Update your composer, and everything should
+be smooth sailing.
+
+Refer to the console output for any issues.
 
 ### Upgrading from v1.3
 

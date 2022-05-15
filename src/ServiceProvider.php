@@ -30,14 +30,8 @@ class ServiceProvider extends AddonServiceProvider
         Feedamic::class,
     ];
 
-    public function boot()
-    {
-        parent::boot();
-
-        $this->mergeConfigFrom(__DIR__.'/../config/feedamic.php', 'statamic.feedamic');
-
-        $this->publishes([
-            __DIR__.'/../config/feedamic.php' => config_path('statamic/feedamic.php')
-        ], 'config');
-    }
+    protected $updateScripts = [
+        // v2.0.1
+        \MityDigital\Feedamic\UpdateScripts\v2_0_1\MoveConfigFile::class
+    ];
 }

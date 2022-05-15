@@ -91,12 +91,12 @@ class FeedEntry
                 'absolute' => true,
                 'src'      => $this->image->url(),
                 'alt'      => $this->title,
-                'width'    => config('statamic.feedamic.image.width', 1280),
-                'height'   => config('statamic.feedamic.image.height', 720)
+                'width'    => feedamic.image.width', 1280),
+                'height'   => feedamic.image.height', 720)
             ]);
             $glide->generate();
 
-            $summary = '<p><img src="'.$glide->index().'" alt="'.$this->title(true).'" width="'.config('statamic.feedamic.image.width', 1280).'" height="'.config('statamic.feedamic.image.height', 720).'" style="display:block; width:100%; max-width:100%; height:auto;" /></p>'.$summary;
+            $summary = '<p><img src="'.$glide->index().'" alt="'.$this->title(true).'" width="'.feedamic.image.width', 1280).'" height="'.feedamic.image.height', 720).'" style="display:block; width:100%; max-width:100%; height:auto;" /></p>'.$summary;
         }
 
         // do we encode?

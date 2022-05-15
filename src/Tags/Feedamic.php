@@ -14,7 +14,7 @@ class Feedamic extends Tags
     public function index()
     {
         $links = [];
-        foreach (config('statamic.feedamic.routes') as $type => $route) {
+        foreach (feedamic.routes') as $type => $route) {
             $mime = 'application/xml';
             switch($type)
             {
@@ -26,7 +26,7 @@ class Feedamic extends Tags
                     break;
             }
 
-            $links[] = '<link rel="alternate" type="'.$mime.'" title="'.config('statamic.feedamic.title').'"  href="'.$route.'" />';
+            $links[] = '<link rel="alternate" type="'.$mime.'" title="'.feedamic.title').'"  href="'.$route.'" />';
         }
 
         return implode("\r\n", $links);

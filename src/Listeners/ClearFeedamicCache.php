@@ -13,10 +13,10 @@ class ClearFeedamicCache implements ShouldQueue
      */
     public function handle(EntrySaved $event)
     {
-        if (in_array($event->entry->collection()->handle(), config('statamic.feedamic.collections'))) {
-            Cache::forget(config('statamic.feedamic.cache'));
-            Cache::forget(config('statamic.feedamic.cache').'.atom');
-            Cache::forget(config('statamic.feedamic.cache').'.rss');
+        if (in_array($event->entry->collection()->handle(), feedamic.collections'))) {
+            Cache::forget(feedamic.cache'));
+            Cache::forget(feedamic.cache').'.atom');
+            Cache::forget(feedamic.cache').'.rss');
         }
     }
 }
