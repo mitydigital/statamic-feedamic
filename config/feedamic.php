@@ -59,6 +59,7 @@ return [
             |   - copyright
             |   - image
             |   - language
+            |   - limit
             |   - summary
             */
             /*
@@ -66,7 +67,10 @@ return [
             'summary' => [
                 'short_intro',
                 'introduction'
-            ]
+            ],
+
+            Or, only allowing 10 entries to be returned for a specific feed
+            'limit' => 10
              */
 
         ],
@@ -205,5 +209,20 @@ return [
     |
     */
 
-    'language' => 'en'
+    'language' => 'en',
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | DEFAULTS: Limit
+    |--------------------------------------------------------------------------
+    |
+    | This is the default that applies to all configured 'feeds', unless overwritten
+    | for a specific feed configuration.
+    |
+    | Limits the number of entries returned in a feed.
+    |
+    */
+
+    'limit' => null
 ];

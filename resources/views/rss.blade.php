@@ -25,7 +25,7 @@
                     <description><![CDATA[{!! $entry->summary(false) !!}]]></description>
                 @endif
 
-                @if ($author_email)
+                @if ($author_email && $entry->author->email())
                     <author>{{ $entry->author->email() }}</author>
                 @endif
 

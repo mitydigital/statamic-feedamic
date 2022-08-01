@@ -49,7 +49,7 @@ class FeedamicController extends Controller
         $xml = Cache::rememberForever($cacheXml, function () use ($cacheEntries, $feed, $type) {
             // get the entries
             $entries = Cache::rememberForever($cacheEntries, fn() => $this->loadFeedEntries($feed));
-            
+
             // get the base url for the feed - this is the <id>, and must be a canonical representation
             $uri = config('app.url');
             if (substr($uri, -1) != '/') {
@@ -114,11 +114,12 @@ class FeedamicController extends Controller
             $collections = config('feedamic.collections');
         }
 
-        $entries = collect($collections)->flatMap(function ($handle) {
+        $entries = collect($collections)->flatMap(function ($handle) use ($feed) {
             // load the entries for this collection
             return Collection::findByHandle($handle)
                 ->queryEntries()
-                ->orderBy('updated_at', 'desc')
+                ->orderBy('published_at', 'desc')
+                ->limit($this->getConfigValue($feed, 'limit', null, true))
                 ->get()
                 ->filter(function (Entry $entry) {
                     // is the entry published?
@@ -144,9 +145,9 @@ class FeedamicController extends Controller
                     // this far, we keep it
                     return true;
                 })
-                ->map(function (Entry $entry) {
+                ->map(function (Entry $entry) use ($feed) {
                     // get summary fields
-                    $summaryFields = config('feedamic.summary');
+                    $summaryFields = $this->getConfigValue($feed, 'summary', [], true);
                     if (is_string($summaryFields)) {
                         $summaryFields = [$summaryFields];
                     } elseif (is_bool($summaryFields)) {
@@ -154,7 +155,7 @@ class FeedamicController extends Controller
                     }
 
                     // get image fields
-                    $imageFields = config('feedamic.image.fields');
+                    $imageFields = $this->getConfigValue($feed, 'image.fields', [], true);
                     if (is_string($imageFields)) {
                         $imageFields = [$imageFields];
                     } elseif (is_bool($imageFields) || is_null($imageFields)) {
@@ -162,7 +163,21 @@ class FeedamicController extends Controller
                     }
 
                     // get author field
-                    $authorField = config('feedamic.author.handle');
+                    $authorField = $this->getConfigValue($feed, 'author.handle', false);
+
+                    // set up as if it were the basic sort
+                    /*$authorField = $authorConfig;
+                    $authorType = 'basic';
+
+                    // if we have config
+                    if ($authorConfig) {
+                        // if it is a string, it's the new type
+                        if (is_string($authorConfig)) {
+                            $authorType = 'class';
+                            $authorField = new $authorConfig($entry);
+                        }
+                    }*/
+
 
                     // add the title to the augmented fields
                     $summaryFields[] = 'title';
@@ -218,15 +233,22 @@ class FeedamicController extends Controller
                             if ($entryArray[$authorField]->raw()) {
                                 // adds support for user collections (if there are multiple) although the template will only
                                 // output the first author
-                                if (method_exists($entryArray[$authorField],
-                                        'value') && get_class($entryArray[$authorField]->value()) == 'Statamic\Query\OrderedQueryBuilder') {
-                                    $author = new FeedEntryAuthor($entryArray[$authorField]->value()->get());
+                                if (method_exists($entryArray[$authorField], 'value')
+                                    && $entryArray[$authorField]->value()
+                                    && get_class($entryArray[$authorField]->value()) == 'Statamic\Query\OrderedQueryBuilder') {
+                                    // only include if there is at least one
+                                    if ($entryArray[$authorField]->value()->count()) {
+                                        $author = new FeedEntryAuthor($entryArray[$authorField]->value()->get(), $feed);
+                                    }
                                 } else {
-                                    $author = new FeedEntryAuthor($entryArray[$authorField]->value());
+                                    if ($entryArray[$authorField]->value()) {
+                                        $author = new FeedEntryAuthor($entryArray[$authorField]->value(), $feed);
+                                    }
                                 }
                             }
                         }
                     }
+
 
                     // create a feed entry object
                     return new FeedEntry([

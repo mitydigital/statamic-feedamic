@@ -32,7 +32,7 @@
             <content src="{{ $entry->uri }}" type="text/html"></content>
             @if ($entry->author)
                 <author>
-                    <name>{{ $entry->author->name() }}</name>@if ($author_email)
+                    <name>{{ $entry->author->name() }}</name>@if ($author_email && $entry->author->email())
                         <email>{{ $entry->author->email() }}</email>
                     @endif
 
