@@ -9,7 +9,7 @@
 
 <!-- /statamic:hide -->
 
-> Feedamic is an Atom and RSS feed for Statamic 3
+> Feedamic is an Atom and RSS feed for Statamic 3.3
 
 ## Installation
 
@@ -106,6 +106,18 @@ These will publish to your `resources/views/vendor/mitydigital/feedamic` folder.
 
 ## Upgrade Notes
 
+### Upgrading to v2.2.0
+
+v2.2.0 adds support for multiple feeds - if you want it.
+
+New installs will use the new configuration file format, however older installs will still work just fine.
+
+If you want to
+
+**Important**: if you have published the views for some reason, multiple feed support has seen these updated to have
+variables rather than config calls so that defaults can be passed too. Check out the source views for the updated
+templates.
+
 ### Upgrading from v2.0.0 to v2.1.0
 
 There are two changes - one minor, the config file, and one potentially more major, the views.
@@ -127,11 +139,8 @@ However there are some ***breaking changes*** with this update.
 First of all, update your composer.json file:
 
 ```json
-# Change from: 
-"mitydigital/statamic-rss-feed": "^1.0",
-        
-# Update to: 
-"mitydigital/feedamic": "^2.0",
+# Change from: "mitydigital/statamic-rss-feed": "^1.0",
+# Update to: "mitydigital/feedamic": "^2.0",
 ```
 
 The run `composer update`.
@@ -209,6 +218,7 @@ help you. So be awesome - it'll feel fantastic.
 ## Credits
 
 - [Marty Friedel](https://github.com/martyf)
+- [Jack Sleight](https://github.com/jacksleight) for input, chats and ideas
 
 ## License
 

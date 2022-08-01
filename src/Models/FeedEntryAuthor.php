@@ -2,6 +2,9 @@
 
 namespace MityDigital\Feedamic\Models;
 
+use Illuminate\Support\Collection;
+use Statamic\Auth\UserCollection;
+
 class FeedEntryAuthor
 {
     public $author;
@@ -46,11 +49,6 @@ class FeedEntryAuthor
         return $this->name;
     }
 
-    public function email()
-    {
-        return $this->getProperty('email');
-    }
-
     public function getProperty($handle)
     {
         $author = $this->author;
@@ -58,8 +56,8 @@ class FeedEntryAuthor
         if (!$author) {
             return '';
         }
-
-        if (get_class($author) == \Illuminate\Support\Collection::class) {
+        
+        if (get_class($author) == Collection::class || get_class($author) == UserCollection::class) {
             $author = $author->first();
         }
 
@@ -71,5 +69,10 @@ class FeedEntryAuthor
             default:
                 return $author->value($handle);
         }
+    }
+
+    public function email()
+    {
+        return $this->getProperty('email');
     }
 }

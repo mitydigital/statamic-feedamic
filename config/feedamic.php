@@ -4,36 +4,72 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Routes
+    | Feeds
     |--------------------------------------------------------------------------
     |
     | Ability to define Atom and RSS feed routes.
     |
-    | The key is the feed type, and the value is the route.
+    | You can create as many feeds as you like in the key:value setup, and even
+    | override some defaults (or use defaults) to make your config simpler.
     |
-    | By default, an atom and RSS 2.0 feed will be generated.
-    |
-    | Remove from the array to disable a specific feed type.
-    |
-    */
-
-    'routes' => [
-        'atom' => '/feed/atom',
-        'rss'  => '/feed'
-    ],
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Collections
-    |--------------------------------------------------------------------------
-    |
-    | An array of collections to include in the feed.
+    | The key is used as a reference to your feed, and is used as part of the
+    | cache key for the feed.
     |
     */
 
-    'collections' => [
-        'blog'
+    'feeds' => [
+        'blog' => [
+            /*
+            | The title for the feed
+            */
+            'title' => '',
+
+            /*
+            | The description (RSS) or subtitle (Atom) for the feed
+            */
+            'description' => '',
+
+            /*
+            | Define the Atom and RSS routes for the feed.
+            | By default, an atom and RSS 2.0 feed will be generated.
+            | Remove from the array to disable a specific feed type.
+            */
+            'routes' => [
+                'atom' => '/feed/atom',
+                'rss' => '/feed'
+            ],
+
+            /*
+            | The alternative link used. If omitted, will be the app.url value - which is fine too
+            */
+            'alt_url' => '',
+
+            /*
+            | An array of collections to include in the feed
+            | Remove from the array to disable a specific feed type.
+            */
+            'collections' => [
+                'blog'
+            ],
+
+            /*
+            | You can also override the following configuration for feed-specific
+            | values:
+            |   - author
+            |   - copyright
+            |   - image
+            |   - language
+            |   - summary
+            */
+            /*
+            For example, this summary would only apply to this feed:
+            'summary' => [
+                'short_intro',
+                'introduction'
+            ]
+             */
+
+        ],
     ],
 
 
@@ -42,7 +78,9 @@ return [
     | Cache Key
     |--------------------------------------------------------------------------
     |
-    | The base cache key for output. Will be cached forever until EventSaved is fired.
+    | The base cache key for output.
+    |
+    | Will be cached forever until EventSaved is fired, or you manually clear the cache.
     |
     */
 
@@ -51,32 +89,11 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Title
+    | DEFAULTS: Summary
     |--------------------------------------------------------------------------
     |
-    | The title for the feed
-    |
-    */
-
-    'title' => '',
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Description
-    |--------------------------------------------------------------------------
-    |
-    | The description (RSS) or subtitle (Atom) for the feed
-    |
-    */
-
-    'description' => '',
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Summary
-    |--------------------------------------------------------------------------
+    | This is the default that applies to all configured 'feeds', unless overwritten
+    | for a specific feed configuration.
     |
     | A list of blueprint fields to look at to try to build the "summary" for the feed.
     |
@@ -94,8 +111,11 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Image
+    | DEFAULTS: Image
     |--------------------------------------------------------------------------
+    |
+    | This is the default that applies to all configured 'feeds', unless overwritten
+    | for a specific feed configuration.
     |
     | Configuration options for the image to be injected in to the "summary" for the entry.
     |
@@ -113,15 +133,18 @@ return [
             'hero',
             'meta_og_image'
         ],
-        'width'  => 1280,
+        'width' => 1280,
         'height' => 720
     ],
 
 
     /*
     |--------------------------------------------------------------------------
-    | Author
+    | DEFAULTS: Author
     |--------------------------------------------------------------------------
+    |
+    | This is the default that applies to all configured 'feeds', unless overwritten
+    | for a specific feed configuration.
     |
     | Sets the lookup of an author field.
     |
@@ -142,17 +165,20 @@ return [
         'handle' => 'author',
 
         // true to include the email in the feed, false to exclude - atom only
-        'email'  => false,
+        'email' => false,
 
         // the name pattern to use for the author name
-        'name'   => '[name]',
+        'name' => '[name]',
     ],
 
 
     /*
     |--------------------------------------------------------------------------
-    | Copyright
+    | DEFAULTS: Copyright
     |--------------------------------------------------------------------------
+    |
+    | This is the default that applies to all configured 'feeds', unless overwritten
+    | for a specific feed configuration.
     |
     | A string to output to the <copyright> (RSS) or <rights> (Atom) feed.
     |
@@ -165,8 +191,11 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Language
+    | DEFAULTS: Language
     |--------------------------------------------------------------------------
+    |
+    | This is the default that applies to all configured 'feeds', unless overwritten
+    | for a specific feed configuration.
     |
     | Marks the feed as being in a specific language.
     |
