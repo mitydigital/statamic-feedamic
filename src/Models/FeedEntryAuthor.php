@@ -2,6 +2,9 @@
 
 namespace MityDigital\Feedamic\Models;
 
+use Illuminate\Support\Collection;
+use Statamic\Data\DataCollection;
+
 class FeedEntryAuthor
 {
     public $author;
@@ -10,13 +13,17 @@ class FeedEntryAuthor
     protected $template;
     protected $name;
 
-    public function __construct($author)
+    public function __construct($author, $feed = null)
     {
         // set the author
         $this->author = $author;
 
         // get the name template
-        $this->template = config('feedamic.author.name');
+        if (config()->has('feedamic.feeds.'.$feed.'.author')) {
+            $this->template = config('feedamic.feeds.'.$feed.'.author.name');
+        } else {
+            $this->template = config('feedamic.author.name');
+        }
 
         // find the tokens needed for the template
         preg_match_all("/\[[^\]]*\]/", $this->template, $authorNameTokens);
@@ -46,11 +53,6 @@ class FeedEntryAuthor
         return $this->name;
     }
 
-    public function email()
-    {
-        return $this->getProperty('email');
-    }
-
     public function getProperty($handle)
     {
         $author = $this->author;
@@ -59,17 +61,35 @@ class FeedEntryAuthor
             return '';
         }
 
-        if (get_class($author) == \Illuminate\Support\Collection::class) {
+        // if it is a simple collection, or a Statamic Data Collection (i.e. Taxonomy Terms, Entries, Users, etc)
+        if (get_class($author) == Collection::class || is_subclass_of($author, DataCollection::class)) {
             $author = $author->first();
+        }
+
+        if (!$author) {
+            return '';
         }
 
         switch ($handle) {
             case 'email':
-                return $author->email();
+                if (method_exists($author, 'email')) {
+                    return $author->email();
+                } else {
+                    return $author->value($handle);
+                }
             case 'id':
-                return $author->id();
+                if (method_exists($author, 'id')) {
+                    return $author->id();
+                } else {
+                    return $author->value($handle);
+                }
             default:
                 return $author->value($handle);
         }
+    }
+
+    public function email()
+    {
+        return $this->getProperty('email');
     }
 }
