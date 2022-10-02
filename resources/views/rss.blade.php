@@ -5,7 +5,7 @@
         <link>{{ $alt_url }}</link>
         <atom:link href="{{ $href }}" rel="self" type="application/rss+xml"/>
         @if($updated)
-            <lastBuildDate>{{ $updated->toRfc822String() }}</lastBuildDate>
+            <lastBuildDate>{{ $updated->toRfc2822String() }}</lastBuildDate>
         @endif
 
         <language>{{ $language }}</language>
@@ -25,7 +25,7 @@
                     <description><![CDATA[{!! $entry->summary(false) !!}]]></description>
                 @endif
 
-                @if ($author_email && $entry->author->email())
+                @if ($author_email && $entry->author && $entry->author->email())
                     <author>{{ $entry->author->email() }}</author>
                 @endif
 
