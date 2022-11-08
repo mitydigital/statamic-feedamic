@@ -30,6 +30,7 @@ help you. So be awesome - it'll feel fantastic.
 
 - [Marty Friedel](https://github.com/martyf)
 - [Jack Sleight](https://github.com/jacksleight) for input, chats and ideas
+- [Sm1lEE](https://github.com/Sm1lEE) for locale support
 
 ## License
 
