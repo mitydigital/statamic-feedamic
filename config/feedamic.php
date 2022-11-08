@@ -242,6 +242,7 @@ return [
     | 'locales' => 'current'
     |
     | When not set or null, all locales will be included.
+    |
     */
 
     'locales' => null,
