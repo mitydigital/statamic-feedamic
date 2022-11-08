@@ -12,6 +12,7 @@ use MityDigital\Feedamic\Models\FeedEntry;
 use MityDigital\Feedamic\Models\FeedEntryAuthor;
 use Statamic\Entries\Entry;
 use Statamic\Facades\Collection;
+use Statamic\Facades\Site;
 use Statamic\Facades\URL;
 
 class FeedamicController extends Controller
@@ -114,10 +115,19 @@ class FeedamicController extends Controller
             $collections = config('feedamic.collections');
         }
 
-        $entries = collect($collections)->flatMap(function ($handle) use ($feed) {
+        // filter entries by their locales; include all locales by default
+        $locales = $this->getConfigValue($feed, 'locales', '*', true);
+        // dynamically get current site handle for special locales value 'current'
+        $locales = $locales === 'current' ? [Site::current()->handle()] : $locales;
+
+        $entries = collect($collections)->flatMap(function ($handle) use ($feed, $locales) {
             // load the entries for this collection
             return Collection::findByHandle($handle)
                 ->queryEntries()
+                ->when($locales !== '*', function ($query) use ($locales) {
+                    // only apply locale filter if its value is not a wildcard
+                    return $query->whereIn('locale', $locales);
+                })
                 ->orderBy('published_at', 'desc')
                 ->limit($this->getConfigValue($feed, 'limit', null, true))
                 ->get()
@@ -254,7 +264,7 @@ class FeedamicController extends Controller
                     return new FeedEntry([
                         'title' => $entryArray['title']->value(),
                         'author' => $author,
-                        'uri' => config('app.url').$entry->uri(),
+                        'uri' => $entry->absoluteUrl(),
                         'summary' => $summary,
                         'image' => $image,
                         'published' => $entry->date(),
