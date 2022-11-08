@@ -224,5 +224,25 @@ return [
     |
     */
 
-    'limit' => null
+    'limit' => null,
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | DEFAULTS: Locales
+    |--------------------------------------------------------------------------
+    |
+    | This is the default that applies to all configured 'feeds', unless overwritten
+    | for a specific feed configuration.
+    |
+    | Limits the entries local to a list of locales, e. g.
+    | 'locales' => ['com', 'uk']
+    |
+    | To include only the current locale, provide the special 'current' string:
+    | 'locales' => 'current'
+    |
+    | When not set or null, all locales will be included.
+    */
+
+    'locales' => null,
 ];
