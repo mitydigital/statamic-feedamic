@@ -4,6 +4,7 @@ namespace MityDigital\Feedamic\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
+use MityDigital\Feedamic\Facades\Feedamic;
 use Statamic\Console\RunsInPlease;
 
 class ClearCacheCommand extends Command
@@ -35,39 +36,40 @@ class ClearCacheCommand extends Command
         if (count($feeds) > 0) {
             // clear the specific feeds only
             $cleared = [];
+
             foreach ($feeds as $feed) {
-                foreach (config('feedamic.feeds.'.$feed.'.routes', []) as $type => $route) {
-                    Cache::forget(config('feedamic.cache').'.'.$feed.'.'.$type);
-                    Cache::forget(config('feedamic.cache').'.'.$feed);
-                    if (!in_array('"'.$feed.'"', $cleared)) {
-                        $cleared[] = '"'.$feed.'"';
-                    }
+                if (config('feedamic.feeds.' . $feed) === null) {
+                    continue;
                 }
+
+                $types = array_keys(config('feedamic.feeds.' . $feed)['routes']);
+                $cacheKeys = Feedamic::getCacheClearingKeys($feed, $types);
+
+                foreach ($cacheKeys as $cacheKey) {
+                    Cache::forget($cacheKey);
+                }
+
+                $cleared[] = '"' . $feed . '"';
             }
 
-            // make it prettier
-            // Arr::join came in Laravel 9 - so do it manually for L8 support
-            if (count($cleared) > 1) {
-                $lastCleared = array_pop($cleared);
-                $cleared = implode(', ', $cleared).' and '.$lastCleared;
-            } else {
-                $cleared = end($cleared);
-            }
+            $cleared = implode(' and ', $cleared);
 
-            $this->info('Ah-choo... feeds for '.$cleared.' are clear.');
+            $this->info('Ah-choo... feeds for ' . $cleared . ' are clear.');
         } else {
             // Clear specific feeds caches
             foreach (config('feedamic.feeds', []) as $feed => $config) {
-                foreach ($config['routes'] as $type => $route) {
-                    Cache::forget(config('feedamic.cache').'.'.$feed.'.'.$type);
-                    Cache::forget(config('feedamic.cache').'.'.$feed);
+                $types = array_keys($config['routes']);
+                $cacheKeys = Feedamic::getCacheClearingKeys($feed, $types);
+
+                foreach ($cacheKeys as $cacheKey) {
+                    Cache::forget($cacheKey);
                 }
             }
 
             // Pre-2.2 clearing of cache
             Cache::forget(config('feedamic.cache'));
-            Cache::forget(config('feedamic.cache').'.atom');
-            Cache::forget(config('feedamic.cache').'.rss');
+            Cache::forget(config('feedamic.cache') . '.atom');
+            Cache::forget(config('feedamic.cache') . '.rss');
 
             $this->info('Ah-choo... it\'s all gone.');
         }

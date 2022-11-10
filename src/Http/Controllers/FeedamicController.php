@@ -7,12 +7,11 @@ use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Cache;
-use MityDigital\Feedamic\Feedamic;
+use MityDigital\Feedamic\Facades\Feedamic;
 use MityDigital\Feedamic\Models\FeedEntry;
 use MityDigital\Feedamic\Models\FeedEntryAuthor;
 use Statamic\Entries\Entry;
 use Statamic\Facades\Collection;
-use Statamic\Facades\Site;
 use Statamic\Facades\URL;
 
 class FeedamicController extends Controller
@@ -36,20 +35,13 @@ class FeedamicController extends Controller
      */
     protected function getXml($feed, $type)
     {
-        if (Feedamic::version() >= '2.2.0' && $feed) {
-            // v2.2 or above
-            $cacheXml = config('feedamic.cache').'.'.$feed.'.'.$type;
-            $cacheEntries = config('feedamic.cache').'.'.$feed;
-        } else {
-            // v2.1 or below
-            $cacheXml = config('feedamic.cache').'.'.$type;
-            $cacheEntries = config('feedamic.cache');
-        }
+        $cacheXml = Feedamic::getCacheKey($feed, $type);
+        $cacheEntries = Feedamic::getCacheKey($feed);
 
         // build the xml
         $xml = Cache::rememberForever($cacheXml, function () use ($cacheEntries, $feed, $type) {
             // get the entries
-            $entries = Cache::rememberForever($cacheEntries, fn() => $this->loadFeedEntries($feed));
+            $entries = Cache::rememberForever($cacheEntries, fn () => $this->loadFeedEntries($feed));
 
             // get the base url for the feed - this is the <id>, and must be a canonical representation
             $uri = config('app.url');
@@ -59,17 +51,17 @@ class FeedamicController extends Controller
 
             // get params, fallbacks or defaults
             $params = [
-                'title' => $this->getConfigValue($feed, 'title'),
-                'description' => $this->getConfigValue($feed, 'description'),
-                'language' => $this->getConfigValue($feed, 'language'),
-                'alt_url' => URL::makeAbsolute($this->getConfigValue($feed, 'alt_url', config('app.url'), true)),
-                'href' => URL::makeAbsolute($this->getConfigValue($feed, 'routes.atom')),
-                'copyright' => $this->getConfigValue($feed, 'copyright'),
-                'author_email' => $this->getConfigValue($feed, 'author.email')
+                'title' => Feedamic::getConfigValue($feed, 'title'),
+                'description' => Feedamic::getConfigValue($feed, 'description'),
+                'language' => Feedamic::getConfigValue($feed, 'language'),
+                'alt_url' => URL::makeAbsolute(Feedamic::getConfigValue($feed, 'alt_url', config('app.url'), true)),
+                'href' => URL::makeAbsolute(Feedamic::getConfigValue($feed, 'routes.atom')),
+                'copyright' => Feedamic::getConfigValue($feed, 'copyright'),
+                'author_email' => Feedamic::getConfigValue($feed, 'author.email')
             ];
 
             // return the Atom view
-            $xml = view('mitydigital/feedamic::'.$type, array_merge([
+            $xml = view('mitydigital/feedamic::' . $type, array_merge([
                 'id' => $uri
             ], array_merge($params, $entries)))->render();
 
@@ -85,7 +77,7 @@ class FeedamicController extends Controller
                 $tidy->cleanRepair();
 
                 // return tidy as a string
-                return ''.$tidy;
+                return '' . $tidy;
             }
 
             // otherwise just return some plain jane xml
@@ -93,9 +85,9 @@ class FeedamicController extends Controller
         });
 
         // add the XML header
-        $xml = '<?xml version="1.0" encoding="UTF-8"?>'."\n".$xml;
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n" . $xml;
 
-        return response($xml, 200, ['Content-Type' => 'application/'.$type.'+xml; charset=UTF-8']);
+        return response($xml, 200, ['Content-Type' => 'application/' . $type . '+xml; charset=UTF-8']);
     }
 
     /**
@@ -107,18 +99,10 @@ class FeedamicController extends Controller
      */
     protected function loadFeedEntries(string $feed = null)
     {
-        if (Feedamic::version() >= '2.2.0' && $feed) {
-            // v2.2 or above
-            $collections = config('feedamic.feeds.'.$feed.'.collections');
-        } else {
-            // v2.1 or below
-            $collections = config('feedamic.collections');
-        }
+        $collections = Feedamic::getCollections($feed);
 
-        // filter entries by their locales; include all locales by default
-        $locales = $this->getConfigValue($feed, 'locales', '*', true);
-        // dynamically get current site handle for special locales value 'current'
-        $locales = $locales === 'current' ? [Site::current()->handle()] : $locales;
+        // get configured locales for multi-site support
+        $locales = Feedamic::getLocales($feed);
 
         $entries = collect($collections)->flatMap(function ($handle) use ($feed, $locales) {
             // load the entries for this collection
@@ -129,7 +113,6 @@ class FeedamicController extends Controller
                     return $query->whereIn('locale', $locales);
                 })
                 ->orderBy('published_at', 'desc')
-                ->limit($this->getConfigValue($feed, 'limit', null, true))
                 ->get()
                 ->filter(function (Entry $entry) {
                     // is the entry published?
@@ -155,9 +138,10 @@ class FeedamicController extends Controller
                     // this far, we keep it
                     return true;
                 })
+                ->limit(Feedamic::getConfigValue($feed, 'limit', null, true))
                 ->map(function (Entry $entry) use ($feed) {
                     // get summary fields
-                    $summaryFields = $this->getConfigValue($feed, 'summary', [], true);
+                    $summaryFields = Feedamic::getConfigValue($feed, 'summary', [], true);
                     if (is_string($summaryFields)) {
                         $summaryFields = [$summaryFields];
                     } elseif (is_bool($summaryFields)) {
@@ -165,7 +149,7 @@ class FeedamicController extends Controller
                     }
 
                     // get image fields
-                    $imageFields = $this->getConfigValue($feed, 'image.fields', [], true);
+                    $imageFields = Feedamic::getConfigValue($feed, 'image.fields', [], true);
                     if (is_string($imageFields)) {
                         $imageFields = [$imageFields];
                     } elseif (is_bool($imageFields) || is_null($imageFields)) {
@@ -173,7 +157,7 @@ class FeedamicController extends Controller
                     }
 
                     // get author field
-                    $authorField = $this->getConfigValue($feed, 'author.handle', false);
+                    $authorField = Feedamic::getConfigValue($feed, 'author.handle', false);
 
                     // set up as if it were the basic sort
                     /*$authorField = $authorConfig;
@@ -243,9 +227,11 @@ class FeedamicController extends Controller
                             if ($entryArray[$authorField]->raw()) {
                                 // adds support for user collections (if there are multiple) although the template will only
                                 // output the first author
-                                if (method_exists($entryArray[$authorField], 'value')
+                                if (
+                                    method_exists($entryArray[$authorField], 'value')
                                     && $entryArray[$authorField]->value()
-                                    && get_class($entryArray[$authorField]->value()) == 'Statamic\Query\OrderedQueryBuilder') {
+                                    && get_class($entryArray[$authorField]->value()) == 'Statamic\Query\OrderedQueryBuilder'
+                                ) {
                                     // only include if there is at least one
                                     if ($entryArray[$authorField]->value()->count()) {
                                         $author = new FeedEntryAuthor($entryArray[$authorField]->value()->get(), $feed);
@@ -288,46 +274,6 @@ class FeedamicController extends Controller
             'entries' => $entries,
             'updated' => $lastUpdated
         ];
-    }
-
-    /**
-     * Some helper logic to get the config (or a fallback) from the Feedamic config array
-     *
-     * @param  string|null  $feed
-     * @param  string  $key
-     * @param  mixed|null  $default
-     * @param  bool|null  $useDefaultIfEmpty
-     * @return \Illuminate\Config\Repository|Application|mixed
-     */
-    protected function getConfigValue(
-        string|null $feed,
-        string $key,
-        mixed $default = null,
-        bool $useDefaultIfEmpty = null
-    ) {
-        // set the location
-        $location = '';
-
-        // do we have a feed, and does the "feeds" config exist?
-        if (Feedamic::version() >= '2.2.0' && $feed && config('feedamic.feeds', false)) {
-            // if so, does the key exist in there?
-            if (config()->has('feedamic.feeds.'.$feed.'.'.$key)) {
-                $location = 'feedamic.feeds.'.$feed.'.'.$key;
-            }
-        }
-
-        if (!$location) {
-            // no 'feeds', so look for the core value
-            $location = 'feedamic.'.$key;
-        }
-
-        $value = config($location, $default);
-
-        if ($useDefaultIfEmpty && $default && !$value) {
-            return $default;
-        }
-
-        return $value;
     }
 
     /**
