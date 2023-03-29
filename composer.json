@@ -1,36 +1,36 @@
 {
-    "name": "mitydigital/feedamic",
-    "description": "The Atom and RSS feed generator for Statamic.",
-    "type": "statamic-addon",
-    "keywords": [
-        "statamic",
-        "rss",
-        "atom"
-    ],
-    "autoload": {
-        "psr-4": {
-            "MityDigital\\Feedamic\\": "src"
-        }
-    },
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Marty Friedel"
-        }
-    ],
-    "require": {
-		"php": "^8.0",
-        "statamic/cms": "^3.3"
-    },
-    "extra": {
-        "statamic": {
-            "name": "Feedamic",
-            "description": "A simple RSS feed for a given collection in Statamic 3."
-        },
-        "laravel": {
-            "providers": [
-                "MityDigital\\Feedamic\\ServiceProvider"
-            ]
-        }
+  "name": "mitydigital/feedamic",
+  "description": "The Atom and RSS feed generator for Statamic.",
+  "type": "statamic-addon",
+  "keywords": [
+    "statamic",
+    "rss",
+    "atom"
+  ],
+  "autoload": {
+    "psr-4": {
+      "MityDigital\\Feedamic\\": "src"
     }
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Marty Friedel"
+    }
+  ],
+  "require": {
+    "php": "^8.0",
+    "statamic/cms": "^3.3|^4.0"
+  },
+  "extra": {
+    "statamic": {
+      "name": "Feedamic",
+      "description": "A simple RSS feed for a given collection in Statamic 3."
+    },
+    "laravel": {
+      "providers": [
+        "MityDigital\\Feedamic\\ServiceProvider"
+      ]
+    }
+  }
 }
