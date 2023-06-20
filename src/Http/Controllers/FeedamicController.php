@@ -2,7 +2,6 @@
 
 namespace MityDigital\Feedamic\Http\Controllers;
 
-use Illuminate\Config\Repository;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Response;
@@ -11,12 +10,10 @@ use Illuminate\Support\Facades\Cache;
 use MityDigital\Feedamic\Feedamic;
 use MityDigital\Feedamic\Models\FeedEntry;
 use MityDigital\Feedamic\Models\FeedEntryAuthor;
-use Statamic\Assets\OrderedQueryBuilder;
 use Statamic\Entries\Entry;
 use Statamic\Facades\Collection;
 use Statamic\Facades\Site;
 use Statamic\Facades\URL;
-use tidy;
 
 class FeedamicController extends Controller
 {
@@ -48,7 +45,7 @@ class FeedamicController extends Controller
             $cacheXml = config('feedamic.cache').'.'.$type;
             $cacheEntries = config('feedamic.cache');
         }
-      
+
         // build the xml
         $xml = Cache::rememberForever($cacheXml, function () use ($cacheEntries, $feed, $type) {
             // get the entries
@@ -78,7 +75,7 @@ class FeedamicController extends Controller
 
             // if the tidy extension exists, use it
             if (extension_loaded('tidy')) {
-                $tidy = new tidy;
+                $tidy = new \tidy;
                 $tidy->parseString($xml, [
                     'indent' => true,
                     'output-xml' => true,
@@ -226,7 +223,7 @@ class FeedamicController extends Controller
                             $image = $entryArray[$imageField]->value();
 
                             // if the image asset allows multiple to be selected, just pick the first one
-                            if ($image && get_class($image) == OrderedQueryBuilder::class) {
+                            if ($image && get_class($image) == \Statamic\Assets\OrderedQueryBuilder::class) {
                                 $image = $image->first();
                             }
 
@@ -300,7 +297,7 @@ class FeedamicController extends Controller
      * @param  string  $key
      * @param  mixed|null  $default
      * @param  bool|null  $useDefaultIfEmpty
-     * @return Repository|Application|mixed
+     * @return \Illuminate\Config\Repository|Application|mixed
      */
     protected function getConfigValue(
         string|null $feed,
