@@ -3,6 +3,7 @@
 namespace MityDigital\Feedamic;
 
 use MityDigital\Feedamic\Commands\ClearCacheCommand;
+use MityDigital\Feedamic\Feedamic as FeedamicFeedamic;
 use MityDigital\Feedamic\Listeners\ClearFeedamicCache;
 use MityDigital\Feedamic\Tags\Feedamic;
 use Statamic\Events\EntrySaved;
@@ -23,7 +24,7 @@ class ServiceProvider extends AddonServiceProvider
     ];
 
     protected $routes = [
-        'web' => __DIR__.'/../routes/web.php',
+        'web' => __DIR__ . '/../routes/web.php',
     ];
 
     protected $tags = [
@@ -40,8 +41,11 @@ class ServiceProvider extends AddonServiceProvider
 
     public function bootAddon()
     {
+        $this->app->singleton(FeedamicFeedamic::class);
+        $this->app->alias(FeedamicFeedamic::class, 'feedamic');
+
         $this->publishes([
-            __DIR__.'/../resources/views' => resource_path('views/vendor/mitydigital/feedamic'),
+            __DIR__ . '/../resources/views' => resource_path('views/vendor/mitydigital/feedamic'),
         ], 'feedamic-views');
     }
 
