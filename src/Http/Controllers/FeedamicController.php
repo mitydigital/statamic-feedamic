@@ -121,40 +121,30 @@ class FeedamicController extends Controller
         $locales = $locales === 'current' ? [Site::current()->handle()] : $locales;
 
         $entries = collect($collections)->flatMap(function ($handle) use ($feed, $locales) {
+            $collection = Collection::findByHandle($handle);
+
             // load the entries for this collection
-            return Collection::findByHandle($handle)
+            return $collection
                 ->queryEntries()
                 ->when($locales !== '*', function ($query) use ($locales) {
                     // only apply locale filter if its value is not a wildcard
                     return $query->whereIn('locale', $locales);
                 })
-                ->orderBy('published_at', 'desc')
+                ->where('published', true)
+                ->where(function ($query) use ($collection) {
+                    if ($collection->futureDateBehavior() === 'private') {
+                        $query->where($collection->sortField(), '<=', now());
+                    }
+
+                    if ($collection->pastDateBehavior() === 'private') {
+                        $query->where($collection->sortField(), '>=', now());
+                    }
+
+                    return $query;
+                })
+                ->orderBy($collection->sortField(), 'desc')
                 ->limit($this->getConfigValue($feed, 'limit', null, true))
                 ->get()
-                ->filter(function (Entry $entry) {
-                    // is the entry published?
-                    if (!$entry->published()) {
-                        return false;
-                    }
-
-                    // if future listings are private, do not include
-                    if ($entry->collection()->futureDateBehavior() == 'private') {
-                        if ($entry->date() > now()) {
-                            return false;
-                        }
-                    }
-
-                    // if past listings are private, do not include
-                    if ($entry->collection()->pastDateBehavior() == 'private') {
-                        if ($entry->date() < now()) {
-                            return false;
-                        }
-                    }
-
-
-                    // this far, we keep it
-                    return true;
-                })
                 ->map(function (Entry $entry) use ($feed) {
                     // get summary fields
                     $summaryFields = $this->getConfigValue($feed, 'summary', [], true);
@@ -187,7 +177,6 @@ class FeedamicController extends Controller
                             $authorField = new $authorConfig($entry);
                         }
                     }*/
-
 
                     // add the title to the augmented fields
                     $summaryFields[] = 'title';
