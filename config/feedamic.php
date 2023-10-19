@@ -54,19 +54,17 @@ return [
 
             /*
             | An array of Taxonomies and Terms to include in the feed.
-            | The key of should be the Taxonomy handle, with an array of Terms
+            | The key of should be the Taxonomy handle, with two properties - logic, and handles (of the tags).
+            |    'taxonomies' => [
+            |        'logic' => 'and', // also could be "or"
+            |        'handles' => [
+            |            'my-tag',
+            |            'another-tag'
+            |        ]
+            |    ]
+            |
              */
-            'taxonomies' => [
-            ],
-
-            /*
-            Here is an example taxonomy configuration for one Taxonomy and two Terms
-            'taxonomies' => [
-                'tags' => [
-                    'my-tag',
-                    'another-tag'
-                ]
-            ]*/
+            'taxonomies' => [],
 
             /*
             | You can also override the following configuration for feed-specific

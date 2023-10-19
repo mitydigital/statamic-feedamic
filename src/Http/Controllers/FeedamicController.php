@@ -6,6 +6,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use MityDigital\Feedamic\Feedamic;
 use MityDigital\Feedamic\Models\FeedEntry;
@@ -131,9 +132,23 @@ class FeedamicController extends Controller
                 ->queryEntries();
 
             // filter by taxonomy terms
-            foreach ($taxonomies as $taxonomy => $terms) {
-                foreach ($terms as $term) {
-                    $queryBuilder = $queryBuilder->whereTaxonomy($taxonomy.'::'.$term);
+            foreach ($taxonomies as $taxonomy => $termsConfig) {
+                $logic = strtolower(Arr::get($termsConfig, 'logic', 'and'));
+                switch($logic)
+                {
+                    case 'and':
+                        foreach (Arr::get($termsConfig, 'handles', []) as $term) {
+                            $queryBuilder = $queryBuilder->whereTaxonomy($taxonomy.'::'.$term);
+                        }
+                        break;
+                    case 'or':
+                        // OR LOGIC
+                        $taxonomyTerms = [];
+                        foreach (Arr::get($termsConfig, 'handles', []) as $term) {
+                            $taxonomyTerms[] = $taxonomy.'::'.$term;
+                        }
+                        $queryBuilder = $queryBuilder->whereTaxonomyIn($taxonomyTerms);
+                        break;
                 }
             }
 
