@@ -115,17 +115,29 @@ class FeedamicController extends Controller
             $collections = config('feedamic.collections');
         }
 
+        // get the taxonomies for later
+        $taxonomies = config('feedamic.feeds.'.$feed.'.taxonomies', []);
+
         // filter entries by their locales; include all locales by default
         $locales = $this->getConfigValue($feed, 'locales', '*', true);
         // dynamically get current site handle for special locales value 'current'
         $locales = $locales === 'current' ? [Site::current()->handle()] : $locales;
 
-        $entries = collect($collections)->flatMap(function ($handle) use ($feed, $locales) {
+        $entries = collect($collections)->flatMap(function ($handle) use ($feed, $locales, $taxonomies) {
             $collection = Collection::findByHandle($handle);
 
             // load the entries for this collection
-            return $collection
-                ->queryEntries()
+            $queryBuilder = $collection
+                ->queryEntries();
+
+            // filter by taxonomy terms
+            foreach ($taxonomies as $taxonomy => $terms) {
+                foreach ($terms as $term) {
+                    $queryBuilder = $queryBuilder->whereTaxonomy($taxonomy.'::'.$term);
+                }
+            }
+
+            $entries = $queryBuilder
                 ->when($locales !== '*', function ($query) use ($locales) {
                     // only apply locale filter if its value is not a wildcard
                     return $query->whereIn('locale', $locales);
@@ -261,7 +273,7 @@ class FeedamicController extends Controller
                     ]);
                 });
 
-            return $e;
+            return $entries;
         })->sortBy('published', SORT_REGULAR, true);
 
         // if we have entries, get the last updated date

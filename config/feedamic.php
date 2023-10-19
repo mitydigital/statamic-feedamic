@@ -53,6 +53,22 @@ return [
             ],
 
             /*
+            | An array of Taxonomies and Terms to include in the feed.
+            | The key of should be the Taxonomy handle, with an array of Terms
+             */
+            'taxonomies' => [
+            ],
+
+            /*
+            Here is an example taxonomy configuration for one Taxonomy and two Terms
+            'taxonomies' => [
+                'tags' => [
+                    'my-tag',
+                    'another-tag'
+                ]
+            ]*/
+
+            /*
             | You can also override the following configuration for feed-specific
             | values:
             |   - author
