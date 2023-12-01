@@ -152,7 +152,8 @@ class FeedamicController extends Controller
                 }
             }
 
-            $entries = $queryBuilder
+            // set up the required query builder behaviour
+            $queryBuilder
                 ->when($locales !== '*', function ($query) use ($locales) {
                     // only apply locale filter if its value is not a wildcard
                     return $query->whereIn('locale', $locales);
@@ -168,7 +169,15 @@ class FeedamicController extends Controller
                     }
 
                     return $query;
-                })
+                });
+
+            // do we have a scope?
+            // if so, let's apply it
+            if ($scope = $this->getConfigValue($feed, 'scope', null)) {
+                app($scope)->apply($queryBuilder, []);
+            }
+
+            $entries = $queryBuilder
                 ->orderBy($collection->sortField(), 'desc')
                 ->limit($this->getConfigValue($feed, 'limit', null, true))
                 ->get()

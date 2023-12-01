@@ -87,6 +87,18 @@ return [
             'limit' => 10
              */
 
+            /*
+            | You can provide a Query Scope to help filter feeds based on additional
+            | Query Builder logic specific to your needs and Blueprints. Create your
+            | scope, and include it as the 'scope' config for your feed, and it will
+            | get applied to Feedamic's query logic when building your feed.
+            |
+            | See https://statamic.dev/extending/query-scopes-and-filters#scopes
+            */
+            /*
+            'scope' => \App\Scopes\MyFeedamicScope::class
+             */
+
         ],
     ],
 
