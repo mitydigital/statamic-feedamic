@@ -174,7 +174,16 @@ class FeedamicController extends Controller
             // do we have a scope?
             // if so, let's apply it
             if ($scope = $this->getConfigValue($feed, 'scope', null)) {
-                app($scope)->apply($queryBuilder, []);
+                $feedConfig = $feed; // fall back to the feed name
+
+                if (Feedamic::version() >= '2.2.0' && $feed && config('feedamic.feeds', false)) {
+                    $feedConfig = config('feedamic.feeds.'.$feed);
+                }
+                else {
+                    $feedConfig = config('feedamic');
+                }
+
+                app($scope)->apply($queryBuilder, $feedConfig);
             }
 
             $entries = $queryBuilder
