@@ -8,6 +8,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\View;
 use MityDigital\Feedamic\Feedamic;
 use MityDigital\Feedamic\Models\FeedEntry;
 use MityDigital\Feedamic\Models\FeedEntryAuthor;
@@ -69,10 +70,20 @@ class FeedamicController extends Controller
                 'author_email' => $this->getConfigValue($feed, 'author.email')
             ];
 
+            $view = 'mitydigital/feedamic::'.$type;
+            if ($viewOverride = $this->getConfigValue($feed, 'view.'.$type, null)) {
+                if (!View::exists($viewOverride)){
+                    throw new \Exception('Configured view for "'.$type.'" does not exist.');
+                }
+
+                $view = $viewOverride;
+            }
+
             // return the Atom view
-            $xml = view('mitydigital/feedamic::'.$type, array_merge([
-                'id' => $uri
-            ], array_merge($params, $entries)))->render();
+            $xml = view(
+                $view,
+                array_merge(['id' => $uri], array_merge($params, $entries)))
+                ->render();
 
             // if the tidy extension exists, use it
             if (extension_loaded('tidy')) {
@@ -180,7 +191,7 @@ class FeedamicController extends Controller
                 } else {
                     $feedConfig = config('feedamic');
                 }
-                
+
                 app($scope)->apply($queryBuilder, $feedConfig);
             }
 

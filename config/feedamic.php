@@ -99,6 +99,22 @@ return [
             'scope' => \App\Scopes\MyFeedamicScope::class
              */
 
+            /*
+            | While you can publish the views and override these globally, there may
+            | be times you want to override a specific feed's view(s). These should
+            | be a valid view within your site (i.e. resources/views/...), and you
+            | can override just one view, or both, or neither. Leave the 'view'
+            | param out of your config to fall back to Feedamic's views.
+            |
+            | See https://docs.mity.com.au/feedamic/views
+            */
+            /*
+            'view' => [
+                'atom' => 'path-to-rss-template',
+                'rss' => 'path-to-atom-template',
+            ]
+            */
+
         ],
     ],
 
