@@ -134,8 +134,7 @@ class FeedamicController extends Controller
             // filter by taxonomy terms
             foreach ($taxonomies as $taxonomy => $termsConfig) {
                 $logic = strtolower(Arr::get($termsConfig, 'logic', 'and'));
-                switch($logic)
-                {
+                switch ($logic) {
                     case 'and':
                         foreach (Arr::get($termsConfig, 'handles', []) as $term) {
                             $queryBuilder = $queryBuilder->whereTaxonomy($taxonomy.'::'.$term);
@@ -177,12 +176,11 @@ class FeedamicController extends Controller
                 $feedConfig = $feed; // fall back to the feed name
 
                 if (Feedamic::version() >= '2.2.0' && $feed && config('feedamic.feeds', false)) {
-                    $feedConfig = config('feedamic.feeds.'.$feed);
-                }
-                else {
+                    $feedConfig = config('feedamic.feeds.'.$feed) + ['handle' => $feed];
+                } else {
                     $feedConfig = config('feedamic');
                 }
-
+                
                 app($scope)->apply($queryBuilder, $feedConfig);
             }
 
