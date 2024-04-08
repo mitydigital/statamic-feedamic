@@ -13,6 +13,7 @@ class FeedEntry
     public $title;
     public $updated;
     public $uri;
+    public $entry;
 
     public function __construct(array $attributes = [])
     {

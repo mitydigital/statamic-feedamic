@@ -311,7 +311,8 @@ class FeedamicController extends Controller
                         'summary' => $summary,
                         'image' => $image,
                         'published' => $entry->date(),
-                        'updated' => $entry->lastModified()
+                        'updated' => $entry->lastModified(),
+                        'entry' => $entry
                     ]);
                 });
 
