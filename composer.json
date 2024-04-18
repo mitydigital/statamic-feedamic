@@ -20,7 +20,7 @@
   ],
   "require": {
     "php": "^8.0",
-    "statamic/cms": "^3.3|^4.0"
+    "statamic/cms": "^5.0"
   },
   "extra": {
     "statamic": {
@@ -32,5 +32,6 @@
         "MityDigital\\Feedamic\\ServiceProvider"
       ]
     }
-  }
+  },
+  "minimum-stability": "dev"
 }
