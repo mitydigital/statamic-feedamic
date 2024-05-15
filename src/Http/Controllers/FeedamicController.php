@@ -162,6 +162,12 @@ class FeedamicController extends Controller
                 }
             }
 
+            // get the sort field
+            $collectionSortField = $collection->sortField() ? $collection->sortField() : null;
+            if ($collection->dated()) {
+                $collectionSortField = 'date';
+            }
+
             // set up the required query builder behaviour
             $queryBuilder
                 ->when($locales !== '*', function ($query) use ($locales) {
@@ -169,13 +175,13 @@ class FeedamicController extends Controller
                     return $query->whereIn('locale', $locales);
                 })
                 ->where('published', true)
-                ->where(function ($query) use ($collection) {
+                ->where(function ($query) use ($collection, $collectionSortField) {
                     if ($collection->futureDateBehavior() === 'private') {
-                        $query->where($collection->sortField(), '<=', now());
+                        $query->where($collectionSortField, '<=', now());
                     }
 
                     if ($collection->pastDateBehavior() === 'private') {
-                        $query->where($collection->sortField(), '>=', now());
+                        $query->where($collectionSortField, '>=', now());
                     }
 
                     return $query;
@@ -196,7 +202,7 @@ class FeedamicController extends Controller
             }
 
             $entries = $queryBuilder
-                ->orderBy($collection->sortField(), 'desc')
+                ->orderBy($collectionSortField, 'desc')
                 ->limit($this->getConfigValue($feed, 'limit', null, true))
                 ->get()
                 ->map(function (Entry $entry) use ($feed) {
