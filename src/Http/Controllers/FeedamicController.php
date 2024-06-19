@@ -309,8 +309,9 @@ class FeedamicController extends Controller
                     }
 
 
-                    // create a feed entry object
-                    return new FeedEntry([
+                    $feedModel = $this->getConfigValue($feed, 'model', FeedEntry::class, false);
+
+                    return new $feedModel([
                         'title' => $entryArray['title']->value(),
                         'author' => $author,
                         'uri' => $entry->absoluteUrl(),
