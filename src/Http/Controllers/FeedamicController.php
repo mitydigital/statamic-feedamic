@@ -352,13 +352,13 @@ class FeedamicController extends Controller
         $feedModelName = $this->getConfigValue($feed, 'model', FeedEntry::class);
 
         if (!class_exists($feedModelName)) {
-            throw new \Exception('Feedamic model class "'.$feedModelName.'" does not exist.');
+            throw new \Exception('Custom model class "'.$feedModelName.'" does not exist.');
         }
 
         $feedModel = new $feedModelName();
 
         if (!class_implements($feedModel, FeedamicEntry::class)) {
-            throw new \Exception('Feedamic model class "'.$feedModelName.'" does not implement the FeedamicEntry interface.');
+            throw new \Exception('Custom model class "'.$feedModelName.'" does not implement the FeedamicEntry interface.');
         }
 
         return $feedModel;
