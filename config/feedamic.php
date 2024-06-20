@@ -115,6 +115,14 @@ return [
             ]
             */
 
+            /*
+            | You can also change the view model for a specific feed. If you omit this,
+            | default will be used.
+            */
+            /*
+            'model' => \App\Models\MyAlternateFeedEntry::class
+             */
+
         ],
     ],
 
