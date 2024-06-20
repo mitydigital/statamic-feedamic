@@ -288,4 +288,17 @@ return [
     */
 
     'locales' => null,
+
+    /*
+    |--------------------------------------------------------------------------
+    | DEFAULTS: Feed Model
+    |--------------------------------------------------------------------------
+    |
+    | This is the default model used to generate the feed.
+    |
+    | You can extend the default model to add additional functionality, or to
+    | override the default behaviour.
+    |
+    */
+    'model' => \MityDigital\Feedamic\Models\FeedEntry::class,
 ];
