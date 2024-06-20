@@ -2,9 +2,10 @@
 
 namespace MityDigital\Feedamic\Models;
 
+use MityDigital\Feedamic\Contracts\FeedamicEntry;
 use Statamic\Tags\Glide;
 
-class FeedEntry
+class FeedEntry implements FeedamicEntry
 {
     public $author;
     public $published;
