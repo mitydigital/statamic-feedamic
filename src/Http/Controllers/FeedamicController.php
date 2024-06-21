@@ -2,20 +2,21 @@
 
 namespace MityDigital\Feedamic\Http\Controllers;
 
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\Routing\ResponseFactory;
-use Illuminate\Http\Response;
-use Illuminate\Routing\Controller;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\View;
-use MityDigital\Feedamic\Feedamic;
-use MityDigital\Feedamic\Models\FeedEntry;
-use MityDigital\Feedamic\Models\FeedEntryAuthor;
-use Statamic\Entries\Entry;
-use Statamic\Facades\Collection;
-use Statamic\Facades\Site;
 use Statamic\Facades\URL;
+use Statamic\Facades\Site;
+use Illuminate\Support\Arr;
+use Statamic\Entries\Entry;
+use Illuminate\Http\Response;
+use Statamic\Facades\Collection;
+use Illuminate\Routing\Controller;
+use MityDigital\Feedamic\Feedamic;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Cache;
+use MityDigital\Feedamic\Models\FeedEntry;
+use Illuminate\Contracts\Foundation\Application;
+use MityDigital\Feedamic\Models\FeedEntryAuthor;
+use Illuminate\Contracts\Routing\ResponseFactory;
+use MityDigital\Feedamic\Contracts\FeedamicEntry;
 
 class FeedamicController extends Controller
 {
@@ -309,7 +310,7 @@ class FeedamicController extends Controller
                     }
 
 
-                    $feedModel = $this->getConfigValue($feed, 'model', FeedEntry::class, false);
+                    $feedModel = $this->getFeedModel($feed);
 
                     return new $feedModel([
                         'title' => $entryArray['title']->value(),
@@ -339,6 +340,28 @@ class FeedamicController extends Controller
             'entries' => $entries,
             'updated' => $lastUpdated
         ];
+    }
+
+    /**
+     * Get the Feed Entry model and check it implements the FeedamicEntry interface correctly.
+     *
+     * @param  string|null  $feed
+     */
+    protected function getFeedModel(string $feed = null): FeedamicEntry
+    {
+        $feedModelName = $this->getConfigValue($feed, 'model', FeedEntry::class);
+
+        if (!class_exists($feedModelName)) {
+            throw new \Exception('Custom model class "'.$feedModelName.'" does not exist.');
+        }
+
+        $feedModel = new $feedModelName();
+
+        if (!class_implements($feedModel, FeedamicEntry::class)) {
+            throw new \Exception('Custom model class "'.$feedModelName.'" does not implement the FeedamicEntry interface.');
+        }
+
+        return $feedModel;
     }
 
     /**
