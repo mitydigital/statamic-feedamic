@@ -56,10 +56,12 @@ return [
             | An array of Taxonomies and Terms to include in the feed.
             | The key of should be the Taxonomy handle, with two properties - logic, and handles (of the tags).
             |    'taxonomies' => [
-            |        'logic' => 'and', // also could be "or"
-            |        'handles' => [
-            |            'my-tag',
-            |            'another-tag'
+            |        'taxonomy_handle' => [
+            |            'logic' => 'and', // also could be "or"
+            |            'handles' => [
+            |                'my-tag',
+            |                'another-tag'
+            |            ]
             |        ]
             |    ]
             |
