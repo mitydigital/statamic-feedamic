@@ -112,8 +112,8 @@ return [
             */
             /*
             'view' => [
-                'atom' => 'path-to-rss-template',
-                'rss' => 'path-to-atom-template',
+                'atom' => 'path-to-atom-template',
+                'rss' => 'path-to-rss-template',
             ]
             */
 
