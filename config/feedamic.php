@@ -46,6 +46,7 @@ return [
 
             /*
             | An array of collections to include in the feed
+            | Each collection must be configured with Publish Dates enabled
             | Remove from the array to disable a specific feed type.
             */
             'collections' => [
