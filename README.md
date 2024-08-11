@@ -34,6 +34,7 @@ help you. So be awesome - it'll feel fantastic.
 - [Jack Sleight](https://github.com/jacksleight) for input, chats and ideas
 - [Sm1lEE](https://github.com/Sm1lEE) for locale support
 - [Thomas van der Westen](https://github.com/tdwesten) for alternate feed model support
+- [Steve Parks](https://github.com/steveparks) for configuration updates
 
 ## License
 
