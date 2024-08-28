@@ -56,7 +56,7 @@ class ClearCacheCommand extends Command
 
             $this->info('Ah-choo... feeds for '.$cleared.' are clear.');
         } else {
-            // Clear specific feeds caches
+            // Clear all feeds caches
             foreach (config('feedamic.feeds', []) as $feed => $config) {
                 foreach ($config['routes'] as $type => $route) {
                     Cache::forget(config('feedamic.cache').'.'.$feed.'.'.$type);

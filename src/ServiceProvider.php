@@ -4,6 +4,7 @@ namespace MityDigital\Feedamic;
 
 use MityDigital\Feedamic\Commands\ClearCacheCommand;
 use MityDigital\Feedamic\Listeners\ClearFeedamicCache;
+use MityDigital\Feedamic\Listeners\ScheduledCacheInvalidated;
 use MityDigital\Feedamic\Tags\Feedamic;
 use Statamic\Events\EntrySaved;
 use Statamic\Providers\AddonServiceProvider;
@@ -19,6 +20,9 @@ class ServiceProvider extends AddonServiceProvider
     protected $listen = [
         EntrySaved::class => [
             ClearFeedamicCache::class,
+        ],
+        \MityDigital\StatamicScheduledCacheInvalidator\Events\ScheduledCacheInvalidated::class => [
+            ScheduledCacheInvalidated::class
         ]
     ];
 
