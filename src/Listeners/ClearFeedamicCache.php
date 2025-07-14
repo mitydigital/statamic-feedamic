@@ -13,18 +13,17 @@ class ClearFeedamicCache implements ShouldQueue
      */
     public function handle(EntrySaved $event)
     {
-        // v2.1 cache clearing behaviour
-        if (in_array($event->entry->collection()->handle(), config('feedamic.collections', []))) {
-            Cache::forget(config('feedamic.cache'));
-            Cache::forget(config('feedamic.cache').'.atom');
-            Cache::forget(config('feedamic.cache').'.rss');
-        }
+        echo 'need to do this';
+
+        return;
 
         // v2.2 cache clearing for multiple feeds
         // look at specific feeds if we have them configured
         foreach (config('feedamic.feeds', []) as $feed => $config) {
-            if (isset($config['collections']) && is_array($config['collections']) && in_array($event->entry->collection()->handle(),
-                    $config['collections'])) {
+            if (isset($config['collections']) && is_array($config['collections'])
+                && in_array($event->entry->collection()->handle(),
+                    $config['collections'])
+            ) {
                 foreach ($config['routes'] as $type => $route) {
                     Cache::forget(config('feedamic.cache').'.'.$feed.'.'.$type);
                     Cache::forget(config('feedamic.cache').'.'.$feed);

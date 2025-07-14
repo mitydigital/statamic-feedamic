@@ -1,0 +1,768 @@
+title: 'feedamic::config.title'
+tabs:
+  main:
+    display: 'feedamic::config.main'
+    sections:
+      -
+        fields:
+          -
+            handle: feeds
+            field:
+              type: replicator
+              display: 'feedamic::config.feeds.display'
+              localizable: false
+              hide_display: false
+              button_label: 'feedamic::config.feeds.button_label'
+              validate:
+                - required
+                - array
+                - 'min:1'
+              sets:
+                types:
+                  display: 'feedamic::config.feeds.sets.type'
+                  sets:
+                    feed:
+                      display: 'feedamic::config.feeds.sets.feed'
+                      fields:
+                        -
+                          handle: sites
+                          field:
+                            options:
+                              -
+                                key: all
+                                value: 'feedamic::config.feeds.sites.options.all'
+                              -
+                                key: specific
+                                value: 'feedamic::config.feeds.sites.options.specific'
+                            default: all
+                            type: select
+                            display: 'feedamic::config.feeds.sites.display'
+                            localizable: false
+                            width: 33
+                            validate:
+                              - required
+                        -
+                          handle: sites_specific
+                          field:
+                            mode: select
+                            type: sites
+                            display: 'feedamic::config.feeds.sites_specific'
+                            localizable: false
+                            validate:
+                              - 'exclude_unless:{this}.sites,specific'
+                              - 'min:1'
+                            width: 66
+                            if:
+                              sites: 'equals specific'
+                        -
+                          handle: sites_specific_spacer
+                          field:
+                            type: spacer
+                            display: 'Sites Specific Spacer'
+                            localizable: false
+                            width: 66
+                            if:
+                              sites: 'equals all'
+                        -
+                          handle: title
+                          field:
+                            type: text
+                            display: 'feedamic::config.feeds.title.display'
+                            instructions: 'feedamic::config.feeds.title.instructions'
+                            localizable: false
+                            instructions_position: below
+                            width: 66
+                            validate:
+                              - required
+                        -
+                          handle: handle
+                          field:
+                            type: text
+                            display: 'feedamic::config.feeds.handle.display'
+                            instructions: 'feedamic::config.feeds.handle.instructions'
+                            localizable: false
+                            instructions_position: below
+                            width: 33
+                            validate:
+                              - required
+                              - 'new \MityDigital\Feedamic\Rules\HandleMustBeUniqueRule'
+                        -
+                          handle: description
+                          field:
+                            type: textarea
+                            display: 'feedamic::config.feeds.description.display'
+                            instructions: 'feedamic::config.feeds.description.instructions'
+                            localizable: false
+                            instructions_position: below
+                            validate:
+                              - required
+                        -
+                          handle: routes
+                          field:
+                            type: group
+                            display: 'feedamic::config.feeds.routes.display'
+                            instructions: 'feedamic::config.feeds.routes.instructions'
+                            localizable: false
+                            validate:
+                              - 'new \MityDigital\Feedamic\Rules\RequiresAtLeastOneRouteRule'
+                            fields:
+                              -
+                                handle: atom
+                                field:
+                                  default: /feed/atom
+                                  type: text
+                                  display: 'feedamic::config.feeds.routes.atom.display'
+                                  instructions: 'feedamic::config.feeds.routes.atom.instructions'
+                                  localizable: false
+                                  validate:
+                                    - nullable
+                                    - 'new \MityDigital\Feedamic\Rules\FeedRouteFormatRule'
+                                  width: 50
+                              -
+                                handle: atom_view
+                                field:
+                                  type: template
+                                  display: 'feedamic::config.feeds.routes.atom_view.display'
+                                  instructions: 'feedamic::config.feeds.routes.atom_view.instructions'
+                                  localizable: false
+                                  width: 50
+                              -
+                                handle: rss
+                                field:
+                                  default: /feed
+                                  type: text
+                                  display: 'feedamic::config.feeds.routes.rss.display'
+                                  instructions: 'feedamic::config.feeds.routes.rss.instructions'
+                                  localizable: false
+                                  validate:
+                                    - nullable
+                                    - 'new \MityDigital\Feedamic\Rules\FeedRouteFormatRule'
+                                  width: 50
+                              -
+                                handle: rss_view
+                                field:
+                                  type: template
+                                  display: 'feedamic::config.feeds.routes.rss_view.display'
+                                  instructions: 'feedamic::config.feeds.routes.rss_view.instructions'
+                                  localizable: false
+                                  width: 50
+                        -
+                          handle: collections
+                          field:
+                            dictionary: dated_collections_dictionary
+                            type: dictionary
+                            display: 'feedamic::config.feeds.collections'
+                            localizable: false
+                            validate:
+                              - required
+                        -
+                          handle: taxonomies
+                          field:
+                            type: grid
+                            display: 'feedamic::config.feeds.taxonomies.display'
+                            instructions: 'feedamic::config.feeds.taxonomies.instructions'
+                            localizable: false
+                            add_row: 'Add set...'
+                            fields:
+                              -
+                                handle: terms
+                                field:
+                                  mode: select
+                                  create: false
+                                  type: terms
+                                  display: 'feedamic::config.feeds.taxonomies.fields.terms'
+                                  localizable: false
+                                  width: 75
+                                  validate:
+                                    - required
+                                    - 'min:1'
+                              -
+                                handle: logic
+                                field:
+                                  options:
+                                    -
+                                      key: and
+                                      value: 'feedamic::config.feeds.taxonomies.fields.logic.options.and'
+                                    -
+                                      key: or
+                                      value: 'feedamic::config.feeds.taxonomies.fields.logic.options.or'
+                                  default: and
+                                  type: select
+                                  display: 'feedamic::config.feeds.taxonomies.fields.logic.display'
+                                  localizable: false
+                                  width: 25
+                                  validate:
+                                    - required
+                        -
+                          handle: show
+                          field:
+                            options:
+                              -
+                                key: all
+                                value: 'feedamic::config.feeds.show.options.all'
+                              -
+                                key: limit
+                                value: 'feedamic::config.feeds.show.options.limit'
+                            default: all
+                            type: select
+                            display: 'feedamic::config.feeds.show.display'
+                            localizable: false
+                            width: 33
+                        -
+                          handle: show_limit
+                          field:
+                            type: integer
+                            display: 'feedamic::config.feeds.show_limit'
+                            localizable: false
+                            width: 66
+                            if:
+                              show: 'equals limit'
+                            validate:
+                              - sometimes
+                              - 'min:1'
+                              - integer
+                        -
+                          handle: advanced
+                          field:
+                            mode: toggle
+                            type: revealer
+                            display: 'feedamic::config.feeds.advanced'
+                            localizable: false
+                        -
+                          handle: mappings
+                          field:
+                            type: group
+                            display: 'feedamic::config.feeds.mappings.display'
+                            localizable: false
+                            instructions: 'feedamic::config.feeds.mappings.instructions'
+                            always_save: true
+                            if:
+                              advanced: 'equals true'
+                            fields:
+                              -
+                                handle: title_mode
+                                field:
+                                  options:
+                                    -
+                                      key: custom
+                                      value: 'feedamic::config.feeds.override_options.custom'
+                                    -
+                                      key: default
+                                      value: 'feedamic::config.feeds.override_options.default'
+                                  default: default
+                                  type: select
+                                  display: 'feedamic::config.feeds.mappings.title_mode'
+                                  localizable: false
+                                  width: 33
+                              -
+                                handle: title
+                                field:
+                                  type: list
+                                  display: 'feedamic::config.feeds.mappings.title'
+                                  localizable: false
+                                  validate:
+                                    - 'exclude_unless:{this}.mappings.title_mode,custom'
+                                    - array
+                                    - 'min:1'
+                                    - 'new \MityDigital\Feedamic\Rules\ListContainsHandlesRule'
+                                  width: 66
+                                  if:
+                                    title_mode: 'equals custom'
+                              -
+                                handle: title_spacer
+                                field:
+                                  type: spacer
+                                  localizable: false
+                                  display: 'Title Spacer'
+                                  width: 66
+                                  if:
+                                    title_mode: 'equals default'
+                              -
+                                handle: summary_mode
+                                field:
+                                  options:
+                                    -
+                                      key: custom
+                                      value: 'feedamic::config.feeds.override_options.custom'
+                                    -
+                                      key: default
+                                      value: 'feedamic::config.feeds.override_options.default'
+                                  default: default
+                                  type: select
+                                  display: 'feedamic::config.feeds.mappings.summary_mode'
+                                  localizable: false
+                                  width: 33
+                              -
+                                handle: summary
+                                field:
+                                  type: list
+                                  display: 'feedamic::config.feeds.mappings.summary'
+                                  localizable: false
+                                  validate:
+                                    - 'exclude_unless:{this}.mappings.summary_mode,custom'
+                                    - array
+                                    - 'min:0'
+                                    - 'new \MityDigital\Feedamic\Rules\ListContainsHandlesRule'
+                                  width: 66
+                                  if:
+                                    summary_mode: 'equals custom'
+                              -
+                                handle: summary_spacer
+                                field:
+                                  type: spacer
+                                  display: 'Summary Spacer'
+                                  localizable: false
+                                  width: 66
+                                  if:
+                                    summary_mode: 'equals default'
+                              -
+                                handle: image_mode
+                                field:
+                                  options:
+                                    -
+                                      key: custom
+                                      value: 'feedamic::config.feeds.override_options.custom'
+                                    -
+                                      key: default
+                                      value: 'feedamic::config.feeds.override_options.default'
+                                    -
+                                      key: disabled
+                                      value: 'feedamic::config.feeds.override_options.disabled'
+                                  default: default
+                                  type: select
+                                  display: 'feedamic::config.feeds.mappings.image_mode'
+                                  localizable: false
+                                  width: 33
+                              -
+                                handle: image
+                                field:
+                                  type: list
+                                  display: 'feedamic::config.feeds.mappings.image'
+                                  localizable: false
+                                  validate:
+                                    - sometimes
+                                    - 'exclude_unless:{this}.mappings.image_mode,custom'
+                                    - array
+                                    - 'min:1'
+                                    - 'new \MityDigital\Feedamic\Rules\ListContainsHandlesRule'
+                                  width: 66
+                                  if:
+                                    image_mode: 'equals custom'
+                              -
+                                handle: image_spacer
+                                field:
+                                  type: spacer
+                                  display: 'Image Spacer'
+                                  localizable: false
+                                  width: 66
+                                  if:
+                                    image_mode: 'not custom'
+                              -
+                                handle: image_dimensions_mode
+                                field:
+                                  options:
+                                    -
+                                      key: custom
+                                      value: 'feedamic::config.feeds.override_options.custom'
+                                    -
+                                      key: default
+                                      value: 'feedamic::config.feeds.override_options.default'
+                                  default: default
+                                  type: select
+                                  display: 'feedamic::config.feeds.mappings.image_dimensions_mode'
+                                  localizable: false
+                                  width: 33
+                                  if:
+                                    image_mode: 'not disabled'
+                              -
+                                handle: image_dimensions_spacer
+                                field:
+                                  type: spacer
+                                  display: 'Image Dimensions Spacer'
+                                  localizable: false
+                                  width: 66
+                                  if:
+                                    image_dimensions_mode: 'equals default'
+                                    image_mode: 'not disabled'
+                              -
+                                handle: image_width
+                                field:
+                                  input_type: number
+                                  type: text
+                                  display: 'feedamic::config.feeds.mappings.image_width'
+                                  localizable: false
+                                  width: 33
+                                  validate:
+                                    - 'exclude_unless:{this}.mappings.image_dimensions_mode,custom'
+                                    - integer
+                                    - 'min:1'
+                                  if:
+                                    image_mode: 'not disabled'
+                                    image_dimensions_mode: 'equals custom'
+                              -
+                                handle: image_height
+                                field:
+                                  input_type: number
+                                  type: text
+                                  display: 'feedamic::config.feeds.mappings.image_height'
+                                  localizable: false
+                                  width: 33
+                                  validate:
+                                    - 'exclude_unless:{this}.mappings.image_dimensions_mode,custom'
+                                    - integer
+                                    - 'min:1'
+                                  if:
+                                    image_mode: 'not disabled'
+                                    image_dimensions_mode: 'equals custom'
+                              -
+                                handle: author_mode
+                                field:
+                                  options:
+                                    -
+                                      key: custom
+                                      value: 'feedamic::config.feeds.override_options.custom'
+                                    -
+                                      key: default
+                                      value: 'feedamic::config.feeds.override_options.default'
+                                    -
+                                      key: disabled
+                                      value: 'feedamic::config.feeds.override_options.disabled'
+                                  default: default
+                                  type: select
+                                  display: 'feedamic::config.feeds.mappings.author_mode'
+                                  localizable: false
+                                  width: 33
+                              -
+                                handle: author_type
+                                field:
+                                  type: select
+                                  display: 'feedamic::config.author_type.display'
+                                  localizable: false
+                                  options:
+                                    -
+                                      key: entry
+                                      value: 'feedamic::config.author_type.options.entry'
+                                    -
+                                      key: field
+                                      value: 'feedamic::config.author_type.options.field'
+                                  default: entry
+                                  width: 33
+                                  validate:
+                                    - 'exclude_unless:{this}.mappings.author_mode,custom'
+                                  if:
+                                    author_mode: 'equals custom'
+                              -
+                                handle: author_name_spacer_1
+                                field:
+                                  type: spacer
+                                  display: 'Author Name Spacer 1'
+                                  localizable: false
+                                  width: 33
+                                  if:
+                                    author_mode: 'equals custom'
+                              -
+                                handle: author_name_spacer_2
+                                field:
+                                  type: spacer
+                                  display: 'Author Name Spacer 2'
+                                  localizable: false
+                                  width: 33
+                                  if:
+                                    author_mode: 'equals custom'
+                              -
+                                handle: author_name
+                                field:
+                                  type: text
+                                  display: 'feedamic::config.author_type.name.display'
+                                  localizable: false
+                                  default: entry
+                                  width: 33
+                                  validate:
+                                    - 'exclude_unless:{this}.mappings.author_mode,custom'
+                                    - 'new \MityDigital\Feedamic\Rules\AuthorNameRule'
+                                  if:
+                                    author_mode: 'equals custom'
+                              -
+                                handle: author_email
+                                field:
+                                  type: text
+                                  display: 'feedamic::config.author_type.email.display'
+                                  localizable: false
+                                  default: entry
+                                  width: 33
+                                  validate:
+                                    - 'exclude_unless:{this}.mappings.author_mode,custom'
+                                    - nullable
+                                    - 'new \Statamic\Rules\Slug'
+                                  if:
+                                    author_mode: 'equals custom'
+                        -
+                          handle: copyright_mode
+                          field:
+                            options:
+                              -
+                                key: custom
+                                value: 'feedamic::config.feeds.override_options.custom'
+                              -
+                                key: default
+                                value: 'feedamic::config.feeds.override_options.default'
+                              -
+                                key: disabled
+                                value: 'feedamic::config.feeds.override_options.disabled'
+                            default: default
+                            type: select
+                            display: 'feedamic::config.feeds.copyright_mode'
+                            localizable: false
+                            width: 33
+                            if:
+                              advanced: 'equals true'
+                        -
+                          handle: copyright_spacer
+                          field:
+                            type: spacer
+                            display: 'Copyright Spacer'
+                            localizable: false
+                            width: 66
+                            if:
+                              advanced: 'equals true'
+                              copyright_mode: 'equals default'
+                        -
+                          handle: copyright
+                          field:
+                            type: text
+                            display: 'feedamic::config.feeds.copyright'
+                            localizable: false
+                            validate:
+                              - 'exclude_unless:{this}.copyright_mode,custom'
+                              - string
+                            width: 66
+                            if:
+                              advanced: 'equals true'
+                              copyright_mode: 'equals custom'
+                        -
+                          handle: scope
+                          field:
+                            dictionary: feedamic_scopes_dictionary
+                            max_items: 1
+                            type: dictionary
+                            display: 'feedamic::config.feeds.scope.display'
+                            instructions: 'feedamic::config.feeds.scope.instructions'
+                            localizable: false
+                            instructions_position: below
+                            width: 50
+                            always_save: true
+                            if:
+                              advanced: 'equals true'
+                        -
+                          handle: model
+                          field:
+                            dictionary: feedamic_models_dictionary
+                            max_items: 1
+                            type: dictionary
+                            display: 'feedamic::config.feeds.model.display'
+                            instructions: 'feedamic::config.feeds.model.instructions'
+                            localizable: false
+                            instructions_position: below
+                            width: 50
+                            always_save: true
+                            validate:
+                              - required
+                            default: MityDigital\Feedamic\Models\FeedEntry
+                            if:
+                              advanced: 'equals true'
+                        -
+                          handle: alt_url
+                          field:
+                            type: text
+                            display: 'feedamic::config.feeds.alt_url.display'
+                            instructions: 'feedamic::config.feeds.alt_url.instructions'
+                            localizable: false
+                            instructions_position: below
+                            validate:
+                              - url
+                            always_save: true
+                            if:
+                              advanced: 'equals true'
+  defaults:
+    display: 'feedamic::config.defaults.title'
+    sections:
+      -
+        display: 'feedamic::config.defaults.sections.title.display'
+        fields:
+          -
+            handle: default_title
+            field:
+              type: list
+              display: 'feedamic::config.defaults.sections.title.default_title.display'
+              hide_display: true
+              localizable: false
+              default:
+                - title
+              validate:
+                - required
+                - array
+                - 'min:1'
+                - 'new \MityDigital\Feedamic\Rules\ListContainsHandlesRule'
+              instructions: 'feedamic::config.defaults.sections.title.default_title.instructions'
+      -
+        display: 'feedamic::config.defaults.sections.summary.display'
+        fields:
+          -
+            handle: default_summary
+            field:
+              type: list
+              display: 'feedamic::config.defaults.sections.summary.default_summary.display'
+              hide_display: true
+              localizable: false
+              validate:
+                - nullable
+                - array
+                - 'min:0'
+                - 'new \MityDigital\Feedamic\Rules\ListContainsHandlesRule'
+              instructions: 'feedamic::config.defaults.sections.summary.default_summary.instructions'
+      -
+        display: 'feedamic::config.defaults.sections.image.display'
+        fields:
+          -
+            handle: default_image_enabled
+            field:
+              inline_label: 'feedamic::config.defaults.sections.image.default_image_enabled.inline_label'
+              type: toggle
+              display: 'feedamic::config.defaults.sections.image.default_image_enabled.display'
+              localizable: false
+              default: true
+              hide_display: true
+              instructions_position: below
+          -
+            handle: default_image
+            field:
+              type: list
+              display: 'feedamic::config.defaults.sections.image.default_image.display'
+              hide_display: true
+              localizable: false
+              validate:
+                - 'exclude_unless:{this}.default_image_enabled,true'
+                - array
+                - 'min:1'
+                - 'new \MityDigital\Feedamic\Rules\ListContainsHandlesRule'
+              instructions: 'feedamic::config.defaults.sections.image.default_image.instructions'
+              if:
+                default_image_enabled: 'equals true'
+          -
+            handle: default_image_width
+            field:
+              input_type: number
+              type: text
+              display: 'feedamic::config.image.width'
+              localizable: false
+              width: 33
+              default: 1280
+              validate:
+                - 'exclude_unless:{this}.default_image_enabled,true'
+                - integer
+                - 'min:1'
+              if:
+                default_image_enabled: 'equals true'
+          -
+            handle: default_image_height
+            field:
+              input_type: number
+              type: text
+              display: 'feedamic::config.image.height'
+              localizable: false
+              width: 33
+              default: 720
+              validate:
+                - 'exclude_unless:{this}.default_image_enabled,true'
+                - integer
+                - 'min:1'
+              if:
+                default_image_enabled: 'equals true'
+      -
+        display: 'feedamic::config.defaults.sections.author.display'
+        fields:
+          -
+            handle: default_author_enabled
+            field:
+              inline_label: 'feedamic::config.defaults.sections.author.default_author_enabled.inline_label'
+              type: toggle
+              display: 'feedamic::config.defaults.sections.author.default_author_enabled.display'
+              localizable: false
+              hide_display: true
+              default: true
+              instructions_position: below
+          -
+            handle: default_author_type
+            field:
+              options:
+                -
+                  key: entry
+                  value: 'feedamic::config.author_type.options.entry'
+                -
+                  key: field
+                  value: 'feedamic::config.author_type.options.field'
+              default: entry
+              type: select
+              display: 'feedamic::config.author_type.display'
+              localizable: false
+              if:
+                default_author_enabled: 'equals true'
+              instructions: 'feedamic::config.author_type.instructions'
+          -
+            handle: default_author_name
+            field:
+              type: text
+              display: 'feedamic::config.author_type.name.display'
+              localizable: false
+              validate:
+                - 'exclude_unless:{this}.default_author_enabled,true'
+                - required
+                - 'new \MityDigital\Feedamic\Rules\AuthorNameRule(default_author_type)'
+              width: 50
+              if:
+                default_author_enabled: 'equals true'
+              instructions: 'feedamic::config.author_type.name.instructions'
+              instructions_position: below
+          -
+            handle: default_author_email
+            field:
+              type: text
+              display: 'feedamic::config.author_type.email.display'
+              localizable: false
+              width: 50
+              if:
+                default_author_enabled: 'equals true'
+              validate:
+                - nullable
+                - 'new \Statamic\Rules\Slug'
+              instructions: 'feedamic::config.author_type.email.instructions'
+              instructions_position: below
+      -
+        display: 'feedamic::config.defaults.sections.copyright.display'
+        fields:
+          -
+            handle: default_copyright
+            field:
+              type: text
+              display: 'feedamic::config.defaults.sections.copyright.default_copyright.display'
+              hide_display: true
+              localizable: false
+              instructions: 'feedamic::config.defaults.sections.copyright.default_copyright.instructions'
+              instructions_position: below
+      -
+        display: 'feedamic::config.defaults.sections.model.display'
+        fields:
+          -
+            handle: default_model
+            field:
+              dictionary: feedamic_models_dictionary
+              max_items: 1
+              type: dictionary
+              display: 'feedamic::config.defaults.sections.model.default_model.display'
+              instructions: 'feedamic::config.defaults.sections.model.default_model.instructions'
+              localizable: false
+              instructions_position: below
+              width: 50
+              validate:
+                - required
+              default: MityDigital\Feedamic\Models\FeedEntry

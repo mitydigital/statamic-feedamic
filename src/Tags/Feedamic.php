@@ -2,82 +2,58 @@
 
 namespace MityDigital\Feedamic\Tags;
 
+use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
+use Statamic\Facades\Site;
 use Statamic\Tags\Tags;
 
 class Feedamic extends Tags
 {
-    /**
-     * Tag {{ feedamic }} outputs the configured feeds for auto-discovery
-     *
-     * @return string
-     */
-    public function index()
+    public function index(): string
+    {
+        $currentSite = Site::current();
+
+        // get feeds for the current site
+        $feeds = \MityDigital\Feedamic\Facades\Feedamic::getFeedsForSite($currentSite->handle());
+
+        return $this->buildFeeds($currentSite, $feeds);
+    }
+
+    protected function buildFeeds(\Statamic\Sites\Site $site, Collection $feeds): string
     {
         $links = [];
 
-        if (config()->has('feedamic.routes')) {
-            foreach (config('feedamic.routes') as $type => $route) {
-                $mime = 'application/xml';
-                switch ($type) {
-                    case 'atom':
-                        $mime = 'application/atom+xml';
-                        break;
-                    case 'rss':
-                        $mime = 'application/rss+xml';
-                        break;
+        foreach ($feeds as $feed) {
+            foreach (\MityDigital\Feedamic\Facades\Feedamic::getFeedTypes() as $feedType) {
+                if ($url = Arr::get($feed['routes'], $feedType)) {
+                    $mime = match ($feedType) {
+                        'atom' => 'application/atom+xml',
+                        'rss' => 'application/rss+xml',
+                        default => 'application/xml',
+                    };
+
+                    $route = $site->absoluteUrl().$url;
+
+                    $links[] = '<link rel="alternate" type="'.$mime.'" title="'.$feed['title'].'" href="'.$route.'" />';
                 }
-
-                $links[] = '<link rel="alternate" type="'.$mime.'" title="'.config('feedamic.title').'"  href="'.$route.'" />';
-            }
-        }
-
-        // v2.2 multiple feeds support
-        foreach (config('feedamic.feeds', []) as $feed => $config) {
-            foreach ($config['routes'] as $type => $route) {
-                $mime = 'application/xml';
-                switch ($type) {
-                    case 'atom':
-                        $mime = 'application/atom+xml';
-                        break;
-                    case 'rss':
-                        $mime = 'application/rss+xml';
-                        break;
-                }
-
-                $links[] = '<link rel="alternate" type="'.$mime.'" title="'.$config['title'].'"  href="'.$route.'" />';
             }
         }
 
         return implode("\r\n", $links);
     }
 
-    /**
-     * Tag {{ feedamic:feed }} to allow only the specific feed routes to be returned
-     *
-     * @param $feed
-     * @return string
-     */
-    public function wildcard($feed)
+    public function wildcard($feed): string
     {
-        $links = [];
+        $currentSite = Site::current();
 
-        // does the feed exist?
-        if (config()->has('feedamic.feeds.'.$feed)) {
-            foreach (config('feedamic.feeds.'.$feed.'.routes', []) as $type => $route) {
-                $mime = 'application/xml';
-                switch ($type) {
-                    case 'atom':
-                        $mime = 'application/atom+xml';
-                        break;
-                    case 'rss':
-                        $mime = 'application/rss+xml';
-                        break;
-                }
+        // get feed for the current site and handle
+        $config = \MityDigital\Feedamic\Facades\Feedamic::getFeedsForSite($currentSite->handle())
+            ->first(fn (array $config) => $config['handle'] === $feed);
 
-                $links[] = '<link rel="alternate" type="'.$mime.'" title="'.config('feedamic.feeds.'.$feed.'.title').'"  href="'.$route.'" />';
-            }
+        if (! $config) {
+            return '';
         }
 
-        return implode("\r\n", $links);
+        return $this->buildFeeds($currentSite, collect([$config]));
     }
 }

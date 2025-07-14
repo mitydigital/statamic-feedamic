@@ -2,8 +2,6 @@
 
 <!-- statamic:hide -->
 
-![Statamic 3.3+](https://img.shields.io/badge/Statamic-3.3+-FF269E?style=for-the-badge&link=https://statamic.com)
-![Statamic 4.0](https://img.shields.io/badge/Statamic-4.0-FF269E?style=for-the-badge&link=https://statamic.com)
 ![Statamic 5.0](https://img.shields.io/badge/Statamic-5.0-FF269E?style=for-the-badge&link=https://statamic.com)
 [![Feedamic on Packagist](https://img.shields.io/packagist/v/mitydigital/feedamic?style=for-the-badge)](https://packagist.org/packages/mitydigital/feedamic/stats)
 
@@ -11,7 +9,7 @@
 
 <!-- /statamic:hide -->
 
-> Feedamic is an Atom and RSS feed for Statamic 3.3, 4 and 5
+> Feedamic is an Atom and RSS feed for Statamic.
 
 ## Documentation
 
