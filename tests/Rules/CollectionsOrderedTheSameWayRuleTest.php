@@ -10,7 +10,7 @@ it('passes with a single dated collection', function () {
             'blog',
         ],
     ];
-    $rule = new CollectionsOrderedTheSameWayRule();
+    $rule = new CollectionsOrderedTheSameWayRule;
 
     $validator = Validator::make($data, ['collections' => [$rule]]);
 
@@ -24,7 +24,7 @@ it('passes with a single non-dated collection', function () {
             'blog',
         ],
     ];
-    $rule = new CollectionsOrderedTheSameWayRule();
+    $rule = new CollectionsOrderedTheSameWayRule;
 
     $validator = Validator::make($data, ['collections' => [$rule]]);
 
@@ -40,7 +40,7 @@ it('passes with multiple dated collections', function () {
             'blog-b',
         ],
     ];
-    $rule = new CollectionsOrderedTheSameWayRule();
+    $rule = new CollectionsOrderedTheSameWayRule;
 
     $validator = Validator::make($data, ['collections' => [$rule]]);
 
@@ -56,7 +56,7 @@ it('passes with multiple non-dated collections', function () {
             'non-dated-b',
         ],
     ];
-    $rule = new CollectionsOrderedTheSameWayRule();
+    $rule = new CollectionsOrderedTheSameWayRule;
 
     $validator = Validator::make($data, ['collections' => [$rule]]);
 
@@ -72,7 +72,7 @@ it('fails with mis-matching sort orders', function () {
             'non-dated',
         ],
     ];
-    $rule = new CollectionsOrderedTheSameWayRule();
+    $rule = new CollectionsOrderedTheSameWayRule;
 
     $validator = Validator::make($data, ['collections' => [$rule]]);
 
@@ -89,7 +89,7 @@ it('fails with multiple non-dated collections with different sort orders', funct
             'non-dated-custom',
         ],
     ];
-    $rule = new CollectionsOrderedTheSameWayRule();
+    $rule = new CollectionsOrderedTheSameWayRule;
 
     $validator = Validator::make($data, ['collections' => [$rule]]);
 
