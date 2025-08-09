@@ -2,8 +2,8 @@
 
 namespace MityDigital\Feedamic\Tags;
 
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use MityDigital\Feedamic\Models\FeedamicConfig;
 use Statamic\Facades\Site;
 use Statamic\Tags\Tags;
 
@@ -21,25 +21,37 @@ class Feedamic extends Tags
 
     protected function buildFeeds(\Statamic\Sites\Site $site, Collection $feeds): string
     {
-        $links = [];
+        $usedRoutes = [];
 
-        foreach ($feeds as $feed) {
-            foreach (\MityDigital\Feedamic\Facades\Feedamic::getFeedTypes() as $feedType) {
-                if ($url = Arr::get($feed['routes'], $feedType)) {
+        return $feeds
+            ->map(function (FeedamicConfig $config) use ($site, &$usedRoutes) {
+                $links = [];
+
+                foreach ($config->getRoutes() as $feedType => $route) {
                     $mime = match ($feedType) {
                         'atom' => 'application/atom+xml',
                         'rss' => 'application/rss+xml',
                         default => 'application/xml',
                     };
 
-                    $route = $site->absoluteUrl().$url;
+                    $absoluteRoute = $site->absoluteUrl().$route;
 
-                    $links[] = '<link rel="alternate" type="'.$mime.'" title="'.$feed['title'].'" href="'.$route.'" />';
+                    if (! in_array($absoluteRoute, $usedRoutes)) {
+                        $links[] = sprintf(
+                            '<link rel="alternate" type="%s" title="%s" href="%s" />',
+                            $mime,
+                            $config->title,
+                            $absoluteRoute
+                        );
+
+                        $usedRoutes[] = $absoluteRoute;
+                    }
                 }
-            }
-        }
 
-        return implode("\r\n", $links);
+                return $links;
+            })
+            ->flatten()
+            ->join("\r\n");
     }
 
     public function wildcard($feed): string
@@ -48,7 +60,7 @@ class Feedamic extends Tags
 
         // get feed for the current site and handle
         $config = \MityDigital\Feedamic\Facades\Feedamic::getFeedsForSite($currentSite->handle())
-            ->first(fn (array $config) => $config['handle'] === $feed);
+            ->first(fn (FeedamicConfig $config) => $config->handle === $feed);
 
         if (! $config) {
             return '';

@@ -4,6 +4,7 @@ namespace MityDigital\Feedamic\Facades;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Facade;
+use Illuminate\Support\LazyCollection;
 use Statamic\Fields\Blueprint;
 
 /**
@@ -14,7 +15,9 @@ use Statamic\Fields\Blueprint;
  * @method static array getRoutes()
  * @method static Collection getFeeds()
  * @method static Collection getFeedsForSite(string $handle)
+ * @method static array getConfig(string $path, string $site)
  * @method static array load()
+ * @method static LazyCollection getEntries(array $config)
  * @method static void save(array $payload)
  *
  * @see \MityDigital\Feedamic\Support\Feedamic

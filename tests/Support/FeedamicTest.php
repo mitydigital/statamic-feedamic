@@ -76,16 +76,22 @@ it('ensures each route starts with a slash', function () {
     app(Feedamic::class)->save([
         'feeds' => [
             [
+                'handle' => 'slasher',
                 'sites' => 'all',
                 'routes' => [
                     'atom' => '/feed/atom',
                     'rss' => 'feed',
+                ],
+                'mappings' => [
+                    'title_mode' => 'default',
+                    'image_mode' => 'default',
                 ],
             ],
         ],
     ]);
 
     $routes = app(Feedamic::class)->getRoutes();
+
     expect($routes)->toBeArray()->toHaveCount(2)
         ->and($routes['domains'])->toBeArray()->toHaveCount(0)
         ->and($routes['default'])->toBeArray()->toHaveCount(2)
@@ -96,10 +102,15 @@ it('correctly creates the routes for a single site', function () {
     app(Feedamic::class)->save([
         'feeds' => [
             [
+                'handle' => 'routes',
                 'sites' => 'all',
                 'routes' => [
                     'atom' => '/feed/atom',
                     'rss' => '/feed',
+                ],
+                'mappings' => [
+                    'title_mode' => 'default',
+                    'image_mode' => 'default',
                 ],
             ],
         ],
@@ -114,10 +125,15 @@ it('correctly creates the routes for a single site', function () {
     app(Feedamic::class)->save([
         'feeds' => [
             [
+                'handle' => 'routes',
                 'sites' => 'all',
                 'routes' => [
                     'atom' => null,
                     'rss' => '/feed.rss',
+                ],
+                'mappings' => [
+                    'title_mode' => 'default',
+                    'image_mode' => 'default',
                 ],
             ],
         ],
@@ -147,10 +163,15 @@ it('correctly creates the routes for multiple sites on a single domain', functio
     app(Feedamic::class)->save([
         'feeds' => [
             [
+                'handle' => 'all-sites',
                 'sites' => 'all',
                 'routes' => [
                     'atom' => '/feed/atom',
                     'rss' => '/feed',
+                ],
+                'mappings' => [
+                    'title_mode' => 'default',
+                    'image_mode' => 'default',
                 ],
             ],
         ],
@@ -185,10 +206,15 @@ it('correctly creates the routes for a single site on a multi site setup on a si
     app(Feedamic::class)->save([
         'feeds' => [
             [
+                'handle' => 'specific-sites',
                 'sites_specific' => ['en_US'],
                 'routes' => [
                     'atom' => '/feed/atom',
                     'rss' => '/feed',
+                ],
+                'mappings' => [
+                    'title_mode' => 'default',
+                    'image_mode' => 'default',
                 ],
             ],
         ],
@@ -226,10 +252,15 @@ it('correctly creates the routes for multiple sites on multiple domains', functi
     app(Feedamic::class)->save([
         'feeds' => [
             [
+                'handle' => 'all-sites',
                 'sites' => 'all',
                 'routes' => [
                     'atom' => '/feed/atom',
                     'rss' => '/feed',
+                ],
+                'mappings' => [
+                    'title_mode' => 'default',
+                    'image_mode' => 'default',
                 ],
             ],
         ],
@@ -255,17 +286,27 @@ it('correctly creates the routes for multiple sites on multiple domains', functi
     app(Feedamic::class)->save([
         'feeds' => [
             [
+                'handle' => 'all-sites',
                 'sites' => 'all',
                 'routes' => [
                     'atom' => '/feed/atom',
                     'rss' => '/feed',
                 ],
+                'mappings' => [
+                    'title_mode' => 'default',
+                    'image_mode' => 'default',
+                ],
             ],
             [
+                'handle' => 'specific-sites',
                 'sites_specific' => ['en_AU'],
                 'routes' => [
                     'atom' => '/feed/another/atom',
                     'rss' => '/feed/another',
+                ],
+                'mappings' => [
+                    'title_mode' => 'default',
+                    'image_mode' => 'default',
                 ],
             ],
         ],
@@ -313,21 +354,36 @@ it('correctly creates the routes for complex configurations of multiple sites on
     app(Feedamic::class)->save([
         'feeds' => [
             [
+                'handle' => 'au',
                 'sites_specific' => ['en_AU'],
                 'routes' => [
                     'rss' => '/au/feed',
                 ],
+                'mappings' => [
+                    'title_mode' => 'default',
+                    'image_mode' => 'default',
+                ],
             ],
             [
+                'handle' => 'us',
                 'sites_specific' => ['en_US'],
                 'routes' => [
                     'rss' => '/test-us/feed',
                 ],
+                'mappings' => [
+                    'title_mode' => 'default',
+                    'image_mode' => 'default',
+                ],
             ],
             [
+                'handle' => 'ca',
                 'sites_specific' => ['en_CA'],
                 'routes' => [
                     'rss' => '/ca/feed',
+                ],
+                'mappings' => [
+                    'title_mode' => 'default',
+                    'image_mode' => 'default',
                 ],
             ],
         ],
@@ -509,6 +565,7 @@ it('has the correct validation for the feeds array in the blueprint', function (
         'collections',
         [
             'required',
+            'new \MityDigital\Feedamic\Rules\CollectionsOrderedTheSameWayRule',
         ],
     ],
     'taxonomies terms' => [

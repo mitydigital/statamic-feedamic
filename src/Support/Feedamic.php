@@ -2,11 +2,16 @@
 
 namespace MityDigital\Feedamic\Support;
 
+use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\LazyCollection;
 use Illuminate\Support\Str;
 use Illuminate\Support\Uri;
+use MityDigital\Feedamic\Exceptions\InconsistentSortFieldException;
+use MityDigital\Feedamic\Models\FeedamicConfig;
 use Statamic\Facades\Blueprint;
+use Statamic\Facades\Entry;
 use Statamic\Facades\File;
 use Statamic\Facades\YAML;
 use Statamic\Sites\Site;
@@ -21,7 +26,7 @@ class Feedamic
     {
         $data = [];
 
-        $config = $this->load();
+        $config = $this->getConfiguredFeeds();
 
         \Statamic\Facades\Site::all()->each(function (Site $site) use ($config, &$data) {
             $siteUrl = $site->url();
@@ -53,13 +58,10 @@ class Feedamic
             }
 
             // get the routes for the config
-            foreach (Arr::get($config, 'feeds', []) as $feedConfig) {
-                // is the feed applicable to this domain (either all, or specific sites)?
-                if (Arr::get($feedConfig, 'sites') === 'all'
-                    || in_array($site->handle(), Arr::get($feedConfig, 'sites_specific', []))
-                ) {
+            $config->feeds->each(function (FeedamicConfig $config) use ($site, $uri, &$data, $domain) {
+                if (in_array($site->handle(), $config->sites)) {
                     foreach ($this->getFeedTypes() as $feedType) {
-                        $route = Arr::get($feedConfig, 'routes.'.$feedType, null);
+                        $route = $config->getRouteForFeedType($feedType);
 
                         if ($route) {
                             // build the uri, remove duplicate // and get the path
@@ -75,7 +77,7 @@ class Feedamic
                         }
                     }
                 }
-            }
+            });
         });
 
         // get the default domain
@@ -85,6 +87,18 @@ class Feedamic
             'domains' => $data,
             'default' => $default,
         ];
+    }
+
+    protected function getConfiguredFeeds(): self
+    {
+        $this->load();
+
+        $this->feeds = collect(Arr::get($this->config, 'feeds', []))
+            ->mapWithKeys(function (array $feed) {
+                return [Arr::get($feed, 'handle') => new FeedamicConfig($feed, $this->config)];
+            });
+
+        return $this;
     }
 
     public function load(): Collection
@@ -122,6 +136,7 @@ class Feedamic
     {
         File::put(self::getPath(), YAML::dump($payload));
         unset($this->config);
+        unset($this->feeds);
     }
 
     public function getClassOfType(string $folder, string $requiredClass, ?callable $callback = null): array
@@ -163,110 +178,132 @@ class Feedamic
         }
 
         return $this->feeds
-            ->filter(fn (array $config) => in_array($handle, $config['sites']));
+            ->filter(fn (FeedamicConfig $config) => in_array($handle, $config->sites));
     }
 
-    protected function getConfiguredFeeds(): self
+    public function getConfig(string $path, string $site)
     {
-        $this->load();
+        if (! isset($this->feeds)) {
+            $this->getConfiguredFeeds();
+        }
 
-        $this->feeds = collect(Arr::get($this->config, 'feeds', []))
-            ->mapWithKeys(function (array $feed) {
-                $feedConfig = [
-                    'handle' => Arr::get($feed, 'handle'),
-                    'title' => Arr::get($feed, 'title'),
-                    'description' => Arr::get($feed, 'description'),
-                    'sites' => [],
-                    'routes' => [],
-                    'limit' => null,
-                    'alt_url' => Arr::get($feed, 'alt_url'),
-                    'copyright' => '',
-                    'mappings' => [],
-                    'model' => Arr::get($feed, 'model'),
-                ];
+        $path = Str::start($path, '/');
 
-                // update limit
-                if (Arr::get($feed, 'show', 'all') === 'limit') {
-                    $feedConfig['limit'] = Arr::get($feed, 'limit');
+        return $this->feeds
+            ->first(fn (FeedamicConfig $config) => in_array($site, $config->sites) && $config->hasRoute($path));
+    }
+
+    public function getEntries(FeedamicConfig $config)
+    {
+        // ray()->queries();
+        // ray($config);
+
+        $sortField = null;
+
+        $limit = $config->limit;
+
+        $lazyDataSources = [];
+        foreach ($config->collections as $collection) {
+            $collection = \Statamic\Facades\Collection::find($collection);
+
+            $thisSortField = $collection->sortField() ? $collection->sortField() : null;
+            if ($collection->dated()) {
+                $thisSortField = 'date';
+            }
+            if (! $sortField) {
+                $sortField = $thisSortField; // just set the sort field
+            } else {
+                if ($sortField !== $thisSortField) {
+                    throw new InconsistentSortFieldException(__('feedamic::exceptions.inconsistent_sort_field', [
+                        'collection' => $collection->title,
+                        'thisField' => $thisSortField,
+                        'field' => $sortField,
+                    ]));
+                }
+            }
+
+            $query = Entry::query()
+                ->where('site', \Statamic\Facades\Site::current()->handle())
+                ->where('collection', $collection->handle())
+                ->where('published', true)
+                ->orderBy($sortField, 'desc');
+
+            if ($collection->futureDateBehavior() === 'private') {
+                $query->where('date', '<=', now());
+            }
+
+            if ($collection->pastDateBehavior() === 'private') {
+                $query->where('date', '>=', now());
+            }
+
+            $lazyDataSources[] = LazyCollection::make(function () use ($query, $limit) {
+                $query = $query->lazy();
+                if ($limit) {
+                    $query = $query->take($limit);
                 }
 
-                // update site config
-                if (Arr::get($feed, 'sites') === 'all') {
-                    $feedConfig['sites'] =
-                        \Statamic\Facades\Site::all()->map(fn (Site $site) => $site->handle())->values()->toArray();
-                } else {
-                    $feedConfig['sites'] = Arr::get($feed, 'sites_specific', []);
+                foreach ($query as $entry) {
+                    yield $entry;
                 }
-
-                // update routes
-                $feedConfig['routes'] = [];
-                foreach ($this->getFeedTypes() as $feedType) {
-                    if ($route = Arr::get($feed['routes'], $feedType, null)) {
-                        $feedConfig['routes'][$feedType] = $route;
-                        $view = 'mitydigital/feedamic::'.$feedType;
-                        if ($override = Arr::get($feed['routes'], $feedType.'_view')) {
-                            $view = $override;
-                        }
-                        $feedConfig['routes'][$feedType.'_view'] = $view;
-                    }
-                }
-
-                // copyright
-                $feedConfig['copyright'] = match (Arr::get($feed, 'copyright_mode')) {
-                    'default' => Arr::get($this->config, 'default_copyright'),
-                    'custom' => Arr::get($feed, 'copyright'),
-                    'disabled' => null
-                };
-
-                // title
-                $feedConfig['mappings']['title'] = match (Arr::get($feed['mappings'], 'title_mode')) {
-                    'default' => Arr::get($this->config, 'default_title'),
-                    'custom' => Arr::get($feed['mappings'], 'title'),
-                };
-
-                // summary
-                $feedConfig['mappings']['summary'] = match (Arr::get($feed['mappings'], 'summary_mode')) {
-                    'default' => Arr::get($this->config, 'default_summary'),
-                    'custom' => Arr::get($feed['mappings'], 'summary'),
-                    'disabled' => null
-                };
-
-                // image
-                if (Arr::get($feed['mappings'], 'image_mode') === 'disabled') {
-                    $feedConfig['mappings']['image'] = null;
-                } else {
-                    $feedConfig['mappings']['image'] = match (Arr::get($feed['mappings'], 'image_mode')) {
-                        'default' => Arr::get($this->config, 'default_image'),
-                        'custom' => Arr::get($feed['mappings'], 'image')
-                    };
-
-                    // image dimensions
-                    if (Arr::get($feed['mappings'], 'image_dimensions_mode') === 'custom') {
-                        $feedConfig['mappings']['image_width'] = Arr::get($feed['mappings'], 'image_width');
-                        $feedConfig['mappings']['image_height'] = Arr::get($feed['mappings'], 'image_height');
-                    } elseif (Arr::get($feed['mappings'], 'image_dimensions_mode') === 'default') {
-                        $feedConfig['mappings']['image_width'] = Arr::get($this->config, 'default_image_width');
-                        $feedConfig['mappings']['image_height'] = Arr::get($this->config, 'default_image_height');
-                    }
-                }
-
-                // author
-                $feedConfig['mappings']['author_type'] = null;
-                $feedConfig['mappings']['author_name'] = null;
-                $feedConfig['mappings']['author_email'] = null;
-                if (Arr::get($feed['mappings'], 'author_mode') === 'custom') {
-                    $feedConfig['mappings']['author_type'] = Arr::get($feed['mappings'], 'author_type');
-                    $feedConfig['mappings']['author_name'] = Arr::get($feed['mappings'], 'author_name');
-                    $feedConfig['mappings']['author_email'] = Arr::get($feed['mappings'], 'author_email');
-                } elseif (Arr::get($feed['mappings'], 'author_mode') === 'default') {
-                    $feedConfig['mappings']['author_type'] = Arr::get($this->config, 'default_author_type');
-                    $feedConfig['mappings']['author_name'] = Arr::get($this->config, 'default_author_name');
-                    $feedConfig['mappings']['author_email'] = Arr::get($this->config, 'default_author_email');
-                }
-
-                return [$feedConfig['handle'] => $feedConfig];
             });
+        }
 
-        return $this;
+        $entries = LazyCollection::make(function () use ($lazyDataSources, $sortField) {
+            $iterators = [];
+
+            foreach ($lazyDataSources as $key => $collection) {
+                $iterator = $collection->getIterator();
+                $iterators[$key] = [
+                    'iterator' => $iterator,
+                    'current' => $iterator->valid() ? $iterator->current() : null,
+                ];
+            }
+
+            while (true) {
+                $maxKey = null;
+                $maxValue = null;
+                $maxSortValue = null;
+
+                foreach ($iterators as $key => &$data) {
+                    if ($data['current'] === null) {
+                        continue;
+                    }
+
+                    // get the sort value, and if a Carbon object (i.e. "date"), compare from the timestamp
+                    $currentSortValue =
+                        $sortField === 'date' ? $data['current']->date() : $data['current']->get($sortField);
+                    if ($currentSortValue instanceof Carbon) {
+                        $currentSortValue = $currentSortValue->timestamp;
+                    }
+
+                    if ($currentSortValue === null) {
+                        continue;
+                    }
+
+                    if ($maxValue === null || $currentSortValue > $maxSortValue) {
+                        $maxKey = $key;
+                        $maxValue = $data['current'];
+                        $maxSortValue = $currentSortValue;
+                    }
+                }
+
+                if ($maxKey === null) {
+                    break;
+                }
+
+                yield $maxValue;
+
+                $iterators[$maxKey]['iterator']->next();
+                $iterators[$maxKey]['current'] =
+                    $iterators[$maxKey]['iterator']->valid() ? $iterators[$maxKey]['iterator']->current() : null;
+            }
+        });
+
+        // we have a limit, so only take those
+        if ($limit) {
+            return $entries->take($limit);
+        }
+
+        return $entries;
     }
 }

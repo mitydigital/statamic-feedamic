@@ -5,6 +5,9 @@ return [
     'author_name_missing_type' => 'Unknown type: cannot validate.',
     'author_name_entry' => 'Your handles must be wrapped in square brackets.',
 
+    'collections_ordered_the_same_way' => 'All Collections must be ordered the same way, with the same sort field.',
+    'collections_ordered_the_same_way_missing' => 'Collection ":handle" could not be loaded.',
+
     'feed_route_format' => 'Your route is not a valid relative URL.',
     'feed_route_format_slash' => 'Your route must start with a slash.',
 

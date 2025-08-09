@@ -2,6 +2,7 @@
 
 use MityDigital\Feedamic\Facades\Feedamic;
 use MityDigital\Feedamic\Models\FeedamicEntry;
+use Statamic\Facades\Collection;
 
 it('can show the feedamic configuration view', function () {
     createSuperUser();
@@ -54,6 +55,9 @@ it('updates the feedamic configuration', function () {
     $user = createCpUser();
     $role = createFeedamicRole();
     $user->explicitRoles([$role->handle()]);
+
+    // we need a blog collection
+    Collection::make('blog')->save();
 
     expect(file_exists(Feedamic::getPath()))->toBeFalse();
 

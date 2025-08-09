@@ -37,7 +37,8 @@ it('returns an atom feed when there is only an atom feed configured', function (
 
     expect($tag->index())
         ->toBe('<link rel="alternate" type="application/atom+xml" title="Atom Test" href="http://localhost/feed/atom" />')
-        ->and($tag->wildcard('missing-handle'))->toBe('')
+        ->and($tag->wildcard('missing-handle'))
+        ->toBe('')
         ->and($tag->wildcard('atom'))
         ->toBe('<link rel="alternate" type="application/atom+xml" title="Atom Test" href="http://localhost/feed/atom" />');
 });

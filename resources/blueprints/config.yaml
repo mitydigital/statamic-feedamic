@@ -150,11 +150,13 @@ tabs:
                           handle: collections
                           field:
                             dictionary: dated_collections_dictionary
-                            type: dictionary
+                            type: collections
+                            mode: select
                             display: 'feedamic::config.feeds.collections'
                             localizable: false
                             validate:
                               - required
+                              - 'new \MityDigital\Feedamic\Rules\CollectionsOrderedTheSameWayRule'
                         -
                           handle: taxonomies
                           field:
