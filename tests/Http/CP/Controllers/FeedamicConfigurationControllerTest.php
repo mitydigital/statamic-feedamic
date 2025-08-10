@@ -1,6 +1,7 @@
 <?php
 
 use MityDigital\Feedamic\Facades\Feedamic;
+use MityDigital\Feedamic\Models\FeedamicAuthor;
 use MityDigital\Feedamic\Models\FeedamicEntry;
 use Statamic\Facades\Collection;
 
@@ -67,7 +68,8 @@ it('updates the feedamic configuration', function () {
         ->assertSessionHasErrors([
             'feeds',
             'default_title',
-            'default_model',
+            'default_author_model',
+            'default_entry_model',
         ]);
 
     // pass the expected fields
@@ -83,11 +85,13 @@ it('updates the feedamic configuration', function () {
                     'atom' => '/feed/atom',
                 ],
                 'collections' => ['blog'],
-                'model' => FeedamicEntry::class,
+                'author_model' => FeedamicAuthor::class,
+                'entry_model' => FeedamicEntry::class,
             ],
         ],
         'default_title' => ['heading', 'title'],
-        'default_model' => FeedamicEntry::class,
+        'default_author_model' => FeedamicAuthor::class,
+        'default_entry_model' => FeedamicEntry::class,
     ])
         ->assertOk();
 

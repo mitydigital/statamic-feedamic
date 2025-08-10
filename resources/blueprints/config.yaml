@@ -289,6 +289,9 @@ tabs:
                                     -
                                       key: default
                                       value: 'feedamic::config.feeds.override_options.default'
+                                    -
+                                      key: disabled
+                                      value: 'feedamic::config.feeds.override_options.disabled'
                                   default: default
                                   type: select
                                   display: 'feedamic::config.feeds.mappings.summary_mode'
@@ -316,7 +319,49 @@ tabs:
                                   localizable: false
                                   width: 66
                                   if:
-                                    summary_mode: 'equals default'
+                                    summary_mode: 'not custom'
+                              -
+                                handle: content_mode
+                                field:
+                                  options:
+                                    -
+                                      key: custom
+                                      value: 'feedamic::config.feeds.override_options.custom'
+                                    -
+                                      key: default
+                                      value: 'feedamic::config.feeds.override_options.default'
+                                    -
+                                      key: disabled
+                                      value: 'feedamic::config.feeds.override_options.disabled'
+                                  default: default
+                                  type: select
+                                  display: 'feedamic::config.feeds.mappings.content_mode'
+                                  instructions: 'feedamic::config.feeds.mappings.content_instructions'
+                                  localizable: false
+                                  width: 33
+                              -
+                                handle: content
+                                field:
+                                  type: list
+                                  display: 'feedamic::config.feeds.mappings.content'
+                                  localizable: false
+                                  validate:
+                                    - 'exclude_unless:{this}.mappings.content_mode,custom'
+                                    - array
+                                    - 'min:0'
+                                    - 'new \MityDigital\Feedamic\Rules\ListContainsHandlesRule'
+                                  width: 66
+                                  if:
+                                    content_mode: 'equals custom'
+                              -
+                                handle: content_spacer
+                                field:
+                                  type: spacer
+                                  display: 'Content Spacer'
+                                  localizable: false
+                                  width: 66
+                                  if:
+                                    content_mode: 'not custom'
                               -
                                 handle: image_mode
                                 field:
@@ -454,6 +499,28 @@ tabs:
                                   if:
                                     author_mode: 'equals custom'
                               -
+                                handle: author_type_spacer
+                                field:
+                                  type: spacer
+                                  display: 'Default Author Type Spacer'
+                                  localizable: false
+                                  width: 50
+                                  if:
+                                    default_author_type: 'equals field'
+                              -
+                                handle: author_field
+                                field:
+                                  type: text
+                                  display: 'feedamic::config.author_type.field.display'
+                                  localizable: false
+                                  validate:
+                                    - 'exclude_unless:{this}.mappings.author_mode,custom'
+                                    - required
+                                  width: 33
+                                  if:
+                                    author_mode: 'equals custom'
+                                    author_type: 'equals entry'
+                              -
                                 handle: author_name_spacer_1
                                 field:
                                   type: spacer
@@ -462,6 +529,7 @@ tabs:
                                   width: 33
                                   if:
                                     author_mode: 'equals custom'
+                                    author_type: 'equals field'
                               -
                                 handle: author_name_spacer_2
                                 field:
@@ -556,13 +624,22 @@ tabs:
                             if:
                               advanced: 'equals true'
                         -
-                          handle: model
+                          handle: scope_spacer
                           field:
-                            dictionary: feedamic_models_dictionary
+                            type: spacer
+                            display: 'Scope Spacer'
+                            localizable: false
+                            width: 50
+                            if:
+                              advanced: 'equals true'
+                        -
+                          handle: entry_model
+                          field:
+                            dictionary: feedamic_entry_models_dictionary
                             max_items: 1
                             type: dictionary
-                            display: 'feedamic::config.feeds.model.display'
-                            instructions: 'feedamic::config.feeds.model.instructions'
+                            display: 'feedamic::config.feeds.entry_model.display'
+                            instructions: 'feedamic::config.feeds.entry_model.instructions'
                             localizable: false
                             instructions_position: below
                             width: 50
@@ -570,6 +647,23 @@ tabs:
                             validate:
                               - required
                             default: MityDigital\Feedamic\Models\FeedEntry
+                            if:
+                              advanced: 'equals true'
+                        -
+                          handle: author_model
+                          field:
+                            dictionary: feedamic_author_models_dictionary
+                            max_items: 1
+                            type: dictionary
+                            display: 'feedamic::config.feeds.author_model.display'
+                            instructions: 'feedamic::config.feeds.author_model.instructions'
+                            localizable: false
+                            instructions_position: below
+                            width: 50
+                            always_save: true
+                            validate:
+                              - required
+                            default: MityDigital\Feedamic\Models\FeedAuthor
                             if:
                               advanced: 'equals true'
                         -
@@ -622,6 +716,22 @@ tabs:
                 - 'min:0'
                 - 'new \MityDigital\Feedamic\Rules\ListContainsHandlesRule'
               instructions: 'feedamic::config.defaults.sections.summary.default_summary.instructions'
+      -
+        display: 'feedamic::config.defaults.sections.content.display'
+        fields:
+          -
+            handle: default_content
+            field:
+              type: list
+              display: 'feedamic::config.defaults.sections.content.default_content.display'
+              hide_display: true
+              localizable: false
+              validate:
+                - nullable
+                - array
+                - 'min:0'
+                - 'new \MityDigital\Feedamic\Rules\ListContainsHandlesRule'
+              instructions: 'feedamic::config.defaults.sections.content.default_content.instructions'
       -
         display: 'feedamic::config.defaults.sections.image.display'
         fields:
@@ -707,9 +817,34 @@ tabs:
               type: select
               display: 'feedamic::config.author_type.display'
               localizable: false
+              width: 50
               if:
                 default_author_enabled: 'equals true'
               instructions: 'feedamic::config.author_type.instructions'
+          -
+            handle: default_author_type_spacer
+            field:
+              type: spacer
+              display: 'Default Author Type Spacer'
+              localizable: false
+              width: 50
+              if:
+                default_author_type: 'equals field'
+          -
+            handle: default_author_field
+            field:
+              type: text
+              display: 'feedamic::config.author_type.field.display'
+              localizable: false
+              validate:
+                - 'exclude_unless:{this}.default_author_enabled,true'
+                - required
+              width: 50
+              if:
+                default_author_enabled: 'equals true'
+                default_author_type: 'equals entry'
+              instructions: 'feedamic::config.author_type.field.instructions'
+              instructions_position: above
           -
             handle: default_author_name
             field:
@@ -755,16 +890,30 @@ tabs:
         display: 'feedamic::config.defaults.sections.model.display'
         fields:
           -
-            handle: default_model
+            handle: default_entry_model
             field:
-              dictionary: feedamic_models_dictionary
+              dictionary: feedamic_entry_models_dictionary
               max_items: 1
               type: dictionary
-              display: 'feedamic::config.defaults.sections.model.default_model.display'
-              instructions: 'feedamic::config.defaults.sections.model.default_model.instructions'
+              display: 'feedamic::config.defaults.sections.model.default_entry_model.display'
+              instructions: 'feedamic::config.defaults.sections.model.default_entry_model.instructions'
               localizable: false
               instructions_position: below
               width: 50
               validate:
                 - required
               default: MityDigital\Feedamic\Models\FeedEntry
+          -
+            handle: default_author_model
+            field:
+              dictionary: feedamic_author_models_dictionary
+              max_items: 1
+              type: dictionary
+              display: 'feedamic::config.defaults.sections.model.default_author_model.display'
+              instructions: 'feedamic::config.defaults.sections.model.default_author_model.instructions'
+              localizable: false
+              instructions_position: below
+              width: 50
+              validate:
+                - required
+              default: MityDigital\Feedamic\Models\FeedamicAuthor

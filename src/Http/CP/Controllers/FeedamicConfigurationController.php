@@ -47,16 +47,19 @@ class FeedamicConfigurationController extends Controller
                 'feeds',
                 'default_title',
                 'default_summary',
+                'default_content',
                 'default_image_enabled',
                 'default_image',
                 'default_image_width',
                 'default_image_height',
                 'default_author_enabled',
                 'default_author_type',
+                'default_author_field',
                 'default_author_name',
                 'default_author_email',
                 'default_copyright',
-                'default_model',
+                'default_entry_model',
+                'default_author_model',
             ]));
 
         // validate

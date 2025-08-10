@@ -8,5 +8,7 @@ it('defines the expected methods', function () {
 
     expect($methods)->toContain('title')
         ->and($methods)->toContain('summary')
-        ->and($methods)->toContain('hasSummaryOrImage');
+        ->and($methods)->toContain('content')
+        ->and($methods)->toContain('hasImage')
+        ->and($methods)->toContain('hasSummary');
 });

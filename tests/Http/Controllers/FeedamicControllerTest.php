@@ -1,4 +1,3 @@
 <?php
 
-it('needs tests written', function () {
-})->todo();
+it('needs tests written', function () {})->todo();

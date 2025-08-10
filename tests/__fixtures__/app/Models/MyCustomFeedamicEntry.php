@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Support\Traits\ForwardsCalls;
 use MityDigital\Feedamic\Contracts\FeedamicEntry;
+use Statamic\Assets\Asset;
+use Statamic\Fields\Value;
 
 class MyCustomFeedamicEntry implements FeedamicEntry
 {
@@ -11,19 +13,42 @@ class MyCustomFeedamicEntry implements FeedamicEntry
 
     public function __construct(public $entry) {}
 
-    public function hasSummaryOrImage(): bool
+    public function hasSummary(): bool
     {
-        return true;
+        if ($this->summary || $this->image) {
+            return true;
+        }
+
+        return false;
     }
 
-    public function title(bool $encode = true): string
+    public function hasImage(): bool
     {
-        return 'Title';
+        if ($this->summary || $this->image) {
+            return true;
+        }
+
+        return false;
     }
 
-    public function summary(bool $encode = true): string
+    public function image(): ?Asset
     {
-        return 'Summary';
+        return null;
+    }
+
+    public function title(): string|Value
+    {
+        return null;
+    }
+
+    public function content(): null|string|Value
+    {
+        return null;
+    }
+
+    public function summary(): null|string|Value
+    {
+        return null;
     }
 
     public function __call(string $name, array $arguments)

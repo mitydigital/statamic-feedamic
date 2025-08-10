@@ -478,8 +478,14 @@ it('has the correct validation for the field in the blueprint', function (string
             'new \Statamic\Rules\Slug',
         ],
     ],
-    'default model' => [
-        'default_model',
+    'default author model' => [
+        'default_author_model',
+        [
+            'required',
+        ],
+    ],
+    'default entry model' => [
+        'default_entry_model',
         [
             'required',
         ],
@@ -656,8 +662,14 @@ it('has the correct validation for the feeds array in the blueprint', function (
             'string',
         ],
     ],
-    'model' => [
-        'model',
+    'author_model' => [
+        'author_model',
+        [
+            'required',
+        ],
+    ],
+    'entry_model' => [
+        'entry_model',
         [
             'required',
         ],

@@ -16,6 +16,8 @@ class FeedamicConfig
 
     public array $collections;
 
+    public array $taxonomies = [];
+
     public array $sites = [];
 
     public array $routes = [];
@@ -29,15 +31,21 @@ class FeedamicConfig
     public array $mappings = [
         'title' => '',
         'summary' => '',
+        'content' => '',
         'image' => null,
         'image_width' => null,
         'image_height' => null,
         'author_type' => null,
+        'author_field' => null,
         'author_name' => null,
         'author_email' => null,
     ];
 
-    public string $model = FeedamicEntry::class;
+    public ?string $scope = null;
+
+    public string $author_model = FeedamicAuthor::class;
+
+    public string $entry_model = FeedamicEntry::class;
 
     public function __construct($feed, $defaults)
     {
@@ -47,8 +55,22 @@ class FeedamicConfig
         $this->collections = Arr::get($feed, 'collections', []);
         $this->alt_url = Arr::get($feed, 'alt_url');
 
-        if ($model = Arr::get($feed, 'model')) {
-            $this->model = $model;
+        if ($author_model = Arr::get($feed, 'author_model')) {
+            $this->author_model = $author_model;
+        }
+
+        if ($entry_model = Arr::get($feed, 'entry_model')) {
+            $this->entry_model = $entry_model;
+        }
+
+        if ($scope = Arr::get($feed, 'scope')) {
+            $this->scope = $scope;
+        }
+
+        if ($taxonomies = Arr::get($feed, 'taxonomies')) {
+            if (is_array($taxonomies) && ! empty($taxonomies)) {
+                $this->taxonomies = $taxonomies;
+            }
         }
 
         // update limit
@@ -97,6 +119,13 @@ class FeedamicConfig
             default => null
         };
 
+        // content
+        $this->mappings['content'] = match (Arr::get($feed['mappings'], 'content_mode')) {
+            'default' => Arr::get($defaults, 'default_content'),
+            'custom' => Arr::get($feed['mappings'], 'content'),
+            default => null
+        };
+
         // image
         if (Arr::get($feed['mappings'], 'image_mode') === 'disabled') {
             $this->mappings['image'] = null;
@@ -119,10 +148,12 @@ class FeedamicConfig
         // author
         if (Arr::get($feed['mappings'], 'author_mode') === 'custom') {
             $this->mappings['author_type'] = Arr::get($feed['mappings'], 'author_type');
+            $this->mappings['author_field'] = Arr::get($feed['mappings'], 'author_field');
             $this->mappings['author_name'] = Arr::get($feed['mappings'], 'author_name');
             $this->mappings['author_email'] = Arr::get($feed['mappings'], 'author_email');
         } elseif (Arr::get($feed['mappings'], 'author_mode') === 'default') {
             $this->mappings['author_type'] = Arr::get($defaults, 'default_author_type');
+            $this->mappings['author_field'] = Arr::get($defaults, 'default_author_field');
             $this->mappings['author_name'] = Arr::get($defaults, 'default_author_name');
             $this->mappings['author_email'] = Arr::get($defaults, 'default_author_email');
         }
@@ -155,5 +186,75 @@ class FeedamicConfig
     public function getRouteForFeedType(string $type): ?string
     {
         return Arr::get($this->routes, $type, null);
+    }
+
+    public function getTitleMappings(): array
+    {
+        return $this->mappings['title'];
+    }
+
+    public function hasImage(): bool
+    {
+        return ! ($this->mappings['image'] === null);
+    }
+
+    public function hasSummary(): bool
+    {
+        return ! ($this->mappings['summary'] === null);
+    }
+
+    public function hasContent(): bool
+    {
+        return ! ($this->mappings['content'] === null);
+    }
+
+    public function hasAuthor(): bool
+    {
+        return ! ($this->mappings['author_type'] === null);
+    }
+
+    public function getImageMappings(): array
+    {
+        return $this->mappings['image'] ?? [];
+    }
+
+    public function getImageHeight(): int
+    {
+        return (int) $this->mappings['image_height'];
+    }
+
+    public function getImageWidth(): int
+    {
+        return (int) $this->mappings['image_width'];
+    }
+
+    public function getAuthorType(): string
+    {
+        return $this->mappings['author_type'];
+    }
+
+    public function getAuthor(): string
+    {
+        return $this->mappings['author_field'];
+    }
+
+    public function getAuthorName(): string
+    {
+        return $this->mappings['author_name'];
+    }
+
+    public function getAuthorEmail(): ?string
+    {
+        return $this->mappings['author_email'];
+    }
+
+    public function getSummaryMappings(): array
+    {
+        return $this->mappings['summary'] ?? [];
+    }
+
+    public function getContentMappings(): array
+    {
+        return $this->mappings['content'] ?? [];
     }
 }

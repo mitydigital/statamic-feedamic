@@ -2,28 +2,159 @@
 
 namespace MityDigital\Feedamic\Models;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Traits\ForwardsCalls;
+use Statamic\Assets\Asset;
+use Statamic\Assets\AssetCollection;
 use Statamic\Entries\Entry;
+use Statamic\Fields\Value;
 
 class FeedamicEntry implements \MityDigital\Feedamic\Contracts\FeedamicEntry
 {
     use ForwardsCalls;
 
-    public function __construct(public Entry $entry) {}
+    protected static array $modifiers = [];
 
-    public function hasSummaryOrImage(): bool
+    protected string|Value $title;
+
+    protected null|string|Value $summary;
+
+    protected null|string|Value $content;
+
+    protected null|Asset|Value $image;
+
+    protected ?\MityDigital\Feedamic\Contracts\FeedamicAuthor $author;
+
+    public function __construct(public Entry $entry, protected FeedamicConfig $config) {}
+
+    public static function modify(string $field, \Closure $modifier): void
     {
-        return true;
+        static::$modifiers[$field] = $modifier;
     }
 
-    public function title(bool $encode = true): string
+    public function hasImage(): bool
     {
-        return $this->entry->title;
+        return ! empty($this->image());
     }
 
-    public function summary(bool $encode = true): string
+    public function image(): null|Asset|Value
     {
-        return 'Summary';
+        if (! $this->config->hasImage()) {
+            $this->image = null;
+        } elseif (! isset($this->image)) {
+            $image = $this->processField(
+                handle: 'image',
+                value: $this->getMappingValue($this->config->getImageMappings())
+            );
+
+            if (! $image) {
+                $this->image = null;
+            } elseif ($image->value() instanceof Asset) {
+                $this->image = $image->value();
+            } elseif ($image->value()?->get() instanceof AssetCollection) {
+                $this->image = $image->value()->get()->first();
+            }
+        }
+
+        return $this->image;
+    }
+
+    protected function processField(string $handle, mixed $value): mixed
+    {
+        if ($processor = Arr::get(static::$modifiers, $handle)) {
+            return $processor($value);
+        }
+
+        return $value;
+    }
+
+    protected function getMappingValue(array $map, mixed $default = null): mixed
+    {
+        foreach ($map as $handle) {
+            if ($this->entry->has($handle)) {
+                if ($value = $this->entry->augmentedValue($handle)) {
+                    return $value;
+                }
+            }
+        }
+
+        return $default;
+    }
+
+    public function hasSummary(): bool
+    {
+        return ! empty($this->summary());
+    }
+
+    public function summary(): null|string|Value
+    {
+        if (! $this->config->hasSummary()) {
+            $this->summary = null;
+        } elseif (! isset($this->summary)) {
+            $this->summary = $this->processField(
+                handle: 'summary',
+                value: $this->getMappingValue($this->config->getSummaryMappings())
+            );
+        }
+
+        return $this->summary;
+    }
+
+    public function hasAuthor(): bool
+    {
+        return ! empty($this->author());
+    }
+
+    public function author(): ?\MityDigital\Feedamic\Contracts\FeedamicAuthor
+    {
+        if (! $this->config->hasAuthor()) {
+            $this->author = null;
+        } elseif (! isset($this->author)) {
+            $this->author = null;
+
+            $model = $this->config->author_model;
+            if ($this->config->getAuthorType() === 'entry') {
+                $author = $this->entry->augmentedValue($this->config->getAuthor())?->value();
+                if ($author) {
+                    $this->author = new $model($author, $this->config);
+                }
+            } else {
+                $this->author = new $model($this->entry, $this->config);
+            }
+        }
+
+        return $this->author;
+    }
+
+    public function hasContent(): bool
+    {
+        return ! empty($this->content());
+    }
+
+    public function content(): null|string|Value
+    {
+        if (! $this->config->hasContent()) {
+            $this->content = null;
+        } elseif (! isset($this->content)) {
+            $this->content = $this->processField(
+                handle: 'content',
+                value: $this->getMappingValue($this->config->getContentMappings())
+            );
+        }
+
+        return $this->content;
+    }
+
+    public function title(): string|Value
+    {
+        if (! isset($this->title)) {
+            $this->title = $this->processField(
+                handle: 'title',
+                value: $this->getMappingValue($this->config->getTitleMappings())
+            );
+        }
+
+        return $this->title;
     }
 
     public function __call(string $name, array $arguments)

@@ -1,15 +1,15 @@
 <?php
 
 use App\Models\User;
-use MityDigital\Feedamic\Dictionaries\FeedamicModelsDictionary;
+use MityDigital\Feedamic\Dictionaries\FeedamicEntryModelsDictionary;
 use Statamic\Dictionaries\BasicDictionary;
 
 it('extends the basic dictionary', function () {
-    expect(FeedamicModelsDictionary::class)->toExtend(BasicDictionary::class);
+    expect(FeedamicEntryModelsDictionary::class)->toExtend(BasicDictionary::class);
 });
 
 it('correctly returns only models that are for feedamic', function () {
-    $dictionary = new FeedamicModelsDictionary;
+    $dictionary = new FeedamicEntryModelsDictionary;
 
     // confirm we have a "user" model
     expect(new User)->not()->toBeNull();

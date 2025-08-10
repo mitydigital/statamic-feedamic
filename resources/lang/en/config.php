@@ -11,29 +11,30 @@ return [
     ],
 
     'author_type' => [
-        'display' => 'Display',
-        'instructions' => [
-            'Select **Entry** if your author is in a related Entry or User.
-Select **Field** if your author details are explicit fields in your Entry.',
-        ],
+        'display' => 'Source',
+        'instructions' => 'Select **Related Entry/User** if your author is in a related Entry or User.
+Select **Fields** if your author details are fields in your Entry.',
 
         'options' => [
-            'entry' => 'Entry',
-            'field' => 'Field',
+            'entry' => 'Related Entry/User',
+            'field' => 'Fields',
+        ],
+
+        'field' => [
+            'display' => 'Relation Field',
+            'instructions' => 'The handle of the field in your Blueprint that references the Entry or User that is the Author.',
         ],
 
         'name' => [
             'display' => 'Name',
-            'instructions' => 'For **Entry**, the field handles in your linked Entry used to get the name, wrapped in square brackets, such as "[name_first] [name_last]".
-
-For **Field**, the handle in your Entry that contains the author name.',
+            'instructions' => 'The field handle(s) that are used to display the Author\'s name. 
+            
+For "Fields", a single field handle (such as "name"), or for "Related Entry/User" multiple handles each in square brackets (such as "[name_first] [name_last]").',
         ],
 
         'email' => [
             'display' => 'Email',
-            'instructions' => "For **Entry**, the field handle in your linked Entry/User that is the author's email.
-
-For **Field**, the handle in your Entry that is the author's email.
+            'instructions' => "The field handle that is the author's email.
 
 Leave **blank** to exclude the email.",
         ],
@@ -149,10 +150,16 @@ Leave **blank** to exclude the email.",
             'summary_mode' => 'Summary',
             'summary' => 'Summary Handles',
 
+            'content_mode' => 'Content',
+            'content' => 'Content Handles',
+            'content_instructions' => 'Only used in Atom feeds.',
+
             'image_mode' => 'Image',
             'image' => 'Image Handles',
 
             'image_dimensions_mode' => 'Image Dimensions',
+            'image_width' => 'Width',
+            'image_height' => 'Height',
 
             'author_mode' => 'Author',
         ],
@@ -167,9 +174,14 @@ Leave **blank** to exclude the email.",
 See https://statamic.dev/extending/query-scopes-and-filters#scopes',
         ],
 
-        'model' => [
-            'display' => 'Model',
-            'instructions' => 'Select the Model to use for the feed generation.',
+        'author_model' => [
+            'display' => 'Author Model',
+            'instructions' => 'Select the Author Model to use for the feed generation.',
+        ],
+
+        'entry_model' => [
+            'display' => 'Entry Model',
+            'instructions' => 'Select the Entry Model to use for the feed generation.',
         ],
 
         'alt_url' => [
@@ -197,6 +209,15 @@ See https://statamic.dev/extending/query-scopes-and-filters#scopes',
                 'default_summary' => [
                     'display' => 'Handles',
                     'instructions' => 'A list of fields that looked at, in order, to determine the "summary" for each entry.',
+                ],
+            ],
+
+            'content' => [
+                'display' => 'Content',
+
+                'default_content' => [
+                    'display' => 'Handles',
+                    'instructions' => 'A list of fields that looked at, in order, to determine the "content" for each entry. Only used in Atom feeds.',
                 ],
             ],
 
@@ -235,11 +256,16 @@ Keep blank to exclude this element.',
             ],
 
             'model' => [
-                'display' => 'Model',
+                'display' => 'Models',
 
-                'default_model' => [
-                    'display' => 'Model',
-                    'instructions' => 'Select the default Model to use for the feed generation.',
+                'default_entry_model' => [
+                    'display' => 'Entry Model',
+                    'instructions' => 'Select the default Entry Model to use for the feed generation.',
+                ],
+
+                'default_author_model' => [
+                    'display' => 'Author Model',
+                    'instructions' => 'Select the default Author Model to use for the feed generation.',
                 ],
             ],
         ],

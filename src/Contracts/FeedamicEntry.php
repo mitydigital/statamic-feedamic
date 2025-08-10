@@ -2,11 +2,20 @@
 
 namespace MityDigital\Feedamic\Contracts;
 
+use Statamic\Assets\Asset;
+use Statamic\Fields\Value;
+
 interface FeedamicEntry
 {
-    public function hasSummaryOrImage(): bool;
+    public function hasImage(): bool;
 
-    public function title(bool $encode = true): string;
+    public function hasSummary(): bool;
 
-    public function summary(bool $encode = true): string;
+    public function title(): string|Value;
+
+    public function summary(): null|string|Value;
+
+    public function content(): null|string|Value;
+
+    public function image(): null|Asset|Value;
 }

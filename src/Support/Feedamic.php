@@ -228,12 +228,35 @@ class Feedamic
                 ->where('published', true)
                 ->orderBy($sortField, 'desc');
 
+            // collection date behaviour
             if ($collection->futureDateBehavior() === 'private') {
                 $query->where('date', '<=', now());
             }
 
             if ($collection->pastDateBehavior() === 'private') {
                 $query->where('date', '>=', now());
+            }
+
+            // filter by taxonomy terms
+            foreach ($config->taxonomies as $termsConfig) {
+                $logic = strtolower(Arr::get($termsConfig, 'logic', 'and'));
+                switch ($logic) {
+                    case 'and':
+                        foreach (Arr::get($termsConfig, 'terms', []) as $term) {
+                            $query = $query->whereTaxonomy($term);
+                        }
+                        break;
+                    case 'or':
+                        // OR LOGIC
+                        $query = $query->whereTaxonomyIn(Arr::get($termsConfig, 'terms', []));
+                        break;
+                }
+            }
+
+            // do we have a scope?
+            // if so, let's apply it
+            if ($scope = $config->scope) {
+                app($scope)->apply($query, $config);
             }
 
             $lazyDataSources[] = LazyCollection::make(function () use ($query, $limit) {
