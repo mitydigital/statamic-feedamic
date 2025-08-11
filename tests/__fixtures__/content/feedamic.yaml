@@ -1,0 +1,131 @@
+feeds:
+  -
+    sites: all
+    sites_specific: {  }
+    sites_specific_spacer: null
+    title: 'All Sites'
+    handle: all-sites
+    description: 'Description for All Sites'
+    routes:
+      atom: /feed/atom
+      atom_view: null
+      rss: /feed
+      rss_view: null
+    collections:
+      - blog
+    taxonomies: {  }
+    show: all
+    show_limit: null
+    advanced: false
+    mappings:
+      title_mode: default
+      title: {  }
+      title_spacer: null
+      summary_mode: default
+      summary: {  }
+      summary_spacer: null
+      content_mode: default
+      content: {  }
+      content_spacer: null
+      image_mode: default
+      image: {  }
+      image_spacer: null
+      image_dimensions_mode: default
+      image_dimensions_spacer: null
+      image_width: null
+      image_height: null
+      author_mode: default
+      author_type: entry
+      author_type_spacer: null
+      author_field: null
+      author_name_spacer_1: null
+      author_name_spacer_2: null
+      author_name: entry
+      author_email: entry
+    copyright_mode: default
+    copyright_spacer: null
+    copyright: null
+    scope: null
+    scope_spacer: null
+    entry_model: MityDigital\Feedamic\Models\FeedEntry
+    author_model: MityDigital\Feedamic\Models\FeedAuthor
+    alt_url: null
+    _id: me6q3oip
+    type: feed
+    enabled: true
+  -
+    sites: specific
+    sites_specific:
+      - ca
+    sites_specific_spacer: null
+    title: 'CA Site'
+    handle: ca-site
+    description: 'Description for CA Site'
+    routes:
+      atom: /ca/feed/atom
+      atom_view: null
+      rss: null
+      rss_view: null
+    collections:
+      - blog
+    taxonomies: {  }
+    show: all
+    show_limit: null
+    advanced: false
+    mappings:
+      title_mode: default
+      title: {  }
+      title_spacer: null
+      summary_mode: default
+      summary: {  }
+      summary_spacer: null
+      content_mode: default
+      content: {  }
+      content_spacer: null
+      image_mode: default
+      image: {  }
+      image_spacer: null
+      image_dimensions_mode: default
+      image_dimensions_spacer: null
+      image_width: null
+      image_height: null
+      author_mode: default
+      author_type: entry
+      author_type_spacer: null
+      author_field: null
+      author_name_spacer_1: null
+      author_name_spacer_2: null
+      author_name: entry
+      author_email: entry
+    copyright_mode: default
+    copyright_spacer: null
+    copyright: null
+    scope: null
+    scope_spacer: null
+    entry_model: MityDigital\Feedamic\Models\FeedEntry
+    author_model: MityDigital\Feedamic\Models\FeedAuthor
+    alt_url: null
+    _id: me6q3zcr
+    type: feed
+    enabled: true
+default_title:
+  - title
+default_summary:
+  - introduction
+  - content
+default_content:
+  - content
+default_image_enabled: true
+default_image:
+  - image
+default_image_width: 1280
+default_image_height: 720
+default_author_enabled: true
+default_author_type: entry
+default_author_type_spacer: null
+default_author_field: author_entry
+default_author_name: '[name_first] [name_last]'
+default_author_email: email
+default_copyright: 'Default Copyright Stataement'
+default_entry_model: MityDigital\Feedamic\Models\FeedEntry
+default_author_model: MityDigital\Feedamic\Models\FeedamicAuthor

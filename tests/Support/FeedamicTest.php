@@ -4,6 +4,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use MityDigital\Feedamic\Http\Controllers\FeedamicController;
 use MityDigital\Feedamic\Support\Feedamic;
 use Statamic\Facades\Site;
 use Statamic\Fields\Blueprint;
@@ -695,3 +696,25 @@ it('has the correct validation for the feeds array in the blueprint', function (
         ],
     ],
 ]);
+
+it('registers the expected routes', function () {
+    $routes = collect(\Illuminate\Support\Facades\Route::getRoutes()->getRoutes())
+        ->filter(fn (\Illuminate\Routing\Route $route) => $route->getControllerClass() === FeedamicController::class)
+        ->map(fn (\Illuminate\Routing\Route $route) => $route->getDomain().'/'.$route->uri())
+        ->values();
+
+    $expected = [
+        '/feed/atom',
+        '/feed',
+        '/us/feed/atom',
+        '/us/feed',
+        'ca.test/feed/atom',
+        'ca.test/feed',
+        'ca.test/ca/feed/atom',
+    ];
+
+    expect($routes)->toHaveCount(7);
+    foreach ($expected as $route) {
+        expect($routes)->toContain($route);
+    }
+});

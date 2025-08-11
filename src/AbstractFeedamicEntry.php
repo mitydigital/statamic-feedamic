@@ -28,9 +28,7 @@ abstract class AbstractFeedamicEntry
 
     protected ?AbstractFeedamicAuthor $author;
 
-    public function __construct(public Entry $entry, protected FeedamicConfig $config)
-    {
-    }
+    public function __construct(public Entry $entry, protected FeedamicConfig $config) {}
 
     public static function modify(string $field, Closure $modifier): void
     {
@@ -44,14 +42,14 @@ abstract class AbstractFeedamicEntry
 
     public function hasImage(): bool
     {
-        return !empty($this->image());
+        return ! empty($this->image());
     }
 
     public function image(): null|Asset|Value
     {
-        if (!$this->config->hasImage()) {
+        if (! $this->config->hasImage()) {
             $this->image = null;
-        } elseif (!isset($this->image)) {
+        } elseif (! isset($this->image)) {
             $image = $this->processField(
                 handle: 'image',
                 value: $this->getMappingValue($this->config->getImageMappings())
@@ -94,14 +92,14 @@ abstract class AbstractFeedamicEntry
 
     public function hasSummary(): bool
     {
-        return !empty($this->summary());
+        return ! empty($this->summary());
     }
 
     public function summary(): null|string|Value
     {
-        if (!$this->config->hasSummary()) {
+        if (! $this->config->hasSummary()) {
             $this->summary = null;
-        } elseif (!isset($this->summary)) {
+        } elseif (! isset($this->summary)) {
             $this->summary = $this->processField(
                 handle: 'summary',
                 value: $this->getMappingValue($this->config->getSummaryMappings())
@@ -113,14 +111,14 @@ abstract class AbstractFeedamicEntry
 
     public function hasAuthor(): bool
     {
-        return !empty($this->author());
+        return ! empty($this->author());
     }
 
     public function author(): ?AbstractFeedamicAuthor
     {
-        if (!$this->config->hasAuthor()) {
+        if (! $this->config->hasAuthor()) {
             $this->author = null;
-        } elseif (!isset($this->author)) {
+        } elseif (! isset($this->author)) {
             $this->author = null;
 
             $model = $this->config->author_model;
@@ -139,14 +137,14 @@ abstract class AbstractFeedamicEntry
 
     public function hasContent(): bool
     {
-        return !empty($this->content());
+        return ! empty($this->content());
     }
 
     public function content(): null|string|Value
     {
-        if (!$this->config->hasContent()) {
+        if (! $this->config->hasContent()) {
             $this->content = null;
-        } elseif (!isset($this->content)) {
+        } elseif (! isset($this->content)) {
             $this->content = $this->processField(
                 handle: 'content',
                 value: $this->getMappingValue($this->config->getContentMappings())
@@ -158,7 +156,7 @@ abstract class AbstractFeedamicEntry
 
     public function title(): string|Value
     {
-        if (!isset($this->title)) {
+        if (! isset($this->title)) {
             $this->title = $this->processField(
                 handle: 'title',
                 value: $this->getMappingValue($this->config->getTitleMappings())

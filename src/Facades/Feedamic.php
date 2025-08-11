@@ -16,7 +16,7 @@ use Statamic\Fields\Blueprint;
  * @method static Collection getFeeds()
  * @method static Collection getFeedsForSite(string $handle)
  * @method static array getConfig(string $path, string $site)
- * @method static array load()
+ * @method static array load(bool $refresh = false)
  * @method static LazyCollection getEntries(array $config)
  * @method static void save(array $payload)
  * @method static string svg(string $name, string $attrs = null)

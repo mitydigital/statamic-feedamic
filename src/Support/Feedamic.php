@@ -103,9 +103,9 @@ class Feedamic
         return $this;
     }
 
-    public function load(): Collection
+    public function load($refresh = false): Collection
     {
-        if (! isset($this->config)) {
+        if (! isset($this->config) || $refresh === true) {
             if (file_exists(self::getPath())) {
                 $this->config = collect(YAML::file(self::getPath())->parse());
             } else {

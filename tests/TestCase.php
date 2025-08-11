@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\File;
 use MityDigital\Feedamic\ServiceProvider;
 use Statamic\Facades\AssetContainer;
 use Statamic\Facades\Blueprint;
+use Statamic\Facades\Site;
 use Statamic\Statamic;
 use Statamic\Testing\AddonTestCase;
 use Statamic\Testing\Concerns\PreventsSavingStacheItemsToDisk;
@@ -36,16 +37,18 @@ abstract class TestCase extends AddonTestCase
         parent::getEnvironmentSetUp($app);
 
         foreach ($this->fixtures as $folder) {
-            File::copyDirectory(
-                __DIR__.'/__fixtures__/app/'.$folder, app_path($folder)
-            );
+            File::copyDirectory(__DIR__.'/__fixtures__/app/'.$folder, app_path($folder));
         }
+
+        File::makeDirectory(base_path('content'));
+        File::copy(__DIR__.'/__fixtures__/content/feedamic.yaml', base_path('content/feedamic.yaml'));
     }
 
     protected function resolveApplicationConfiguration($app)
     {
         parent::resolveApplicationConfiguration($app);
 
+        $app['config']->set('app.url', 'http://feedamic.test');
         $app['config']->set('statamic.editions.pro', true);
         $app['config']->set('filesystems.disks.assets', [
             'driver' => 'local',
@@ -56,6 +59,24 @@ abstract class TestCase extends AddonTestCase
         ]);
 
         Statamic::booted(function () {
+            Site::setSites([
+                'default' => [
+                    'name' => 'Australia',
+                    'locale' => 'en_AU',
+                    'url' => '/',
+                ],
+                'us' => [
+                    'name' => 'US',
+                    'locale' => 'en_US',
+                    'url' => 'http://feedamic.test/us/',
+                ],
+                'ca' => [
+                    'name' => 'Canada',
+                    'locale' => 'en_CA',
+                    'url' => 'http://ca.test/',
+                ],
+            ]);
+
             Blueprint::setDirectory(__DIR__.'/__fixtures__/resources/blueprints');
 
             $assets = AssetContainer::make('assets');
