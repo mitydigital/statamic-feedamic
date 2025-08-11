@@ -5,6 +5,9 @@ use MityDigital\Feedamic\Tags\Feedamic as FeedamicTag;
 use Statamic\Facades\Site;
 
 it('returns nothing when there is no configuration', function () {
+    Feedamic::save([
+        'feeds' => [],
+    ]);
     $tag = new FeedamicTag;
 
     expect($tag->index())->toBe('')
@@ -36,11 +39,11 @@ it('returns an atom feed when there is only an atom feed configured', function (
     $tag = new FeedamicTag;
 
     expect($tag->index())
-        ->toBe('<link rel="alternate" type="application/atom+xml" title="Atom Test" href="http://localhost/feed/atom" />')
+        ->toBe('<link rel="alternate" type="application/atom+xml" title="Atom Test" href="http://feedamic.test/feed/atom" />')
         ->and($tag->wildcard('missing-handle'))
         ->toBe('')
         ->and($tag->wildcard('atom'))
-        ->toBe('<link rel="alternate" type="application/atom+xml" title="Atom Test" href="http://localhost/feed/atom" />');
+        ->toBe('<link rel="alternate" type="application/atom+xml" title="Atom Test" href="http://feedamic.test/feed/atom" />');
 });
 
 it('returns an rss feed when there is only an rss feed configured', function () {
@@ -68,10 +71,10 @@ it('returns an rss feed when there is only an rss feed configured', function () 
     $tag = new FeedamicTag;
 
     expect($tag->index())
-        ->toBe('<link rel="alternate" type="application/rss+xml" title="RSS Test" href="http://localhost/feed" />')
+        ->toBe('<link rel="alternate" type="application/rss+xml" title="RSS Test" href="http://feedamic.test/feed" />')
         ->and($tag->wildcard('missing-handle'))->toBe('')
         ->and($tag->wildcard('rss'))
-        ->toBe('<link rel="alternate" type="application/rss+xml" title="RSS Test" href="http://localhost/feed" />');
+        ->toBe('<link rel="alternate" type="application/rss+xml" title="RSS Test" href="http://feedamic.test/feed" />');
 });
 
 it('returns both an atom and rss feed when both are configured', function () {
@@ -100,14 +103,14 @@ it('returns both an atom and rss feed when both are configured', function () {
     $tag = new FeedamicTag;
 
     expect($tag->index())
-        ->toBe('<link rel="alternate" type="application/atom+xml" title="Both Test" href="http://localhost/feed/atom" />'
+        ->toBe('<link rel="alternate" type="application/atom+xml" title="Both Test" href="http://feedamic.test/feed/atom" />'
             ."\r\n"
-            .'<link rel="alternate" type="application/rss+xml" title="Both Test" href="http://localhost/feed" />')
+            .'<link rel="alternate" type="application/rss+xml" title="Both Test" href="http://feedamic.test/feed" />')
         ->and($tag->wildcard('missing-handle'))->toBe('')
         ->and($tag->wildcard('both'))
-        ->toBe('<link rel="alternate" type="application/atom+xml" title="Both Test" href="http://localhost/feed/atom" />'
+        ->toBe('<link rel="alternate" type="application/atom+xml" title="Both Test" href="http://feedamic.test/feed/atom" />'
             ."\r\n"
-            .'<link rel="alternate" type="application/rss+xml" title="Both Test" href="http://localhost/feed" />');
+            .'<link rel="alternate" type="application/rss+xml" title="Both Test" href="http://feedamic.test/feed" />');
 });
 
 it('correctly returns routes for a specific site', function () {

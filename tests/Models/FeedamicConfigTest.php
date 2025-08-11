@@ -6,8 +6,16 @@ use App\Scopes\MyQueryScope;
 use MityDigital\Feedamic\Models\FeedamicAuthor;
 use MityDigital\Feedamic\Models\FeedamicConfig;
 use MityDigital\Feedamic\Models\FeedamicEntry;
+use Statamic\Facades\Site;
 
 beforeEach(function () {
+    Site::setSites([
+        'default' => [
+            'name' => 'Australia',
+            'locale' => 'en_AU',
+            'url' => '/',
+        ],
+    ]);
     $this->defaults = collect([
         'default_title' => [
             'title',

@@ -36,6 +36,9 @@ it('returns the configured path', function () {
 });
 
 it('saves the config', function () {
+    // force remove
+    File::delete(base_path('content/feedamic.yaml'));
+
     // file doesn't exist
     expect(File::exists(app(Feedamic::class)->getPath()))
         ->toBeFalse();
@@ -74,6 +77,13 @@ it('loads the blueprint', function () {
 });
 
 it('ensures each route starts with a slash', function () {
+    Site::setSites([
+        'default' => [
+            'name' => 'Australia',
+            'locale' => 'en_AU',
+            'url' => '/',
+        ],
+    ]);
     app(Feedamic::class)->save([
         'feeds' => [
             [
@@ -100,6 +110,14 @@ it('ensures each route starts with a slash', function () {
 });
 
 it('correctly creates the routes for a single site', function () {
+    Site::setSites([
+        'default' => [
+            'name' => 'Australia',
+            'locale' => 'en_AU',
+            'url' => '/',
+        ],
+    ]);
+    
     app(Feedamic::class)->save([
         'feeds' => [
             [
