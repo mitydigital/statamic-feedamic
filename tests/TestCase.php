@@ -4,6 +4,9 @@ namespace MityDigital\Feedamic\Tests;
 
 use Illuminate\Support\Facades\File;
 use MityDigital\Feedamic\ServiceProvider;
+use Statamic\Facades\AssetContainer;
+use Statamic\Facades\Blueprint;
+use Statamic\Statamic;
 use Statamic\Testing\AddonTestCase;
 use Statamic\Testing\Concerns\PreventsSavingStacheItemsToDisk;
 
@@ -34,8 +37,7 @@ abstract class TestCase extends AddonTestCase
 
         foreach ($this->fixtures as $folder) {
             File::copyDirectory(
-                __DIR__.'/__fixtures__/app/'.$folder,
-                app_path($folder)
+                __DIR__.'/__fixtures__/app/'.$folder, app_path($folder)
             );
         }
     }
@@ -45,6 +47,24 @@ abstract class TestCase extends AddonTestCase
         parent::resolveApplicationConfiguration($app);
 
         $app['config']->set('statamic.editions.pro', true);
+        $app['config']->set('filesystems.disks.assets', [
+            'driver' => 'local',
+            'root' => public_path('assets'),
+            'url' => '/assets',
+            'visibility' => 'public',
+            'throw' => false,
+        ]);
+
+        Statamic::booted(function () {
+            Blueprint::setDirectory(__DIR__.'/__fixtures__/resources/blueprints');
+
+            $assets = AssetContainer::make('assets');
+            $assets->disk('assets');
+            $assets->title('Assets');
+            $assets->save();
+
+            File::copyDirectory(__DIR__.'/__fixtures__/public/assets', public_path('assets'));
+        });
     }
 
     protected function tearDown(): void

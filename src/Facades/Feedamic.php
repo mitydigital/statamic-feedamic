@@ -19,6 +19,7 @@ use Statamic\Fields\Blueprint;
  * @method static array load()
  * @method static LazyCollection getEntries(array $config)
  * @method static void save(array $payload)
+ * @method static string svg(string $name, string $attrs = null)
  *
  * @see \MityDigital\Feedamic\Support\Feedamic
  */

@@ -13,8 +13,10 @@ use MityDigital\Feedamic\Models\FeedamicConfig;
 use Statamic\Facades\Blueprint;
 use Statamic\Facades\Entry;
 use Statamic\Facades\File;
+use Statamic\Facades\Path;
 use Statamic\Facades\YAML;
 use Statamic\Sites\Site;
+use Stringy\StaticStringy;
 
 class Feedamic
 {
@@ -139,24 +141,28 @@ class Feedamic
         unset($this->feeds);
     }
 
-    public function getClassOfType(string $folder, string $requiredClass, ?callable $callback = null): array
+    public function getClassOfType(string $abstractClass): array
     {
-        if (! app('files')->exists($path = app_path($folder))) {
+        if (! app('files')->exists($path = app_path())) {
             return [];
         }
 
-        return collect(app('files')->allFiles($path))
-            ->map(function ($file) use ($folder, $callback, $requiredClass) {
-                $class = $file->getBasename('.php');
-                $fqcn = app()->getNamespace()."{$folder}\\{$class}";
+        return collect(\Illuminate\Support\Facades\File::allFiles(app_path()))
+            ->map(function ($file) {
+                $path = $file->getRealPath();
 
-                if ($callback) {
-                    if ($callback($fqcn, $requiredClass)) {
-                        return $fqcn;
-                    }
-                } elseif (is_subclass_of($fqcn, $requiredClass)) {
-                    return $fqcn;
-                }
+                // Turn file path into fully qualified class name
+                $class = 'App\\'.str_replace(
+                    ['/', '.php'],
+                    ['\\', ''],
+                    Str::after($path, app_path().DIRECTORY_SEPARATOR)
+                );
+
+                return $class;
+            })
+            ->filter(function ($class) use ($abstractClass) {
+                return class_exists($class)
+                    && is_subclass_of($class, $abstractClass);
             })
             ->filter()
             ->toArray();
@@ -195,9 +201,6 @@ class Feedamic
 
     public function getEntries(FeedamicConfig $config)
     {
-        // ray()->queries();
-        // ray($config);
-
         $sortField = null;
 
         $limit = $config->limit;
@@ -328,5 +331,18 @@ class Feedamic
         }
 
         return $entries;
+    }
+
+    public function svg(string $name, ?string $attrs = null): string
+    {
+        if ($attrs) {
+            $attrs = " class=\"{$attrs}\"";
+        }
+
+        $svg = StaticStringy::collapseWhitespace(
+            File::get(Path::tidy(__DIR__."/../../resources/svg/{$name}.svg"))
+        );
+
+        return str_replace('<svg', sprintf('<svg%s', $attrs), $svg);
     }
 }

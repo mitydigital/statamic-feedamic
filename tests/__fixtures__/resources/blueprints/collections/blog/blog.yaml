@@ -1,0 +1,86 @@
+title: 'Blog'
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        fields:
+          -
+            handle: title
+            field:
+              type: text
+              required: true
+              localizable: false
+              validate:
+                - required
+          -
+            handle: display_title
+            field:
+              type: text
+              display: 'Display Title'
+              localizable: false
+          -
+            handle: introduction
+            field:
+              type: textarea
+              display: Introduction
+              localizable: false
+          -
+            handle: content
+            field:
+              remove_empty_nodes: false
+              type: bard
+              display: Content
+              localizable: false
+          -
+            handle: image
+            field:
+              max_files: 1
+              container: assets
+              type: assets
+              display: Image
+              localizable: false
+          -
+            handle: images
+            field:
+              max_files: 2
+              container: assets
+              type: assets
+              display: Images
+              localizable: false
+          -
+            handle: author_user
+            field:
+              max_items: 1
+              type: users
+              display: 'Author User'
+              localizable: false
+          -
+            handle: author_entry
+            field:
+              max_items: 1
+              collections:
+                - pages
+              type: entries
+              display: 'Author Entry'
+              localizable: false
+  sidebar:
+    display: Sidebar
+    sections:
+      -
+        fields:
+          -
+            handle: slug
+            field:
+              type: slug
+              localizable: true
+              validate: 'max:200'
+          -
+            handle: date
+            field:
+              type: date
+              required: true
+              default: now
+              localizable: false
+              validate:
+                - required

@@ -16,8 +16,9 @@ it('correctly returns only models that are for feedamic', function () {
 
     expect($dictionary->options())
         ->toBe([
-            'MityDigital\Feedamic\Models\FeedEntry' => 'MityDigital\Feedamic\Models\FeedEntry',
+            'MityDigital\Feedamic\Models\FeedamicEntry' => 'MityDigital\Feedamic\Models\FeedamicEntry',
             'App\Models\MyCustomFeedamicEntry' => 'App\Models\MyCustomFeedamicEntry',
+            'App\Models\Nested\MyCustomFeedamicEntry' => 'App\Models\Nested\MyCustomFeedamicEntry',
         ])
         ->not()
         ->toContain('App\Models\User');

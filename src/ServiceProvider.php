@@ -48,9 +48,9 @@ class ServiceProvider extends AddonServiceProvider
         });
 
         Nav::extend(function ($nav) {
-            $nav->settings(__('feedamic::cp.nav'))
+            $nav->tools(__('feedamic::cp.nav'))
                 ->route('feedamic.config.show')
-                // ->icon(StatamicStickyNotes::svg('sticky-notes'))
+                ->icon(Facades\Feedamic::svg('feedamic'))
                 ->can('feedamic.config');
         });
 

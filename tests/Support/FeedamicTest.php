@@ -471,6 +471,13 @@ it('has the correct validation for the field in the blueprint', function (string
             'new \MityDigital\Feedamic\Rules\AuthorNameRule(default_author_type)',
         ],
     ],
+    'default author field' => [
+        'default_author_field',
+        [
+            'exclude_unless:{this}.default_author_enabled,true',
+            'required',
+        ],
+    ],
     'default author email' => [
         'default_author_email',
         [
@@ -638,6 +645,13 @@ it('has the correct validation for the feeds array in the blueprint', function (
         'mappings.author_type',
         [
             'exclude_unless:{this}.mappings.author_mode,custom',
+        ],
+    ],
+    'mappings author field' => [
+        'mappings.author_field',
+        [
+            'exclude_unless:{this}.mappings.author_mode,custom',
+            'required',
         ],
     ],
     'mappings author name' => [
