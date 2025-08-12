@@ -29,16 +29,14 @@
         <published>{{ $entry->date->toRfc3339String() }}</published>
         @endif
         <updated>{{ $entry->getUpdatedAt()->toRfc3339String() }}</updated>
-        @if ($entry->hasSummary() &&$entry->hasImage())
+        @if ($entry->hasSummary() && $entry->hasImage())
             <summary type="html">
             @if ($entry->hasImage())
             <s:glide src="{{ $entry->image() }}" width="{{ $config->getImageWidth() }}" height="{{ $config->getImageHeight() }}">
             {{ $entry->encode('<p><img src="'.$config->makeUrlAbsolute($url).'" width="'.$width.'" height="'.$height.'"></p>') }}
             </s:glide>
             @endif
-            @if ($entry->hasSummary())
-                {{ $entry->encode('<p>'.$entry->summary().'</p>') }}
-            @endif
+            {{ $entry->encode('<p>'.$entry->summary().'</p>') }}
             </summary>
         @elseif ($entry->hasSummary())
             <summary type="text">{{ $entry->summary() }}</summary>

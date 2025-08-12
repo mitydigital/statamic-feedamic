@@ -1,32 +1,42 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
-        <title>{!! $title !!}</title>
-        <description>{!! $description !!}</description>
-        <link>{{ $alt_url }}</link>
-        <atom:link href="{{ $href }}" rel="self" type="application/rss+xml"/>
-        @if($updated)
-            <lastBuildDate>{{ $updated->toRfc2822String() }}</lastBuildDate>
+        <title>{!! $config->title !!}</title>
+        <description>{!! $config->description !!}</description>
+        @if ($config->alt_url)
+        <link>{{ $config->alt_url }}</link>
         @endif
-
-        <language>{{ $language }}</language>
-        @if ($copyright)
-            <copyright>{!! $copyright !!}</copyright>
+        <lastBuildDate>{{ $updated->toRfc2822String() }}</lastBuildDate>
+        <language>{{ $site->lang }}</language>
+        @if ($config->copyright)
+            <copyright>{!! $config->copyright !!}</copyright>
         @endif
 
         <generator>Feedamic: the Atom and RSS Feed generator for Statamic</generator>
 
         @foreach ($entries as $entry)
             <item>
-                <title><![CDATA[{!! html_entity_decode($entry->title(false)) !!}]]></title>
-                <link>{{ $entry->uri }}</link>
-                <guid isPermaLink="true">{{ $entry->uri }}</guid>
-                <pubDate>{{ $entry->published->toRfc822String() }}</pubDate>
-                @if ($entry->hasSummaryOrImage())
-                    <description><![CDATA[{!! $entry->summary(false) !!}]]></description>
+                <title><![CDATA[{!! $entry->title() !!}]]></title>
+                <link>{{ $entry->url() }}</link>
+                <guid isPermaLink="true">{{ $entry->url() }}</guid>
+                <pubDate>{{ $entry->getUpdatedAt()->toRfc822String() }}</pubDate>
+                @if ($entry->hasSummary() && $entry->hasImage())
+                <description><![CDATA[{!! $entry->summary() !!}]]></description>
+                @elseif ($entry->hasSummary())
+                    <description><![CDATA[{!! $entry->summary() !!}]]></description>
                 @endif
 
-                @if ($author_email && $entry->author && $entry->author->email())
-                    <author>{{ $entry->author->email() }}</author>
+                @if ($entry->hasAuthor())
+                    @if ($email = $entry->author()->email())
+                    <author>{{ $email }} ({{ $entry->author()->name() }})</author>
+                    @else
+                    <author>{{ $entry->author()->name() }}</author>
+                    @endif
+                @else
+                    @if ($email = $config->author_fallback_email)
+                    <author>{{ $email }} ({{ $config->author_fallback_name }})</author>
+                    @else
+                    <author>{{ $config->author_fallback_name }}</author>
+                    @endif
                 @endif
 
             </item>
