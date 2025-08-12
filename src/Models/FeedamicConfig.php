@@ -4,6 +4,7 @@ namespace MityDigital\Feedamic\Models;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use MityDigital\Feedamic\Exceptions\FeedNotConfiguredException;
 use MityDigital\Feedamic\Facades\Feedamic;
 use Statamic\Facades\Path;
 use Statamic\Sites\Site;
@@ -75,7 +76,7 @@ class FeedamicConfig
         }
 
         if ($taxonomies = Arr::get($feed, 'taxonomies')) {
-            if (is_array($taxonomies) && ! empty($taxonomies)) {
+            if (is_array($taxonomies) && !empty($taxonomies)) {
                 $this->taxonomies = $taxonomies;
             }
         }
@@ -144,7 +145,7 @@ class FeedamicConfig
             };
 
             // image
-            if (! Arr::get($feed['mappings'], 'image_mode') || Arr::get($feed['mappings'], 'image_mode') === 'disabled'
+            if (!Arr::get($feed['mappings'], 'image_mode') || Arr::get($feed['mappings'], 'image_mode') === 'disabled'
             ) {
                 $this->mappings['image'] = null;
             } else {
@@ -213,22 +214,22 @@ class FeedamicConfig
 
     public function hasImage(): bool
     {
-        return ! ($this->mappings['image'] === null);
+        return !($this->mappings['image'] === null);
     }
 
     public function hasSummary(): bool
     {
-        return ! ($this->mappings['summary'] === null);
+        return !($this->mappings['summary'] === null);
     }
 
     public function hasContent(): bool
     {
-        return ! ($this->mappings['content'] === null);
+        return !($this->mappings['content'] === null);
     }
 
     public function hasAuthor(): bool
     {
-        return ! ($this->mappings['author_type'] === null);
+        return !($this->mappings['author_type'] === null);
     }
 
     public function getImageMappings(): array
@@ -298,19 +299,32 @@ class FeedamicConfig
 
     public function makeUrlAbsolute(string $url): string
     {
-        if (! Str::startsWith($url, '/')) {
+        if (!Str::startsWith($url, '/')) {
             return $url;
         }
 
         return Path::tidy(Str::ensureLeft($url, \Statamic\Facades\Site::current()->absoluteUrl()));
     }
 
-    public function getCacheKey(string|Site $site): string
+    public function getCacheKey(string $route, string|Site $site): string
     {
+        $type = null;
+        foreach (Feedamic::getFeedTypes() as $feedType) {
+            $configured = Arr::get($this->routes, $feedType, null);
+            if ($configured === $route) {
+                $type = $feedType;
+            }
+        }
+
+        if (!$type) {
+            throw new FeedNotConfiguredException(__('feedamic::exceptions.feed_not_configured', ['route' => $route]));
+        }
+
         return implode('.', [
             config('feedamic.cache', 'feedamic'),
             $this->handle,
             $site instanceof Site ? $site->handle() : $site,
+            $type,
         ]);
     }
 }

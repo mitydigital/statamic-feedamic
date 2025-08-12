@@ -11,7 +11,7 @@
             <copyright>{!! $config->copyright !!}</copyright>
         @endif
 
-        <generator>Feedamic: the Atom and RSS Feed generator for Statamic</generator>
+        <generator>{{ __('feedamic::feeds.generator') }}</generator>
 
         @foreach ($entries as $entry)
             <item>

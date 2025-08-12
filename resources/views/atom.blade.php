@@ -15,13 +15,10 @@
         <rights>{!! $config->copyright !!}</rights>
     @endif
 
-    <generator uri="https://github.com/mitydigital/feedamic" version="2.2">
-        Feedamic: the Atom and RSS Feed generator for Statamic
-    </generator>
-
+    <generator uri="https://github.com/mitydigital/feedamic" version="3.0">{{ __('feedamic::feeds.generator') }}</generator>
 
     @foreach ($entries as $entry)
-<entry>
+    <entry>
         <title type="html">{!! $entry->title() !!}</title>
         <link href="{{ $entry->url() }}"/>
         <id>{{ $entry->url() }}</id>
