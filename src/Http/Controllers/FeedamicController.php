@@ -25,12 +25,12 @@ class FeedamicController
         );
 
         // if there's no config, abort!
-        if (!$config) {
+        if (! $config) {
             abort(404);
         }
 
         $view = $config->getViewForRoute($route);
-        if (!View::exists($view)) {
+        if (! View::exists($view)) {
             throw new ViewNotFoundException(__('feedamic::exceptions.view_not_found', [
                 'view' => $view,
             ]));

@@ -10,37 +10,21 @@ class ClearCacheCommand extends Command
 {
     use RunsInPlease;
 
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'statamic:feedamic:clear 
                             {--handles= : Optional, the feed handles you want to clear, separated by commas. When omitted, will clear all feeds.} 
                             {--sites= : Optional, the sites you want to clear, separated by commas. When omitted, will clear all sites.}';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Clear the Feedamic caches';
 
-    /**
-     * Execute the console command.
-     *
-     * @return void
-     */
     public function handle()
     {
         $handles = $this->option('handles') ? explode(',', $this->option('handles')) : null;
         $sites = $this->option('sites') ? explode(',', $this->option('sites')) : null;
 
-        $this->info(sprintf(
-            'Clearing Feedamic cache for %s in %s.',
-            $handles ? implode(', ', $handles) : 'all feeds',
-            $sites ? implode(', ', $sites) : 'all sites',
-        ));
+        $this->info(__('feedamic::command.clear.start', [
+            'feeds' => $handles ? implode(', ', $handles) : __('feedamic::command.clear.all.feeds'),
+            'sites' => $sites ? implode(', ', $sites) : __('feedamic::command.clear.all.sites'),
+        ]));
 
         $clearedFeeds = Feedamic::clearCache(
             handles: $handles,
@@ -48,9 +32,11 @@ class ClearCacheCommand extends Command
         );
 
         foreach ($clearedFeeds as $clearedFeed) {
-            $this->info(sprintf('Cleared %s', $clearedFeed));
+            $this->info(__('feedamic::command.clear.cleared', [
+                'key' => $clearedFeed,
+            ]));
         }
 
-        $this->info('Ah-choo... Feedamic\'s cache is all gone.');
+        $this->info(__('feedamic::command.clear.done'));
     }
 }
