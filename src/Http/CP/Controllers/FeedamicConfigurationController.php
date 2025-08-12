@@ -69,5 +69,7 @@ class FeedamicConfigurationController extends Controller
 
         // save
         Feedamic::save($fields->values()->toArray());
+
+        Feedamic::clearCache();
     }
 }

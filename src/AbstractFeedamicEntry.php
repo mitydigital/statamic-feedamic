@@ -184,7 +184,7 @@ abstract class AbstractFeedamicEntry
 
     public function encode(string $html): string
     {
-        return htmlspecialchars($html, ENT_QUOTES, 'UTF-8');
+        return htmlspecialchars($html, ENT_XML1, 'UTF-8', false);
     }
 
     public function entry(): Entry

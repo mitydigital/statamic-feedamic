@@ -2,9 +2,7 @@
     <channel>
         <title>{!! $config->title !!}</title>
         <description>{!! $config->description !!}</description>
-        @if ($config->alt_url)
-        <link>{{ $config->alt_url }}</link>
-        @endif
+        <link>{{ $site->absoluteUrl() }}</link>
         <lastBuildDate>{{ $updated->toRfc2822String() }}</lastBuildDate>
         <language>{{ $site->lang }}</language>
         @if ($config->copyright)
@@ -20,9 +18,14 @@
                 <guid isPermaLink="true">{{ $entry->url() }}</guid>
                 <pubDate>{{ $entry->getUpdatedAt()->toRfc822String() }}</pubDate>
                 @if ($entry->hasSummary() && $entry->hasImage())
-                <description><![CDATA[{!! $entry->summary() !!}]]></description>
+                <description><![CDATA[
+                <s:glide src="{{ $entry->image() }}" width="{{ $config->getImageWidth() }}" height="{{ $config->getImageHeight() }}">
+                <p><img src="{{ $config->makeUrlAbsolute($url) }}" width="{{ $width }}" height="{{ $height }}" alt="{{ $entry->title() }}"></p>
+                </s:glide>
+                <p>{!! $entry->summary() !!}</p>
+                ]]></description>
                 @elseif ($entry->hasSummary())
-                    <description><![CDATA[{!! $entry->summary() !!}]]></description>
+                <description><![CDATA[{!! $entry->summary() !!}]]></description>
                 @endif
 
                 @if ($entry->hasAuthor())

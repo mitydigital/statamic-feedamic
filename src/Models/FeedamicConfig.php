@@ -76,7 +76,7 @@ class FeedamicConfig
         }
 
         if ($taxonomies = Arr::get($feed, 'taxonomies')) {
-            if (is_array($taxonomies) && !empty($taxonomies)) {
+            if (is_array($taxonomies) && ! empty($taxonomies)) {
                 $this->taxonomies = $taxonomies;
             }
         }
@@ -145,7 +145,7 @@ class FeedamicConfig
             };
 
             // image
-            if (!Arr::get($feed['mappings'], 'image_mode') || Arr::get($feed['mappings'], 'image_mode') === 'disabled'
+            if (! Arr::get($feed['mappings'], 'image_mode') || Arr::get($feed['mappings'], 'image_mode') === 'disabled'
             ) {
                 $this->mappings['image'] = null;
             } else {
@@ -214,22 +214,22 @@ class FeedamicConfig
 
     public function hasImage(): bool
     {
-        return !($this->mappings['image'] === null);
+        return ! ($this->mappings['image'] === null);
     }
 
     public function hasSummary(): bool
     {
-        return !($this->mappings['summary'] === null);
+        return ! ($this->mappings['summary'] === null);
     }
 
     public function hasContent(): bool
     {
-        return !($this->mappings['content'] === null);
+        return ! ($this->mappings['content'] === null);
     }
 
     public function hasAuthor(): bool
     {
-        return !($this->mappings['author_type'] === null);
+        return ! ($this->mappings['author_type'] === null);
     }
 
     public function getImageMappings(): array
@@ -299,7 +299,7 @@ class FeedamicConfig
 
     public function makeUrlAbsolute(string $url): string
     {
-        if (!Str::startsWith($url, '/')) {
+        if (! Str::startsWith($url, '/')) {
             return $url;
         }
 
@@ -316,7 +316,7 @@ class FeedamicConfig
             }
         }
 
-        if (!$type) {
+        if (! $type) {
             throw new FeedNotConfiguredException(__('feedamic::exceptions.feed_not_configured', ['route' => $route]));
         }
 

@@ -19,7 +19,7 @@
 
     @foreach ($entries as $entry)
     <entry>
-        <title type="html">{!! $entry->title() !!}</title>
+        <title type="html">{!! $entry->encode($entry->title()) !!}</title>
         <link href="{{ $entry->url() }}"/>
         <id>{{ $entry->url() }}</id>
         @if ($entry->date)
@@ -28,12 +28,10 @@
         <updated>{{ $entry->getUpdatedAt()->toRfc3339String() }}</updated>
         @if ($entry->hasSummary() && $entry->hasImage())
             <summary type="html">
-            @if ($entry->hasImage())
             <s:glide src="{{ $entry->image() }}" width="{{ $config->getImageWidth() }}" height="{{ $config->getImageHeight() }}">
-            {{ $entry->encode('<p><img src="'.$config->makeUrlAbsolute($url).'" width="'.$width.'" height="'.$height.'"></p>') }}
+            {{ '<p><img src="'.$config->makeUrlAbsolute($url).'" width="'.$width.'" height="'.$height.'" alt="'.$entry->title().'"></p>' }}
             </s:glide>
-            @endif
-            {{ $entry->encode('<p>'.$entry->summary().'</p>') }}
+            {{ '<p>'.$entry->summary().'</p>' }}
             </summary>
         @elseif ($entry->hasSummary())
             <summary type="text">{{ $entry->summary() }}</summary>
@@ -43,7 +41,7 @@
 
         @if ($entry->hasContent())
             <content type="html">
-            {{ $entry->encode($entry->content()) }}
+            {{ $entry->content() }}
             </content>
         @else
             <content src="{{ $entry->url() }}" type="text/html"></content>

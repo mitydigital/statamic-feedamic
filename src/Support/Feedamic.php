@@ -57,7 +57,7 @@ class Feedamic
                 $domain = 'default';
             }
 
-            if (!Arr::exists($data, $domain)) {
+            if (! Arr::exists($data, $domain)) {
                 $data[$domain] = [];
             }
 
@@ -75,7 +75,7 @@ class Feedamic
                             $feedPath = Str::start($feedPath, '/');
 
                             // add it, if we need to
-                            if (!in_array($feedType, $data[$domain])) {
+                            if (! in_array($feedType, $data[$domain])) {
                                 $data[$domain][] = $feedPath;
                             }
                         }
@@ -107,7 +107,7 @@ class Feedamic
 
     public function load($refresh = false): Collection
     {
-        if (!isset($this->config) || $refresh === true) {
+        if (! isset($this->config) || $refresh === true) {
             if (file_exists(self::getPath())) {
                 $this->config = collect(YAML::file(self::getPath())->parse());
             } else {
@@ -145,7 +145,7 @@ class Feedamic
 
     public function getClassOfType(string $abstractClass): array
     {
-        if (!app('files')->exists($path = app_path())) {
+        if (! app('files')->exists($path = app_path())) {
             return [];
         }
 
@@ -155,10 +155,10 @@ class Feedamic
 
                 // Turn file path into fully qualified class name
                 $class = 'App\\'.str_replace(
-                        ['/', '.php'],
-                        ['\\', ''],
-                        Str::after($path, app_path().DIRECTORY_SEPARATOR)
-                    );
+                    ['/', '.php'],
+                    ['\\', ''],
+                    Str::after($path, app_path().DIRECTORY_SEPARATOR)
+                );
 
                 return $class;
             })
@@ -172,7 +172,7 @@ class Feedamic
 
     public function getFeeds(): Collection
     {
-        if (!isset($this->feeds)) {
+        if (! isset($this->feeds)) {
             $this->getConfiguredFeeds();
         }
 
@@ -181,7 +181,7 @@ class Feedamic
 
     public function getFeedsForSite(string $handle)
     {
-        if (!isset($this->feeds)) {
+        if (! isset($this->feeds)) {
             $this->getConfiguredFeeds();
         }
 
@@ -191,7 +191,7 @@ class Feedamic
 
     public function getConfig(string $path, string $site): FeedamicConfig
     {
-        if (!isset($this->feeds)) {
+        if (! isset($this->feeds)) {
             $this->getConfiguredFeeds();
         }
 
@@ -215,7 +215,7 @@ class Feedamic
             if ($collection->dated()) {
                 $thisSortField = 'date';
             }
-            if (!$sortField) {
+            if (! $sortField) {
                 $sortField = $thisSortField; // just set the sort field
             } else {
                 if ($sortField !== $thisSortField) {
@@ -355,11 +355,13 @@ class Feedamic
 
     public function clearCache(?array $handles = null, ?array $sites = null, ?string $collection = null): array
     {
-        if (!$handles) {
+        $this->getConfiguredFeeds();
+
+        if (! $handles) {
             $handles = $this->feeds->keys()->toArray();
         }
 
-        if (!$sites) {
+        if (! $sites) {
             $sites = \Statamic\Facades\Site::all()->pluck('handle')->toArray();
         }
 
@@ -369,7 +371,7 @@ class Feedamic
             $config = $this->feeds->get($handle);
 
             // if there is no collection, or this feed uses that collection
-            if (!$collection || in_array($collection, $config->collections)) {
+            if (! $collection || in_array($collection, $config->collections)) {
                 foreach ($config->sites as $site) {
                     if (in_array($site, $sites)) {
                         foreach ($config->getRoutes() as $route) {
