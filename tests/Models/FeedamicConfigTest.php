@@ -33,6 +33,8 @@ beforeEach(function () {
         ],
         'default_image_width' => 1280,
         'default_image_height' => 720,
+        'default_author_fallback_name' => 'Polly Waffle',
+        'default_author_fallback_email' => 'polly@waffle.com.au',
         'default_author_enabled' => true,
         'default_author_type' => 'entry',
         'default_author_field' => 'author_entry',
@@ -147,18 +149,64 @@ it('correctly sets the feedamic entry model during creation', function () {
 
 it('correctly sets the scope during creation', function () {
     $config = new FeedamicConfig([
-        'handle' => 'entry_model-test',
+        'handle' => 'entry_scope-test',
     ], $this->defaults);
 
     expect($config->scope)->toBeNull();
 
     // can be overridden
     $config = new FeedamicConfig([
-        'handle' => 'entry_model-test',
+        'handle' => 'entry_scope-test',
         'scope' => MyQueryScope::class,
     ], $this->defaults);
 
     expect($config->scope)->toBe(MyQueryScope::class);
+});
+
+it('correctly sets the author fallback name during creation', function () {
+    if (false) {
+        $config = new FeedamicConfig([
+            'handle' => 'author_fallback_name-test',
+        ], $this->defaults);
+
+        expect($config->author_fallback_name)->toBe($this->defaults->get('default_author_fallback_name'));
+    }
+
+    // can be overridden
+    $config = new FeedamicConfig([
+        'handle' => 'author_fallback_name-test',
+        'author_fallback_mode' => 'custom',
+        'author_fallback_name' => 'Cherry Ripe',
+    ], $this->defaults);
+
+    expect($config->author_fallback_name)->toBe('Cherry Ripe');
+});
+it('correctly sets the author fallback email during creation', function () {
+    if (false) {
+        $config = new FeedamicConfig([
+            'handle' => 'author_fallback_email-test',
+        ], $this->defaults);
+
+        expect($config->author_fallback_email)->toBe($this->defaults->get('default_author_fallback_email'));
+    }
+
+    // can be overridden
+    $config = new FeedamicConfig([
+        'handle' => 'author_fallback_email-test',
+        'author_fallback_mode' => 'custom',
+        'author_fallback_email' => 'cherry@ripe.com.au',
+    ], $this->defaults);
+
+    expect($config->author_fallback_email)->toBe('cherry@ripe.com.au');
+
+    // can be empty
+    $config = new FeedamicConfig([
+        'handle' => 'author_fallback_email-test',
+        'author_fallback_mode' => 'custom',
+        'author_fallback_email' => '',
+    ], $this->defaults);
+
+    expect($config->author_fallback_email)->toBe('');
 });
 
 it('correctly sets the taxonomies during creation', function () {

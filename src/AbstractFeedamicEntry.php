@@ -174,7 +174,7 @@ abstract class AbstractFeedamicEntry
 
     public function getUpdatedAt(): Carbon
     {
-        return Carbon::parse($this->entry->get('updated_at'));
+        return $this->entry->augmentedValue('updated_at')->raw();
     }
 
     public function url(): string

@@ -3,6 +3,7 @@
         <title>{!! $config->title !!}</title>
         <description>{!! $config->description !!}</description>
         <link>{{ $site->absoluteUrl() }}</link>
+        <atom:link href="{{ $url }}" rel="self" type="application/rss+xml" />
         <lastBuildDate>{{ $updated->toRfc2822String() }}</lastBuildDate>
         <language>{{ $site->lang }}</language>
         @if ($config->copyright)
@@ -16,7 +17,7 @@
                 <title><![CDATA[{!! $entry->title() !!}]]></title>
                 <link>{{ $entry->url() }}</link>
                 <guid isPermaLink="true">{{ $entry->url() }}</guid>
-                <pubDate>{{ $entry->getUpdatedAt()->toRfc822String() }}</pubDate>
+                <pubDate>{{ $entry->getUpdatedAt()->toRfc2822String() }}</pubDate>
                 @if ($entry->hasSummary() && $entry->hasImage())
                 <description><![CDATA[
                 <s:glide src="{{ $entry->image() }}" width="{{ $config->getImageWidth() }}" height="{{ $config->getImageHeight() }}">
