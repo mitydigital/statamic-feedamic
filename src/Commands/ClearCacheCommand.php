@@ -3,7 +3,7 @@
 namespace MityDigital\Feedamic\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Cache;
+use MityDigital\Feedamic\Facades\Feedamic;
 use Statamic\Console\RunsInPlease;
 
 class ClearCacheCommand extends Command
@@ -15,7 +15,9 @@ class ClearCacheCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'statamic:feedamic:clear {feeds?* : Optional, the feed keys you want to flush. Can be multiple keys by space, or omit to clear everything.}';
+    protected $signature = 'statamic:feedamic:clear 
+                            {--handles= : Optional, the feed handles you want to clear, separated by commas. When omitted, will clear all feeds.} 
+                            {--sites= : Optional, the sites you want to clear, separated by commas. When omitted, will clear all sites.}';
 
     /**
      * The console command description.
@@ -31,45 +33,24 @@ class ClearCacheCommand extends Command
      */
     public function handle()
     {
-        $feeds = $this->argument('feeds');
-        if (count($feeds) > 0) {
-            // clear the specific feeds only
-            $cleared = [];
-            foreach ($feeds as $feed) {
-                foreach (config('feedamic.feeds.'.$feed.'.routes', []) as $type => $route) {
-                    Cache::forget(config('feedamic.cache').'.'.$feed.'.'.$type);
-                    Cache::forget(config('feedamic.cache').'.'.$feed);
-                    if (!in_array('"'.$feed.'"', $cleared)) {
-                        $cleared[] = '"'.$feed.'"';
-                    }
-                }
-            }
+        $handles = $this->option('handles') ? explode(',', $this->option('handles')) : null;
+        $sites = $this->option('sites') ? explode(',', $this->option('sites')) : null;
 
-            // make it prettier
-            // Arr::join came in Laravel 9 - so do it manually for L8 support
-            if (count($cleared) > 1) {
-                $lastCleared = array_pop($cleared);
-                $cleared = implode(', ', $cleared).' and '.$lastCleared;
-            } else {
-                $cleared = end($cleared);
-            }
+        $this->info(sprintf(
+            'Clearing Feedamic cache for %s in %s.',
+            $handles ? implode(', ', $handles) : 'all feeds',
+            $sites ? implode(', ', $sites) : 'all sites',
+        ));
 
-            $this->info('Ah-choo... feeds for '.$cleared.' are clear.');
-        } else {
-            // Clear all feeds caches
-            foreach (config('feedamic.feeds', []) as $feed => $config) {
-                foreach ($config['routes'] as $type => $route) {
-                    Cache::forget(config('feedamic.cache').'.'.$feed.'.'.$type);
-                    Cache::forget(config('feedamic.cache').'.'.$feed);
-                }
-            }
+        $clearedFeeds = Feedamic::clearCache(
+            handles: $handles,
+            sites: $sites
+        );
 
-            // Pre-2.2 clearing of cache
-            Cache::forget(config('feedamic.cache'));
-            Cache::forget(config('feedamic.cache').'.atom');
-            Cache::forget(config('feedamic.cache').'.rss');
-
-            $this->info('Ah-choo... it\'s all gone.');
+        foreach ($clearedFeeds as $clearedFeed) {
+            $this->info(sprintf('Cleared %s', $clearedFeed));
         }
+
+        $this->info('Ah-choo... Feedamic\'s cache is all gone.');
     }
 }

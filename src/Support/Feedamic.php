@@ -5,11 +5,13 @@ namespace MityDigital\Feedamic\Support;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\LazyCollection;
 use Illuminate\Support\Str;
 use Illuminate\Support\Uri;
 use MityDigital\Feedamic\Exceptions\InconsistentSortFieldException;
 use MityDigital\Feedamic\Models\FeedamicConfig;
+use MityDigital\Feedamic\Models\FeedamicEntry;
 use Statamic\Facades\Blueprint;
 use Statamic\Facades\Entry;
 use Statamic\Facades\File;
@@ -187,7 +189,7 @@ class Feedamic
             ->filter(fn (FeedamicConfig $config) => in_array($handle, $config->sites));
     }
 
-    public function getConfig(string $path, string $site)
+    public function getConfig(string $path, string $site): FeedamicConfig
     {
         if (! isset($this->feeds)) {
             $this->getConfiguredFeeds();
@@ -231,13 +233,15 @@ class Feedamic
                 ->where('published', true)
                 ->orderBy($sortField, 'desc');
 
-            // collection date behaviour
-            if ($collection->futureDateBehavior() === 'private') {
-                $query->where('date', '<=', now());
-            }
+            if ($collection->dated()) {
+                // collection date behaviour
+                if ($collection->futureDateBehavior() === 'private') {
+                    $query->where('date', '<=', now());
+                }
 
-            if ($collection->pastDateBehavior() === 'private') {
-                $query->where('date', '>=', now());
+                if ($collection->pastDateBehavior() === 'private') {
+                    $query->where('date', '>=', now());
+                }
             }
 
             // filter by taxonomy terms
@@ -274,7 +278,7 @@ class Feedamic
             });
         }
 
-        $entries = LazyCollection::make(function () use ($lazyDataSources, $sortField) {
+        $entries = LazyCollection::make(function () use ($lazyDataSources, $sortField, $config) {
             $iterators = [];
 
             foreach ($lazyDataSources as $key => $collection) {
@@ -296,8 +300,11 @@ class Feedamic
                     }
 
                     // get the sort value, and if a Carbon object (i.e. "date"), compare from the timestamp
-                    $currentSortValue =
-                        $sortField === 'date' ? $data['current']->date() : $data['current']->get($sortField);
+                    $currentSortValue = match ($sortField) {
+                        'date' => $data['current']->date(),
+                        'order' => $data['current']->order(),
+                        default => $data['current']->get($sortField),
+                    };
                     if ($currentSortValue instanceof Carbon) {
                         $currentSortValue = $currentSortValue->timestamp;
                     }
@@ -317,7 +324,7 @@ class Feedamic
                     break;
                 }
 
-                yield $maxValue;
+                yield new FeedamicEntry($maxValue, $config);
 
                 $iterators[$maxKey]['iterator']->next();
                 $iterators[$maxKey]['current'] =
@@ -344,5 +351,35 @@ class Feedamic
         );
 
         return str_replace('<svg', sprintf('<svg%s', $attrs), $svg);
+    }
+
+    public function clearCache(?array $handles = null, ?array $sites = null, ?string $collection = null): array
+    {
+        if (! $handles) {
+            $handles = $this->feeds->keys()->toArray();
+        }
+
+        if (! $sites) {
+            $sites = \Statamic\Facades\Site::all()->pluck('handle')->toArray();
+        }
+
+        $cleared = [];
+        foreach ($handles as $handle) {
+            // get the feed config
+            $config = $this->feeds->get($handle);
+
+            // if there is no collection, or this feed uses that collection
+            if (! $collection || in_array($collection, $config->collections)) {
+                foreach ($config->sites as $site) {
+                    if (in_array($site, $sites)) {
+                        $key = $config->getCacheKey($site);
+                        Cache::forget($key);
+                        $cleared[] = $key;
+                    }
+                }
+            }
+        }
+
+        return $cleared;
     }
 }

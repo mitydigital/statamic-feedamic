@@ -52,6 +52,8 @@ class FeedamicConfigurationController extends Controller
                 'default_image',
                 'default_image_width',
                 'default_image_height',
+                'default_author_fallback_name',
+                'default_author_fallback_email',
                 'default_author_enabled',
                 'default_author_type',
                 'default_author_field',

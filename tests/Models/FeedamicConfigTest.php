@@ -278,7 +278,7 @@ it('correctly sets the routes and route views during creation', function () {
         ->toBeArray()
         ->toBe([
             'atom' => '/feed/atom',
-            'atom_view' => 'mitydigital/feedamic::atom',
+            'atom_view' => 'feedamic::atom',
             'rss' => null,
             'rss_view' => null,
         ]);
@@ -297,7 +297,7 @@ it('correctly sets the routes and route views during creation', function () {
             'atom' => null,
             'atom_view' => null,
             'rss' => '/feed/rss',
-            'rss_view' => 'mitydigital/feedamic::rss',
+            'rss_view' => 'feedamic::rss',
         ]);
 
     // set view, but not route (does not update view)

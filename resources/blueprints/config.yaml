@@ -610,6 +610,60 @@ tabs:
                               advanced: 'equals true'
                               copyright_mode: 'equals custom'
                         -
+                          handle: author_fallback_mode
+                          field:
+                            options:
+                              -
+                                key: custom
+                                value: 'feedamic::config.feeds.override_options.custom'
+                              -
+                                key: default
+                                value: 'feedamic::config.feeds.override_options.default'
+                            default: default
+                            type: select
+                            display: 'feedamic::config.feeds.author_fallback_mode'
+                            localizable: false
+                            width: 33
+                            if:
+                              advanced: 'equals true'
+                        -
+                          handle: author_fallback_spacer
+                          field:
+                            type: spacer
+                            display: 'Author Fallback Spacer'
+                            localizable: false
+                            width: 66
+                            if:
+                              advanced: 'equals true'
+                              copyright_mode: 'equals default'
+                        -
+                          handle: author_fallback_name
+                          field:
+                            type: text
+                            display: 'feedamic::config.feeds.author_fallback_name'
+                            localizable: false
+                            validate:
+                              - 'exclude_unless:{this}.author_fallback_mode,custom'
+                            width: 50
+                            instructions_position: below
+                            if:
+                              advanced: 'equals true'
+                              author_fallback_mode: 'equals custom'
+                        -
+                          handle: author_fallback_email
+                          field:
+                            type: text
+                            display: 'feedamic::config.feeds.author_fallback_email'
+                            localizable: false
+                            width: 50
+                            validate:
+                              - nullable
+                              - email
+                            instructions_position: below
+                            if:
+                              advanced: 'equals true'
+                              author_fallback_mode: 'equals custom'
+                        -
                           handle: scope
                           field:
                             dictionary: feedamic_scopes_dictionary
@@ -793,6 +847,29 @@ tabs:
       -
         display: 'feedamic::config.defaults.sections.author.display'
         fields:
+          -
+            handle: default_author_fallback_name
+            field:
+              type: text
+              display: 'feedamic::config.author_type.fallback_name.display'
+              localizable: false
+              validate:
+                - required
+              width: 50
+              instructions: 'feedamic::config.author_type.fallback_name.instructions'
+              instructions_position: below
+          -
+            handle: default_author_fallback_email
+            field:
+              type: text
+              display: 'feedamic::config.author_type.fallback_email.display'
+              localizable: false
+              width: 50
+              validate:
+                - nullable
+                - email
+              instructions: 'feedamic::config.author_type.fallback_email.instructions'
+              instructions_position: below
           -
             handle: default_author_enabled
             field:

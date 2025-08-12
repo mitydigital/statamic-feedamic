@@ -3,7 +3,7 @@
 namespace MityDigital\Feedamic\Listeners;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Support\Facades\Cache;
+use MityDigital\Feedamic\Facades\Feedamic;
 use Statamic\Events\EntrySaved;
 
 class ClearFeedamicCache implements ShouldQueue
@@ -13,22 +13,9 @@ class ClearFeedamicCache implements ShouldQueue
      */
     public function handle(EntrySaved $event)
     {
-        echo 'need to do this';
-
-        return;
-
-        // v2.2 cache clearing for multiple feeds
-        // look at specific feeds if we have them configured
-        foreach (config('feedamic.feeds', []) as $feed => $config) {
-            if (isset($config['collections']) && is_array($config['collections'])
-                && in_array($event->entry->collection()->handle(),
-                    $config['collections'])
-            ) {
-                foreach ($config['routes'] as $type => $route) {
-                    Cache::forget(config('feedamic.cache').'.'.$feed.'.'.$type);
-                    Cache::forget(config('feedamic.cache').'.'.$feed);
-                }
-            }
-        }
+        Feedamic::clearCache(
+            sites: [$event->entry->locale],
+            collection: $event->entry->collection()->handle()
+        );
     }
 }

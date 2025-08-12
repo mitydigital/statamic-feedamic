@@ -117,7 +117,7 @@ it('correctly creates the routes for a single site', function () {
             'url' => '/',
         ],
     ]);
-    
+
     app(Feedamic::class)->save([
         'feeds' => [
             [

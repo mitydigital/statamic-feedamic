@@ -2,6 +2,7 @@
 
 namespace MityDigital\Feedamic;
 
+use Carbon\Carbon;
 use Closure;
 use Exception;
 use Illuminate\Support\Arr;
@@ -169,6 +170,21 @@ abstract class AbstractFeedamicEntry
     public function __call(string $name, array $arguments)
     {
         return $this->forwardCallTo($this->entry, $name, $arguments);
+    }
+
+    public function getUpdatedAt(): Carbon
+    {
+        return Carbon::parse($this->entry->get('updated_at'));
+    }
+
+    public function url(): string
+    {
+        return $this->config->makeUrlAbsolute($this->entry->uri());
+    }
+
+    public function encode(string $html): string
+    {
+        return htmlspecialchars($html, ENT_QUOTES, 'UTF-8');
     }
 
     public function entry(): Entry

@@ -5,7 +5,9 @@ namespace MityDigital\Feedamic\Models;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use MityDigital\Feedamic\Facades\Feedamic;
+use Statamic\Facades\Path;
 use Statamic\Sites\Site;
+use Statamic\Support\Str;
 
 class FeedamicConfig
 {
@@ -28,6 +30,10 @@ class FeedamicConfig
     public ?string $alt_url = null;
 
     public ?string $copyright = null;
+
+    public ?string $author_fallback_name;
+
+    public ?string $author_fallback_email;
 
     public array $mappings = [
         'title' => [],
@@ -92,7 +98,7 @@ class FeedamicConfig
             $this->routes[$feedType.'_view'] = null;
             if (isset($feed['routes']) && $route = Arr::get($feed['routes'], $feedType)) {
                 $this->routes[$feedType] = $route;
-                $view = 'mitydigital/feedamic::'.$feedType;
+                $view = 'feedamic::'.$feedType;
                 if ($override = Arr::get($feed['routes'], $feedType.'_view')) {
                     $view = $override;
                 }
@@ -106,6 +112,15 @@ class FeedamicConfig
             'custom' => Arr::get($feed, 'copyright'),
             default => null
         };
+
+        // fallback author
+        if (Arr::get($feed, 'author_fallback_mode') === 'custom') {
+            $this->author_fallback_name = Arr::get($feed, 'author_fallback_name');
+            $this->author_fallback_email = Arr::get($feed, 'author_fallback_email');
+        } else {
+            $this->author_fallback_name = $defaults->get('default_author_fallback_name');
+            $this->author_fallback_email = $defaults->get('default_author_fallback_email');
+        }
 
         if (isset($feed['mappings'])) {
             // title
@@ -267,5 +282,35 @@ class FeedamicConfig
     public function getContentMappings(): array
     {
         return $this->mappings['content'] ?? [];
+    }
+
+    public function getViewForRoute(string $route): ?string
+    {
+        foreach (Feedamic::getFeedTypes() as $type) {
+            $configured = Arr::get($this->routes, $type, null);
+            if ($configured === $route) {
+                return Arr::get($this->routes, $type.'_view');
+            }
+        }
+
+        return null;
+    }
+
+    public function makeUrlAbsolute(string $url): string
+    {
+        if (! Str::startsWith($url, '/')) {
+            return $url;
+        }
+
+        return Path::tidy(Str::ensureLeft($url, \Statamic\Facades\Site::current()->absoluteUrl()));
+    }
+
+    public function getCacheKey(string|Site $site): string
+    {
+        return implode('.', [
+            config('feedamic.cache', 'feedamic'),
+            $this->handle,
+            $site instanceof Site ? $site->handle() : $site,
+        ]);
     }
 }

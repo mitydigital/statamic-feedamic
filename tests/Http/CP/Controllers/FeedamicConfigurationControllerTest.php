@@ -70,6 +70,7 @@ it('updates the feedamic configuration', function () {
         ->assertSessionHasErrors([
             'feeds',
             'default_title',
+            'default_author_fallback_name',
             'default_author_model',
             'default_entry_model',
         ]);
@@ -92,6 +93,7 @@ it('updates the feedamic configuration', function () {
             ],
         ],
         'default_title' => ['heading', 'title'],
+        'default_author_fallback_name' => 'Polly Waffle',
         'default_author_model' => FeedamicAuthor::class,
         'default_entry_model' => FeedamicEntry::class,
     ])

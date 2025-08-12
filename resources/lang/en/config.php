@@ -25,6 +25,16 @@ Select **Fields** if your author details are fields in your Entry.',
             'instructions' => 'The handle of the field in your Blueprint that references the Entry or User that is the Author.',
         ],
 
+        'fallback_name' => [
+            'display' => 'Fallback Name',
+            'instructions' => 'Used as a plain-text fallback name for when your Entry does not have an author configured.',
+        ],
+
+        'fallback_email' => [
+            'display' => 'Fallback Email',
+            'instructions' => 'Leave blank to not include a fallback email.<br>Used as a plain-text fallback email for when your Entry does not have an author configured.',
+        ],
+
         'name' => [
             'display' => 'Name',
             'instructions' => 'The field handle(s) that are used to display the Author\'s name. 
@@ -166,6 +176,10 @@ Leave **blank** to exclude the email.",
 
         'copyright_mode' => 'Copyright',
         'copyright' => 'New Copyright',
+
+        'author_fallback_mode' => 'Author',
+        'author_fallback_name' => 'Author Name',
+        'author_fallback_email' => 'Author Email',
 
         'scope' => [
             'display' => 'Scope',
