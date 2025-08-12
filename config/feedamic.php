@@ -31,4 +31,6 @@ return [
     */
 
     'cache' => 'feedamic',
+
+    'cache_enabled' => env('FEEDAMIC_CACHE_ENABLED', true),
 ];

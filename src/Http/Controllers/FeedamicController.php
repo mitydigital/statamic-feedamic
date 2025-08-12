@@ -25,12 +25,12 @@ class FeedamicController
         );
 
         // if there's no config, abort!
-        if (! $config) {
+        if (!$config) {
             abort(404);
         }
 
         $view = $config->getViewForRoute($route);
-        if (! View::exists($view)) {
+        if (!View::exists($view)) {
             throw new ViewNotFoundException(__('feedamic::exceptions.view_not_found', [
                 'view' => $view,
             ]));
@@ -39,7 +39,7 @@ class FeedamicController
         $cacheKey = $config->getCacheKey(Site::current());
 
         // do we have a cached version?
-        if (Cache::has($cacheKey)) {
+        if (config('feedamic.cache_enabled', true) && Cache::has($cacheKey)) {
             $feed = Cache::get($cacheKey);
         } else {
             // it could be a while...
@@ -96,8 +96,10 @@ class FeedamicController
 
             $feed = ob_get_clean();
 
-            // store in the cache
-            Cache::put($cacheKey, $feed);
+            if (config('feedamic.cache_enabled', true)) {
+                // store in the cache
+                Cache::put($cacheKey, $feed);
+            }
         }
 
         return Response::make($feed, 200, [
