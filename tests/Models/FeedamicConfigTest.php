@@ -164,13 +164,11 @@ it('correctly sets the scope during creation', function () {
 });
 
 it('correctly sets the author fallback name during creation', function () {
-    if (false) {
-        $config = new FeedamicConfig([
-            'handle' => 'author_fallback_name-test',
-        ], $this->defaults);
+    $config = new FeedamicConfig([
+        'handle' => 'author_fallback_name-test',
+    ], $this->defaults);
 
-        expect($config->author_fallback_name)->toBe($this->defaults->get('default_author_fallback_name'));
-    }
+    expect($config->author_fallback_name)->toBe($this->defaults->get('default_author_fallback_name'));
 
     // can be overridden
     $config = new FeedamicConfig([
@@ -182,13 +180,11 @@ it('correctly sets the author fallback name during creation', function () {
     expect($config->author_fallback_name)->toBe('Cherry Ripe');
 });
 it('correctly sets the author fallback email during creation', function () {
-    if (false) {
-        $config = new FeedamicConfig([
-            'handle' => 'author_fallback_email-test',
-        ], $this->defaults);
+    $config = new FeedamicConfig([
+        'handle' => 'author_fallback_email-test',
+    ], $this->defaults);
 
-        expect($config->author_fallback_email)->toBe($this->defaults->get('default_author_fallback_email'));
-    }
+    expect($config->author_fallback_email)->toBe($this->defaults->get('default_author_fallback_email'));
 
     // can be overridden
     $config = new FeedamicConfig([
