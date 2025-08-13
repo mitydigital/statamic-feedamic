@@ -170,10 +170,12 @@ class FeedamicConfig
                 $this->mappings['author_name'] = Arr::get($feed['mappings'], 'author_name');
                 $this->mappings['author_email'] = Arr::get($feed['mappings'], 'author_email');
             } elseif (Arr::get($feed['mappings'], 'author_mode') === 'default') {
-                $this->mappings['author_type'] = $defaults->get('default_author_type');
-                $this->mappings['author_field'] = $defaults->get('default_author_field');
-                $this->mappings['author_name'] = $defaults->get('default_author_name');
-                $this->mappings['author_email'] = $defaults->get('default_author_email');
+                if ($defaults->get('default_author_enabled')) {
+                    $this->mappings['author_type'] = $defaults->get('default_author_type');
+                    $this->mappings['author_field'] = $defaults->get('default_author_field');
+                    $this->mappings['author_name'] = $defaults->get('default_author_name');
+                    $this->mappings['author_email'] = $defaults->get('default_author_email');
+                }
             }
         }
     }
