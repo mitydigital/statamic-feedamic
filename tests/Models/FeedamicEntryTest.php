@@ -128,7 +128,7 @@ it('gets the summary from the entry', function () {
 
 it('gets the content from the entry', function () {
     expect($this->feedamic->hasContent())->toBeTrue()
-        ->and(trim($this->feedamic->content()?->value()))->toBe(trim($this->entry->get('content')));
+        ->and(trim($this->feedamic->content()))->toBe(trim($this->entry->get('content')));
 
     // disable in config
     $config = new FeedamicConfig([

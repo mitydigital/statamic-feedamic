@@ -121,7 +121,7 @@ abstract class AbstractFeedamicEntry
         // we may have bard here
         if ($value instanceof Value && $value->fieldtype() instanceof Bard) {
             $hasSets = collect($value->raw())
-                ->first(fn (array $block) => Arr::get($block, 'type', 'paragraph') === 'set');
+                ->first(fn (mixed $block) => is_array($block) && Arr::get($block, 'type', 'paragraph') === 'set');
             if (! static::$ignoreBardSets && $hasSets) {
                 throw new BardContainsSetsException(__('feedamic::exceptions.bard_contains_sets', [
                     'handle' => $handle,
