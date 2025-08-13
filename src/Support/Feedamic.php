@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\LazyCollection;
 use Illuminate\Support\Str;
 use Illuminate\Support\Uri;
+use MityDigital\Feedamic\Exceptions\CollectionMissingRouteException;
 use MityDigital\Feedamic\Exceptions\InconsistentSortFieldException;
 use MityDigital\Feedamic\Models\FeedamicConfig;
 use MityDigital\Feedamic\Models\FeedamicEntry;
@@ -210,6 +211,12 @@ class Feedamic
         $lazyDataSources = [];
         foreach ($config->collections as $collection) {
             $collection = \Statamic\Facades\Collection::find($collection);
+
+            if (! $collection->route(\Statamic\Facades\Site::current()->handle())) {
+                throw new CollectionMissingRouteException(__('feedamic::exceptions.collection_missing_route', [
+                    'collection' => $collection->title,
+                ]));
+            }
 
             $thisSortField = $collection->sortField() ? $collection->sortField() : null;
             if ($collection->dated()) {

@@ -40,7 +40,7 @@
         @endif
 
         @if ($entry->hasContent())
-            <content type="html">
+            <content type="{{ $entry->isContentHtml() ? 'html' : 'text' }}">
             {{ $entry->content() }}
             </content>
         @else

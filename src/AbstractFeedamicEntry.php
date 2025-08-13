@@ -7,11 +7,14 @@ use Closure;
 use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Traits\ForwardsCalls;
+use MityDigital\Feedamic\Exceptions\BardContainsSetsException;
 use MityDigital\Feedamic\Models\FeedamicConfig;
 use Statamic\Assets\Asset;
 use Statamic\Assets\AssetCollection;
 use Statamic\Entries\Entry;
 use Statamic\Fields\Value;
+use Statamic\Fieldtypes\Bard;
+use Statamic\Modifiers\CoreModifiers;
 
 abstract class AbstractFeedamicEntry
 {
@@ -29,16 +32,36 @@ abstract class AbstractFeedamicEntry
 
     protected ?AbstractFeedamicAuthor $author;
 
+    protected static bool $ignoreBardSets = false;
+
     public function __construct(public Entry $entry, protected FeedamicConfig $config) {}
 
-    public static function modify(string $field, Closure $modifier): void
+    public static function ignoreBardSets(?bool $ignoreBardSets = null): bool
     {
-        static::$modifiers[$field] = $modifier;
+        if ($ignoreBardSets !== null) {
+            static::$ignoreBardSets = $ignoreBardSets;
+        }
+
+        return static::$ignoreBardSets;
+    }
+
+    public static function modify(string $field, Closure $modifier, ?Closure $when = null, ?array $feeds = null): void
+    {
+        static::$modifiers[] = [
+            'feeds' => $feeds,
+            'field' => $field,
+            'modifier' => $modifier,
+            'when' => $when,
+        ];
     }
 
     public static function removeModifier(string $field): void
     {
-        unset(static::$modifiers[$field]);
+        foreach (static::$modifiers as $idx => $modifier) {
+            if ($modifier['field'] === $field) {
+                unset(static::$modifiers[$idx]);
+            }
+        }
     }
 
     public function hasImage(): bool
@@ -69,10 +92,43 @@ abstract class AbstractFeedamicEntry
         return $this->image;
     }
 
+    protected function getModifier(string $field, mixed $value): ?Closure
+    {
+        foreach (static::$modifiers as $modifier) {
+            // get the field
+            if ($modifier['field'] === $field) {
+                if ($modifier['feeds'] === null || in_array($this->config->handle, $modifier['feeds'])) {
+                    if ($when = $modifier['when']) {
+                        if (! $when($value)) {
+                            return null;
+                        }
+                    }
+
+                    return $modifier['modifier'];
+                }
+            }
+        }
+
+        return null;
+    }
+
     protected function processField(string $handle, mixed $value): mixed
     {
-        if ($processor = Arr::get(static::$modifiers, $handle)) {
-            return $processor($value);
+        if ($modifier = $this->getModifier($handle, $value)) {
+            $value = $modifier($value);
+        }
+
+        // we may have bard here
+        if ($value instanceof Value && $value->fieldtype() instanceof Bard) {
+            $hasSets = collect($value->raw())
+                ->first(fn (array $block) => Arr::get($block, 'type', 'paragraph') === 'set');
+            if (! static::$ignoreBardSets && $hasSets) {
+                throw new BardContainsSetsException(__('feedamic::exceptions.bard_contains_sets', [
+                    'handle' => $handle,
+                ]));
+            }
+
+            $value = app(CoreModifiers::class)->bardHtml($value);
         }
 
         return $value;
@@ -153,6 +209,16 @@ abstract class AbstractFeedamicEntry
         }
 
         return $this->content;
+    }
+
+    public function isContentHtml(): bool
+    {
+        $content = $this->content();
+        if ($content instanceof Value) {
+            $content = $content->__toString();
+        }
+
+        return $content !== strip_tags($content);
     }
 
     public function title(): string|Value
