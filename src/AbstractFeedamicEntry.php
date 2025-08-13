@@ -211,14 +211,13 @@ abstract class AbstractFeedamicEntry
         return $this->content;
     }
 
-    public function isContentHtml(): bool
+    public function isHtml(mixed $value): bool
     {
-        $content = $this->content();
-        if ($content instanceof Value) {
-            $content = $content->__toString();
+        if ($value instanceof Value) {
+            $value = $value->__toString();
         }
 
-        return $content !== strip_tags($content);
+        return $value !== strip_tags($value);
     }
 
     public function title(): string|Value

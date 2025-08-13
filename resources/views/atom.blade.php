@@ -19,7 +19,7 @@
 
     @foreach ($entries as $entry)
     <entry>
-        <title type="html">{!! $entry->encode($entry->title()) !!}</title>
+        <title type="{{ $entry->isHtml($entry->title()) ? 'html' : 'text' }}">{!! $entry->encode($entry->title()) !!}</title>
         <link href="{{ $entry->url() }}"/>
         <id>{{ $entry->url() }}</id>
         @if ($entry->date)
@@ -40,7 +40,7 @@
         @endif
 
         @if ($entry->hasContent())
-            <content type="{{ $entry->isContentHtml() ? 'html' : 'text' }}">
+            <content type="{{ $entry->isHtml($entry->content()) ? 'html' : 'text' }}">
             {{ $entry->content() }}
             </content>
         @else
