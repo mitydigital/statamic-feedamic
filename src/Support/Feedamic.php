@@ -185,11 +185,11 @@ class Feedamic
 
             if ($collection->dated()) {
                 // collection date behaviour
-                if ($collection->futureDateBehavior() === 'private') {
+                if ($collection->futureDateBehavior() !== 'public') {
                     $query->where('date', '<=', now());
                 }
 
-                if ($collection->pastDateBehavior() === 'private') {
+                if ($collection->pastDateBehavior() !== 'public') {
                     $query->where('date', '>=', now());
                 }
             }
