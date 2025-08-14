@@ -27,6 +27,7 @@ use Statamic\Fields\Blueprint;
  * @method static void removeModifier(string $fieldHandle)
  * @method static ?Closure getModifier(AbstractFeedamicEntry $feedamicEntry, string $fieldHandle, mixed $value)
  * @method static string render(FeedamicConfig $config, string $route)
+ * @method static string version()
  *
  * @see \MityDigital\Feedamic\Support\Feedamic
  */

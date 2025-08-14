@@ -15,7 +15,7 @@
         <rights>{!! $config->copyright !!}</rights>
     @endif
 
-    <generator uri="https://github.com/mitydigital/feedamic" version="3.0">{{ __('feedamic::feeds.generator') }}</generator>
+    <generator uri="https://github.com/mitydigital/feedamic" version="{{ \MityDigital\Feedamic\Facades\Feedamic::version() }}">{{ __('feedamic::feeds.generator') }}</generator>
 
     @foreach ($entries as $entry)
     <entry>
@@ -63,6 +63,4 @@
 
     </entry>
     @endforeach
-
-
 </feed>

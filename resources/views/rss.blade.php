@@ -45,6 +45,5 @@
 
             </item>
         @endforeach
-
     </channel>
 </rss>

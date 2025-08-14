@@ -19,6 +19,7 @@ use MityDigital\Feedamic\Exceptions\ViewNotFoundException;
 use MityDigital\Feedamic\Models\FeedamicConfig;
 use MityDigital\Feedamic\Models\FeedamicEntry;
 use ReflectionFunction;
+use Statamic\Facades\Addon;
 use Statamic\Facades\Blueprint;
 use Statamic\Facades\Entry;
 use Statamic\Facades\File;
@@ -556,5 +557,10 @@ class Feedamic
         }
 
         return $feed;
+    }
+
+    public function version(): string
+    {
+        return Addon::get('mitydigital/feedamic')->version();
     }
 }
