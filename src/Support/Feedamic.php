@@ -184,13 +184,16 @@ class Feedamic
                 ->orderBy($sortField, 'desc');
 
             if ($collection->dated()) {
+                $now = Carbon::now();
                 // collection date behaviour
                 if ($collection->futureDateBehavior() !== 'public') {
-                    $query->where('date', '<=', now());
+                    $query->whereDate('date', '<=', $now->format('Y-m-d'))
+                        ->whereTime('date', '<=', $now->format('H:i:s'));
                 }
 
                 if ($collection->pastDateBehavior() !== 'public') {
-                    $query->where('date', '>=', now());
+                    $query->whereDate('date', '>=', $now->format('Y-m-d'))
+                        ->whereTime('date', '>=', $now->format('H:i:s'));
                 }
             }
 

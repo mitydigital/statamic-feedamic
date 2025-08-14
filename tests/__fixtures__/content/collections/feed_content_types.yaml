@@ -6,11 +6,11 @@ propagate: false
 template: default
 layout: layout
 revisions: false
-route: '/{mount}/{slug}'
+route: '/content-types/{slug}'
 date: true
 sort_dir: asc
 date_behavior:
-  past: unlisted
+  past: public
   future: public
 preview_targets:
   -

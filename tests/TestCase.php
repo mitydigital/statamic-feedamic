@@ -40,9 +40,6 @@ abstract class TestCase extends AddonTestCase
         foreach ($this->fixtures as $folder) {
             File::copyDirectory(__DIR__.'/__fixtures__/app/'.$folder, app_path($folder));
         }
-
-        File::ensureDirectoryExists(base_path('content'));
-        File::copy(__DIR__.'/__fixtures__/content/feedamic.yaml', base_path('content/feedamic.yaml'));
     }
 
     protected function resolveApplicationConfiguration($app)
@@ -87,12 +84,16 @@ abstract class TestCase extends AddonTestCase
             $assets->title('Assets');
             $assets->save();
 
-            File::copyDirectory(__DIR__.'/__fixtures__/public/assets', public_path('assets'));
+            File::ensureDirectoryExists(base_path('content'));
+
+            File::copy(__DIR__.'/__fixtures__/content/feedamic.yaml', base_path('content/feedamic.yaml'));
             File::copyDirectory(__DIR__.'/__fixtures__/content/collections', base_path('content/collections'));
+
+            File::copyDirectory(__DIR__.'/__fixtures__/public/assets', public_path('assets'));
 
             File::copyDirectory(__DIR__.'/__fixtures__/resources/views/feedamic', resource_path('views/feedamic'));
 
-            Stache::warm();
+            Stache::refresh();
         });
     }
 

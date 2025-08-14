@@ -1,7 +1,7 @@
 title: 'Taxonomy Test'
 sites:
   - default
-route: '/{mount}/{slug}'
+route: '/taxonomy/{slug}'
 propagate: false
 template: default
 layout: layout

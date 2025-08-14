@@ -1,16 +1,13 @@
-title: 'Date Behaviour Test'
+title: 'Date Time Behaviour Test'
 sites:
   - default
 propagate: false
 template: default
 layout: layout
 revisions: false
-route: '/date/{slug}'
+route: '/{mount}/date-time/{slug}'
 date: true
-sort_dir: desc
-date_behavior:
-  past: public
-  future: private
+sort_dir: asc
 preview_targets:
   -
     label: Entry

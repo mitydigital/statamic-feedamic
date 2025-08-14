@@ -1,30 +1,11 @@
 <?php
 
 use Carbon\Carbon;
-use Illuminate\Support\Facades\File;
 use MityDigital\Feedamic\Facades\Feedamic;
 use Statamic\Facades\Collection;
-use Statamic\Facades\Stache;
 use Statamic\Facades\YAML;
 
 beforeEach(function () {
-    File::ensureDirectoryExists(base_path('content/collections'));
-    File::copy(
-        __DIR__.'/../../__fixtures__/content/collections/date_behaviour_test.yaml',
-        base_path('content/collections/date_behaviour_test.yaml')
-    );
-    File::copyDirectory(
-        __DIR__.'/../../__fixtures__/content/collections/date_behaviour_test',
-        base_path('content/collections/date_behaviour_test')
-    );
-
-    File::copyDirectory(
-        __DIR__.'/../../__fixtures__/resources/blueprints/collections/date_behaviour_test',
-        resource_path('blueprints/collections/date_behaviour_test')
-    );
-
-    Stache::warm();
-
     $default = collect(YAML::file(base_path('content/feedamic.yaml'))->parse());
 
     // add the "content" feed

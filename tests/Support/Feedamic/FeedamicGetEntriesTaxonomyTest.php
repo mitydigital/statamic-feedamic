@@ -1,42 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\File;
 use MityDigital\Feedamic\Facades\Feedamic;
-use Statamic\Facades\Stache;
 use Statamic\Facades\YAML;
-
-beforeEach(function () {
-    File::ensureDirectoryExists(base_path('content/collections'));
-    File::ensureDirectoryExists(base_path('content/taxonomies'));
-    File::copy(
-        __DIR__.'/../../__fixtures__/content/collections/taxonomy_test.yaml',
-        base_path('content/collections/taxonomy_test.yaml')
-    );
-    File::copyDirectory(
-        __DIR__.'/../../__fixtures__/content/collections/taxonomy_test',
-        base_path('content/collections/taxonomy_test')
-    );
-
-    File::copy(
-        __DIR__.'/../../__fixtures__/content/taxonomies/categories.yaml',
-        base_path('content/taxonomies/categories.yaml')
-    );
-    File::copyDirectory(
-        __DIR__.'/../../__fixtures__/content/taxonomies/categories',
-        base_path('content/taxonomies/categories')
-    );
-
-    File::copyDirectory(
-        __DIR__.'/../../__fixtures__/resources/blueprints/collections/taxonomy_test',
-        resource_path('blueprints/collections/taxonomy_test')
-    );
-    File::copyDirectory(
-        __DIR__.'/../../__fixtures__/resources/blueprints/taxonomies/categories',
-        resource_path('blueprints/taxonomies/categories')
-    );
-
-    Stache::warm();
-});
 
 it('correctly returns 4 entries with no taxonomies', function () {
     $default = collect(YAML::file(base_path('content/feedamic.yaml'))->parse());
