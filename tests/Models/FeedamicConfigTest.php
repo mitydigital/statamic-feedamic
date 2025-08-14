@@ -769,3 +769,27 @@ it('can return the route for a given feed type', function () {
     expect($config->getRouteForFeedType('atom'))->toBeNull()
         ->and($config->getRouteForFeedType('rss'))->toBe('/feed/rss');
 });
+
+it('gets the expected cache key', function () {
+    $config = new FeedamicConfig([
+        'handle' => 'routes-test',
+        'routes' => [
+            'atom' => '/feed/atom',
+            'rss' => '/feed/rss',
+        ],
+    ], $this->defaults);
+
+    expect($config->getCacheKey('/feed/atom', 'default'))->toBe('feedamic.routes-test.default.atom')
+        ->and($config->getCacheKey('/feed/rss', 'default'))->toBe('feedamic.routes-test.default.rss')
+        ->and($config->getCacheKey('/feed/atom', 'us'))->toBe('feedamic.routes-test.us.atom');
+
+    $config = new FeedamicConfig([
+        'handle' => 'different-handle',
+        'routes' => [
+            'atom' => '/feed/atom',
+            'rss' => '/feed/rss',
+        ],
+    ], $this->defaults);
+
+    expect($config->getCacheKey('/feed/atom', 'default'))->toBe('feedamic.different-handle.default.atom');
+});
