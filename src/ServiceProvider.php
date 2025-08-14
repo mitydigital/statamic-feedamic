@@ -37,15 +37,18 @@ class ServiceProvider extends AddonServiceProvider
         Feedamic::class,
     ];
 
+    public function register()
+    {
+        $this->app->singleton(Support\Feedamic::class, function () {
+            return new Support\Feedamic;
+        });
+    }
+
     public function bootAddon()
     {
         $this->publishes([
             __DIR__.'/../resources/views' => resource_path('views/vendor/mitydigital/feedamic'),
         ], 'feedamic-views');
-
-        $this->app->singleton('Feedamic', function () {
-            return new Support\Feedamic;
-        });
 
         Nav::extend(function ($nav) {
             $nav->tools(__('feedamic::cp.nav'))

@@ -75,3 +75,12 @@ function createFeedamicRole()
         ->permissions(['access cp', 'feedamic.config'])
         ->save();
 }
+
+function getPrivateProperty($className, $propertyName): ReflectionProperty
+{
+    $reflector = new ReflectionClass($className);
+    $property = $reflector->getProperty($propertyName);
+    $property->setAccessible(true);
+
+    return $property;
+}

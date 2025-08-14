@@ -421,7 +421,7 @@ class Feedamic
 
             // 0 - AbstractFeedamicEntry
             $entry = Arr::get($parameters, 0);
-            if (! $entry || $entry->getType()->getName() !== AbstractFeedamicEntry::class) {
+            if (! $entry || ($entry->getType() && $entry->getType()->getName() !== AbstractFeedamicEntry::class)) {
                 throw new ModifierCallbackException(__('feedamic::exceptions.modifier_callback', [
                     'handle' => $fieldHandle,
                     'callback' => $callback,

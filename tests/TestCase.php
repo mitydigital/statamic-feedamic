@@ -41,7 +41,7 @@ abstract class TestCase extends AddonTestCase
             File::copyDirectory(__DIR__.'/__fixtures__/app/'.$folder, app_path($folder));
         }
 
-        File::makeDirectory(base_path('content'));
+        File::ensureDirectoryExists(base_path('content'));
         File::copy(__DIR__.'/__fixtures__/content/feedamic.yaml', base_path('content/feedamic.yaml'));
     }
 

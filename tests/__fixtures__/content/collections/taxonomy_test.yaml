@@ -1,0 +1,20 @@
+title: 'Taxonomy Test'
+sites:
+  - default
+route: '/{mount}/{slug}'
+propagate: false
+template: default
+layout: layout
+taxonomies:
+  - categories
+revisions: false
+date: true
+sort_dir: asc
+date_behavior:
+  past: public
+  future: private
+preview_targets:
+  -
+    label: Entry
+    url: '{permalink}'
+    refresh: true
