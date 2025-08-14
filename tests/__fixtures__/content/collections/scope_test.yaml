@@ -1,0 +1,9 @@
+title: 'Scope Test'
+sites:
+  - default
+propagate: false
+revisions: false
+route: '/scope/{slug}'
+date_behavior:
+  past: public
+  future: public

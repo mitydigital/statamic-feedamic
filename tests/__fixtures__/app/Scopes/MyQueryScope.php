@@ -9,5 +9,6 @@ class MyQueryScope extends Scope
     public function apply($query, $values)
     {
         // do something
+        $query->where('title', '=', 'Banana');
     }
 }
