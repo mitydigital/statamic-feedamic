@@ -17,7 +17,8 @@ it('returns 404 if no matching config found', function () {
 
 it('does not return 404 for a matching feed', function () {
     $this->get('/feed/atom')
-        ->assertStatus(200);
+        ->assertStatus(200)
+        ->assertHeader('Content-Type', 'application/xml');
 });
 
 it('requires each collection have a route defined', function () {
