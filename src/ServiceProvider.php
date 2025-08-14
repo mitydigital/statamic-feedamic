@@ -15,9 +15,9 @@ class ServiceProvider extends AddonServiceProvider
 {
     // protected $viewNamespace = 'mitydigital/feedamic';
 
-    /*protected $commands = [
+    protected $commands = [
         ClearCacheCommand::class,
-    ];*/
+    ];
 
     protected $listen = [
         EntrySaved::class => [

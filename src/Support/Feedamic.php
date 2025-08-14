@@ -3,14 +3,17 @@
 namespace MityDigital\Feedamic\Support;
 
 use Carbon\Carbon;
+use Closure;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\LazyCollection;
 use Illuminate\Support\Str;
 use Illuminate\Support\Uri;
+use MityDigital\Feedamic\AbstractFeedamicEntry;
 use MityDigital\Feedamic\Exceptions\CollectionMissingRouteException;
 use MityDigital\Feedamic\Exceptions\InconsistentSortFieldException;
+use MityDigital\Feedamic\Exceptions\ModifierCallbackException;
 use MityDigital\Feedamic\Models\FeedamicConfig;
 use MityDigital\Feedamic\Models\FeedamicEntry;
 use Statamic\Facades\Blueprint;
@@ -27,109 +30,11 @@ class Feedamic
 
     protected Collection $config;
 
-    public function getRoutes(): array
+    protected Collection $modifiers;
+
+    public function __construct()
     {
-        $data = [];
-
-        $config = $this->getConfiguredFeeds();
-
-        \Statamic\Facades\Site::all()->each(function (Site $site) use ($config, &$data) {
-            $siteUrl = $site->url();
-            if ($siteUrl === '/') {
-                $siteUrl = config('app.url');
-            }
-            $uri = Uri::of($siteUrl);
-
-            if ($uri->port()) {
-                $domain = sprintf('%s://%s:%s',
-                    $uri->scheme(),
-                    $uri->host(),
-                    $uri->port()
-                );
-            } else {
-                $domain = sprintf('%s://%s',
-                    $uri->scheme(),
-                    $uri->host()
-                );
-            }
-
-            // if this is the configured domain, treat it as the default
-            if ($domain === config('app.url')) {
-                $domain = 'default';
-            }
-
-            if (! Arr::exists($data, $domain)) {
-                $data[$domain] = [];
-            }
-
-            // get the routes for the config
-            $config->feeds->each(function (FeedamicConfig $config) use ($site, $uri, &$data, $domain) {
-                if (in_array($site->handle(), $config->sites)) {
-                    foreach ($this->getFeedTypes() as $feedType) {
-                        $route = $config->getRouteForFeedType($feedType);
-
-                        if ($route) {
-                            // build the uri, remove duplicate // and get the path
-                            $feedPath = (clone $uri)
-                                ->withPath(preg_replace('/(\/+)/', '/', $uri->path().'/'.$route))
-                                ->path();
-                            $feedPath = Str::start($feedPath, '/');
-
-                            // add it, if we need to
-                            if (! in_array($feedType, $data[$domain])) {
-                                $data[$domain][] = $feedPath;
-                            }
-                        }
-                    }
-                }
-            });
-        });
-
-        // get the default domain
-        $default = Arr::pull($data, 'default', []);
-
-        return [
-            'domains' => $data,
-            'default' => $default,
-        ];
-    }
-
-    protected function getConfiguredFeeds(): self
-    {
-        $this->load();
-
-        $this->feeds = collect(Arr::get($this->config, 'feeds', []))
-            ->mapWithKeys(function (array $feed) {
-                return [Arr::get($feed, 'handle') => new FeedamicConfig($feed, $this->config)];
-            });
-
-        return $this;
-    }
-
-    public function load($refresh = false): Collection
-    {
-        if (! isset($this->config) || $refresh === true) {
-            if (file_exists(self::getPath())) {
-                $this->config = collect(YAML::file(self::getPath())->parse());
-            } else {
-                $this->config = collect([]);
-            }
-        }
-
-        return $this->config;
-    }
-
-    public function getPath(): string
-    {
-        $path = config('feedamic.path');
-        $filename = config('feedamic.filename');
-
-        return $path.'/'.$filename.'.yaml';
-    }
-
-    public function getFeedTypes(): array
-    {
-        return ['atom', 'rss'];
+        $this->modifiers = collect();
     }
 
     public function blueprint(): \Statamic\Fields\Blueprint
@@ -142,6 +47,14 @@ class Feedamic
         File::put(self::getPath(), YAML::dump($payload));
         unset($this->config);
         unset($this->feeds);
+    }
+
+    public function getPath(): string
+    {
+        $path = config('feedamic.path');
+        $filename = config('feedamic.filename');
+
+        return $path.'/'.$filename.'.yaml';
     }
 
     public function getClassOfType(string $abstractClass): array
@@ -180,6 +93,32 @@ class Feedamic
         return $this->feeds;
     }
 
+    protected function getConfiguredFeeds(): self
+    {
+        $this->load();
+
+        $this->feeds = collect(Arr::get($this->config, 'feeds', []))
+            ->mapWithKeys(function (array $feed) {
+                return [Arr::get($feed, 'handle') => new FeedamicConfig($feed, $this->config)];
+            });
+
+        return $this;
+    }
+
+    public function load($refresh = false): Collection
+    {
+
+        if (! isset($this->config) || $refresh === true) {
+            if (file_exists(self::getPath())) {
+                $this->config = collect(YAML::file(self::getPath())->parse());
+            } else {
+                $this->config = collect([]);
+            }
+        }
+
+        return $this->config;
+    }
+
     public function getFeedsForSite(string $handle)
     {
         if (! isset($this->feeds)) {
@@ -190,7 +129,7 @@ class Feedamic
             ->filter(fn (FeedamicConfig $config) => in_array($handle, $config->sites));
     }
 
-    public function getConfig(string $path, string $site): FeedamicConfig
+    public function getConfig(string $path, string $site): ?FeedamicConfig
     {
         if (! isset($this->feeds)) {
             $this->getConfiguredFeeds();
@@ -392,5 +331,142 @@ class Feedamic
         }
 
         return $cleared;
+    }
+
+    public function getRoutes(): array
+    {
+        $data = [];
+
+        $config = $this->getConfiguredFeeds();
+
+        \Statamic\Facades\Site::all()->each(function (Site $site) use ($config, &$data) {
+            $siteUrl = $site->url();
+            if ($siteUrl === '/') {
+                $siteUrl = config('app.url');
+            }
+            $uri = Uri::of($siteUrl);
+
+            if ($uri->port()) {
+                $domain = sprintf('%s://%s:%s',
+                    $uri->scheme(),
+                    $uri->host(),
+                    $uri->port()
+                );
+            } else {
+                $domain = sprintf('%s://%s',
+                    $uri->scheme(),
+                    $uri->host()
+                );
+            }
+
+            // if this is the configured domain, treat it as the default
+            if ($domain === config('app.url')) {
+                $domain = 'default';
+            }
+
+            if (! Arr::exists($data, $domain)) {
+                $data[$domain] = [];
+            }
+
+            // get the routes for the config
+            $config->feeds->each(function (FeedamicConfig $config) use ($site, $uri, &$data, $domain) {
+                if (in_array($site->handle(), $config->sites)) {
+                    foreach ($this->getFeedTypes() as $feedType) {
+                        $route = $config->getRouteForFeedType($feedType);
+
+                        if ($route) {
+                            // build the uri, remove duplicate // and get the path
+                            $feedPath = (clone $uri)
+                                ->withPath(preg_replace('/(\/+)/', '/', $uri->path().'/'.$route))
+                                ->path();
+                            $feedPath = Str::start($feedPath, '/');
+
+                            // add it, if we need to
+                            if (! in_array($feedType, $data[$domain])) {
+                                $data[$domain][] = $feedPath;
+                            }
+                        }
+                    }
+                }
+            });
+        });
+
+        // get the default domain
+        $default = Arr::pull($data, 'default', []);
+
+        return [
+            'domains' => $data,
+            'default' => $default,
+        ];
+    }
+
+    public function getFeedTypes(): array
+    {
+        return ['atom', 'rss'];
+    }
+
+    public function modify(string $fieldHandle, Closure $modifier, ?Closure $when = null, ?array $feeds = null): void
+    {
+        foreach (['modifier' => $modifier, 'when' => $when] as $callback => $closure) {
+            if (! $closure) {
+                continue;
+            }
+
+            $reflection = new \ReflectionFunction($closure);
+            $parameters = $reflection->getParameters();
+
+            // 0 - AbstractFeedamicEntry
+            $entry = Arr::get($parameters, 0);
+            if (! $entry || $entry->getType()->getName() !== AbstractFeedamicEntry::class) {
+                throw new ModifierCallbackException(__('feedamic::exceptions.modifier_callback', [
+                    'handle' => $fieldHandle,
+                    'callback' => $callback,
+                    'argument' => 'MityDigital\Feedamic\AbstractFeedamicEntry $entry',
+                ]));
+            }
+
+            // 1 - $value, whatever you want it to be, just needs to exist
+            if (! array_key_exists(1, $parameters)) {
+                throw new ModifierCallbackException(__('feedamic::exceptions.modifier_callback', [
+                    'handle' => $fieldHandle,
+                    'callback' => $callback,
+                    'argument' => '$value',
+                ]));
+            }
+        }
+
+        $this->modifiers->add([
+            'feeds' => $feeds,
+            'handle' => $fieldHandle,
+            'modifier' => $modifier,
+            'when' => $when,
+        ]);
+    }
+
+    public function removeModifier(string $fieldHandle): void
+    {
+        $this->modifiers = $this->modifiers->reject(fn (array $modifier) => Arr::get($modifier, 'handle') === $fieldHandle);
+    }
+
+    public function getModifier(AbstractFeedamicEntry $feedamicEntry, string $fieldHandle, mixed $value): ?Closure
+    {
+        $modifier = $this->modifiers
+            ->first(function (array $modifier) use ($feedamicEntry, $value, $fieldHandle) {
+                if (Arr::get($modifier, 'handle') === $fieldHandle) {
+                    if ($modifier['feeds'] === null || in_array($feedamicEntry->config()->handle, $modifier['feeds'])) {
+                        if ($when = $modifier['when']) {
+                            if (! $when($feedamicEntry, $value)) {
+                                return false;
+                            }
+                        }
+
+                        return true;
+                    }
+                }
+
+                return false;
+            });
+
+        return $modifier ? $modifier['modifier'] : null;
     }
 }

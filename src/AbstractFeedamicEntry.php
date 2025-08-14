@@ -3,11 +3,11 @@
 namespace MityDigital\Feedamic;
 
 use Carbon\Carbon;
-use Closure;
 use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Traits\ForwardsCalls;
 use MityDigital\Feedamic\Exceptions\BardContainsSetsException;
+use MityDigital\Feedamic\Facades\Feedamic;
 use MityDigital\Feedamic\Models\FeedamicConfig;
 use Statamic\Assets\Asset;
 use Statamic\Assets\AssetCollection;
@@ -22,6 +22,8 @@ abstract class AbstractFeedamicEntry
 
     protected static array $modifiers = [];
 
+    protected static bool $ignoreBardSets = false;
+
     protected string|Value $title;
 
     protected null|string|Value $summary;
@@ -32,8 +34,6 @@ abstract class AbstractFeedamicEntry
 
     protected ?AbstractFeedamicAuthor $author;
 
-    protected static bool $ignoreBardSets = false;
-
     public function __construct(public Entry $entry, protected FeedamicConfig $config) {}
 
     public static function ignoreBardSets(?bool $ignoreBardSets = null): bool
@@ -43,25 +43,6 @@ abstract class AbstractFeedamicEntry
         }
 
         return static::$ignoreBardSets;
-    }
-
-    public static function modify(string $field, Closure $modifier, ?Closure $when = null, ?array $feeds = null): void
-    {
-        static::$modifiers[] = [
-            'feeds' => $feeds,
-            'field' => $field,
-            'modifier' => $modifier,
-            'when' => $when,
-        ];
-    }
-
-    public static function removeModifier(string $field): void
-    {
-        foreach (static::$modifiers as $idx => $modifier) {
-            if ($modifier['field'] === $field) {
-                unset(static::$modifiers[$idx]);
-            }
-        }
     }
 
     public function hasImage(): bool
@@ -92,30 +73,10 @@ abstract class AbstractFeedamicEntry
         return $this->image;
     }
 
-    protected function getModifier(string $field, mixed $value): ?Closure
-    {
-        foreach (static::$modifiers as $modifier) {
-            // get the field
-            if ($modifier['field'] === $field) {
-                if ($modifier['feeds'] === null || in_array($this->config->handle, $modifier['feeds'])) {
-                    if ($when = $modifier['when']) {
-                        if (! $when($value)) {
-                            return null;
-                        }
-                    }
-
-                    return $modifier['modifier'];
-                }
-            }
-        }
-
-        return null;
-    }
-
     protected function processField(string $handle, mixed $value): mixed
     {
-        if ($modifier = $this->getModifier($handle, $value)) {
-            $value = $modifier($value);
+        if ($modifier = Feedamic::getModifier($this, $handle, $value)) {
+            $value = $modifier($this, $value);
         }
 
         // we may have bard here
@@ -275,5 +236,10 @@ abstract class AbstractFeedamicEntry
         }
 
         throw new Exception("Property {$name} does not exist.");
+    }
+
+    public function config(): FeedamicConfig
+    {
+        return $this->config;
     }
 }

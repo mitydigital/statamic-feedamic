@@ -1,6 +1,7 @@
 <?php
 
 use MityDigital\Feedamic\AbstractFeedamicEntry;
+use MityDigital\Feedamic\Facades\Feedamic;
 use MityDigital\Feedamic\Models\FeedamicAuthor;
 use MityDigital\Feedamic\Models\FeedamicConfig;
 use MityDigital\Feedamic\Models\FeedamicEntry;
@@ -89,13 +90,13 @@ it('forwards calls', function () {
 });
 
 it('can have a custom modifier passed', function () {
-    FeedamicEntry::modify('title', function (?Value $value) {
+    Feedamic::modify('title', function (AbstractFeedamicEntry $entry, ?Value $value) {
         return 'Modified!';
     });
 
     expect($this->feedamic->title())->toBe('Modified!');
 
-    FeedamicEntry::removeModifier('title');
+    Feedamic::removeModifier('title');
 });
 
 it('returns the entry', function () {

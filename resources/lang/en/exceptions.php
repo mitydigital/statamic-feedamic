@@ -11,6 +11,8 @@ return [
 
     'inconsistent_sort_field' => 'All Collections in a feed configuration must have the same sort field. In the :collection Collection, ":thisField" does not match the existing sort field of ":field".',
 
+    'modifier_callback' => 'Callback ":callback" for ":handle" does not have the correct method signature: missing :argument.',
+
     'view_not_found' => 'View ":view" does not exist.',
 
     'unknown_author_type' => '":type" is an unknown author type.',
