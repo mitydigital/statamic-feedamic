@@ -1,0 +1,19 @@
+title: 'Feed Content Types'
+sites:
+  - default
+  - us
+propagate: false
+template: default
+layout: layout
+revisions: false
+route: '/{mount}/{slug}'
+date: true
+sort_dir: asc
+date_behavior:
+  past: unlisted
+  future: public
+preview_targets:
+  -
+    label: Entry
+    url: '{permalink}'
+    refresh: true

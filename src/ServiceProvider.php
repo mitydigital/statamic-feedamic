@@ -43,7 +43,7 @@ class ServiceProvider extends AddonServiceProvider
             __DIR__.'/../resources/views' => resource_path('views/vendor/mitydigital/feedamic'),
         ], 'feedamic-views');
 
-        $this->app->bind('Feedamic', function () {
+        $this->app->singleton('Feedamic', function () {
             return new Support\Feedamic;
         });
 

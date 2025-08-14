@@ -1,0 +1,60 @@
+<entry>
+    <title type="text">HTML</title>
+    <link href="http://feedamic.test/html"/>
+    <id>http://feedamic.test/html</id>
+    <published>2025-08-14T00:00:00+00:00</published>
+    <updated>2025-08-13T06:09:42+00:00</updated>
+    <summary/>
+    <content type="html">&lt;p&gt;Hello, HTML&lt;/p&gt;</content>
+    <author>
+        <name/>
+    </author>
+</entry>
+<entry>
+<title type="text">Text</title>
+<link href="http://feedamic.test/text"/>
+<id>http://feedamic.test/text</id>
+<published>2025-08-13T00:00:00+00:00</published>
+<updated>2025-08-13T06:09:24+00:00</updated>
+<summary/>
+<content type="text">Hello, Text</content>
+<author>
+    <name/>
+</author>
+</entry>
+<entry>
+<title type="text">Markdown</title>
+<link href="http://feedamic.test/markdown"/>
+<id>http://feedamic.test/markdown</id>
+<published>2025-08-12T00:00:00+00:00</published>
+<updated>2025-08-13T06:27:36+00:00</updated>
+<summary/>
+<content type="html">&lt;p&gt;Hello, &lt;strong&gt;Markdown&lt;/strong&gt;&lt;/p&gt;</content>
+<author>
+    <name/>
+</author>
+</entry>
+<entry>
+<title type="text">Bard</title>
+<link href="http://feedamic.test/bard"/>
+<id>http://feedamic.test/bard</id>
+<published>2025-08-11T00:00:00+00:00</published>
+<updated>2025-08-13T06:27:47+00:00</updated>
+<summary/>
+<content type="html">&lt;p&gt;Hello, from &lt;strong&gt;Bard&lt;/strong&gt;&lt;/p&gt;</content>
+<author>
+    <name/>
+</author>
+</entry>
+<entry>
+<title type="html">Bard with &lt;strong&gt;Sets&lt;/strong&gt;</title>
+<link href="http://feedamic.test/bard-with-sets"/>
+<id>http://feedamic.test/bard-with-sets</id>
+<published>2025-08-10T00:00:00+00:00</published>
+<updated>2025-08-13T07:09:15+00:00</updated>
+<summary/>
+<content type="html">&lt;p&gt;Hello&lt;/p&gt;</content>
+<author>
+    <name/>
+</author>
+</entry>

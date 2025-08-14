@@ -7,6 +7,7 @@ use MityDigital\Feedamic\ServiceProvider;
 use Statamic\Facades\AssetContainer;
 use Statamic\Facades\Blueprint;
 use Statamic\Facades\Site;
+use Statamic\Facades\Stache;
 use Statamic\Statamic;
 use Statamic\Testing\AddonTestCase;
 use Statamic\Testing\Concerns\PreventsSavingStacheItemsToDisk;
@@ -58,6 +59,8 @@ abstract class TestCase extends AddonTestCase
             'throw' => false,
         ]);
 
+        $app['config']->set('feedamic.cache_enabled', false);
+
         Statamic::booted(function () {
             Site::setSites([
                 'default' => [
@@ -85,6 +88,11 @@ abstract class TestCase extends AddonTestCase
             $assets->save();
 
             File::copyDirectory(__DIR__.'/__fixtures__/public/assets', public_path('assets'));
+            File::copyDirectory(__DIR__.'/__fixtures__/content/collections', base_path('content/collections'));
+
+            File::copyDirectory(__DIR__.'/__fixtures__/resources/views/feedamic', resource_path('views/feedamic'));
+
+            Stache::warm();
         });
     }
 

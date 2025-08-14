@@ -7,6 +7,7 @@ use Closure;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\LazyCollection;
 use Illuminate\Support\Str;
 use Illuminate\Support\Uri;
@@ -14,8 +15,10 @@ use MityDigital\Feedamic\AbstractFeedamicEntry;
 use MityDigital\Feedamic\Exceptions\CollectionMissingRouteException;
 use MityDigital\Feedamic\Exceptions\InconsistentSortFieldException;
 use MityDigital\Feedamic\Exceptions\ModifierCallbackException;
+use MityDigital\Feedamic\Exceptions\ViewNotFoundException;
 use MityDigital\Feedamic\Models\FeedamicConfig;
 use MityDigital\Feedamic\Models\FeedamicEntry;
+use ReflectionFunction;
 use Statamic\Facades\Blueprint;
 use Statamic\Facades\Entry;
 use Statamic\Facades\File;
@@ -23,6 +26,8 @@ use Statamic\Facades\Path;
 use Statamic\Facades\YAML;
 use Statamic\Sites\Site;
 use Stringy\StaticStringy;
+use XMLReader;
+use XMLWriter;
 
 class Feedamic
 {
@@ -107,7 +112,6 @@ class Feedamic
 
     public function load($refresh = false): Collection
     {
-
         if (! isset($this->config) || $refresh === true) {
             if (file_exists(self::getPath())) {
                 $this->config = collect(YAML::file(self::getPath())->parse());
@@ -412,7 +416,7 @@ class Feedamic
                 continue;
             }
 
-            $reflection = new \ReflectionFunction($closure);
+            $reflection = new ReflectionFunction($closure);
             $parameters = $reflection->getParameters();
 
             // 0 - AbstractFeedamicEntry
@@ -445,7 +449,8 @@ class Feedamic
 
     public function removeModifier(string $fieldHandle): void
     {
-        $this->modifiers = $this->modifiers->reject(fn (array $modifier) => Arr::get($modifier, 'handle') === $fieldHandle);
+        $this->modifiers =
+            $this->modifiers->reject(fn (array $modifier) => Arr::get($modifier, 'handle') === $fieldHandle);
     }
 
     public function getModifier(AbstractFeedamicEntry $feedamicEntry, string $fieldHandle, mixed $value): ?Closure
@@ -468,5 +473,85 @@ class Feedamic
             });
 
         return $modifier ? $modifier['modifier'] : null;
+    }
+
+    public function render(FeedamicConfig $config, string $route): string
+    {
+        $view = $config->getViewForRoute($route);
+        if (! View::exists($view)) {
+            throw new ViewNotFoundException(__('feedamic::exceptions.view_not_found', [
+                'view' => $view,
+            ]));
+        }
+
+        $cacheKey = $config->getCacheKey($route, \Statamic\Facades\Site::current());
+
+        // do we have a cached version?
+        if (config('feedamic.cache_enabled', true) && Cache::has($cacheKey)) {
+            $feed = Cache::get($cacheKey);
+        } else {
+            // it could be a while...
+            set_time_limit(0);
+
+            // return the view
+            $xml = view($view, [
+                'id' => request()->url(),
+                'config' => $config,
+                'entries' => \MityDigital\Feedamic\Facades\Feedamic::getEntries($config),
+                'site' => \Statamic\Facades\Site::current(),
+                'updated' => Carbon::now(),
+                'url' => request()->url(),
+            ])->render();
+
+            // output
+            ob_start();
+
+            $reader = new XMLReader;
+            $reader->XML($xml, 'UTF-8', LIBXML_NOBLANKS);
+
+            $writer = new XMLWriter;
+            $writer->openURI('php://output');
+            $writer->setIndent(true);
+            $writer->setIndentString('    ');
+            $writer->startDocument('1.0', 'UTF-8');
+
+            while ($reader->read()) {
+                switch ($reader->nodeType) {
+                    case XMLReader::ELEMENT:
+                        $writer->startElement($reader->name);
+                        if ($reader->hasAttributes) {
+                            while ($reader->moveToNextAttribute()) {
+                                $writer->writeAttribute($reader->name, $reader->value);
+                            }
+                            $reader->moveToElement();
+                        }
+                        if ($reader->isEmptyElement) {
+                            $writer->endElement();
+                        }
+                        break;
+                    case XMLReader::TEXT:
+                        $writer->text(trim($reader->value));
+                        break;
+                    case XMLReader::CDATA:
+                        $writer->writeCdata(trim($reader->value));
+                        break;
+                    case XMLReader::END_ELEMENT:
+                        $writer->endElement();
+                        break;
+                }
+            }
+
+            $writer->endDocument();
+            $reader->close();
+
+            $feed = ob_get_clean();
+
+            if (config('feedamic.cache_enabled', true)) {
+                // store in the cache
+                Cache::put($cacheKey, $feed);
+            }
+        }
+
+        return $feed;
     }
 }
