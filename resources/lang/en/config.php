@@ -254,7 +254,7 @@ See https://statamic.dev/extending/query-scopes-and-filters#scopes',
 
                 'default_author_enabled' => [
                     'display' => 'Default Author Enabled',
-                    'inline_label' => 'Include author?',
+                    'inline_label' => 'Enable advanced Author setup',
                 ],
             ],
 
