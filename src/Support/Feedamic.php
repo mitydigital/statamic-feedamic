@@ -507,48 +507,53 @@ class Feedamic
                 'url' => request()->url(),
             ])->render();
 
-            // output
-            ob_start();
+            if (class_exists(XMLReader::class) && class_exists(XMLWriter::class)) {
+                // output
+                ob_start();
 
-            $reader = new XMLReader;
-            $reader->XML($xml, 'UTF-8', LIBXML_NOBLANKS);
+                $reader = new XMLReader;
+                $reader->XML($xml, 'UTF-8', LIBXML_NOBLANKS);
 
-            $writer = new XMLWriter;
-            $writer->openURI('php://output');
-            $writer->setIndent(true);
-            $writer->setIndentString('    ');
-            $writer->startDocument('1.0', 'UTF-8');
+                $writer = new XMLWriter;
+                $writer->openURI('php://output');
+                $writer->setIndent(true);
+                $writer->setIndentString('    ');
+                $writer->startDocument('1.0', 'UTF-8');
 
-            while ($reader->read()) {
-                switch ($reader->nodeType) {
-                    case XMLReader::ELEMENT:
-                        $writer->startElement($reader->name);
-                        if ($reader->hasAttributes) {
-                            while ($reader->moveToNextAttribute()) {
-                                $writer->writeAttribute($reader->name, $reader->value);
+                while ($reader->read()) {
+                    switch ($reader->nodeType) {
+                        case XMLReader::ELEMENT:
+                            $writer->startElement($reader->name);
+                            if ($reader->hasAttributes) {
+                                while ($reader->moveToNextAttribute()) {
+                                    $writer->writeAttribute($reader->name, $reader->value);
+                                }
+                                $reader->moveToElement();
                             }
-                            $reader->moveToElement();
-                        }
-                        if ($reader->isEmptyElement) {
+                            if ($reader->isEmptyElement) {
+                                $writer->endElement();
+                            }
+                            break;
+                        case XMLReader::TEXT:
+                            $writer->text(trim($reader->value));
+                            break;
+                        case XMLReader::CDATA:
+                            $writer->writeCdata(trim($reader->value));
+                            break;
+                        case XMLReader::END_ELEMENT:
                             $writer->endElement();
-                        }
-                        break;
-                    case XMLReader::TEXT:
-                        $writer->text(trim($reader->value));
-                        break;
-                    case XMLReader::CDATA:
-                        $writer->writeCdata(trim($reader->value));
-                        break;
-                    case XMLReader::END_ELEMENT:
-                        $writer->endElement();
-                        break;
+                            break;
+                    }
                 }
+
+                $writer->endDocument();
+                $reader->close();
+
+                $feed = ob_get_clean();
+            } else {
+                // xml processing not available
+                $feed = $xml;
             }
-
-            $writer->endDocument();
-            $reader->close();
-
-            $feed = ob_get_clean();
 
             if (config('feedamic.cache_enabled', true)) {
                 // store in the cache

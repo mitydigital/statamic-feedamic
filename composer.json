@@ -35,6 +35,10 @@
     "orchestra/testbench": "10.x-dev",
     "pestphp/pest-plugin-laravel": "4.x-dev"
   },
+  "suggest": {
+    "ext-xmlreader": "Required for XML parsing features in this package",
+    "ext-xmlwriter": "Required for XML generation features in this package"
+  },
   "extra": {
     "statamic": {
       "name": "Feedamic",
