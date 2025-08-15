@@ -2,6 +2,6 @@
 
 namespace MityDigital\Feedamic\Models;
 
-use MityDigital\Feedamic\AbstractFeedamicAuthor;
+use MityDigital\Feedamic\Abstracts\AbstractFeedamicAuthor;
 
 class FeedamicAuthor extends AbstractFeedamicAuthor {}

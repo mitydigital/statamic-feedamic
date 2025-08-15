@@ -1,6 +1,6 @@
 <?php
 
-use MityDigital\Feedamic\AbstractFeedamicEntry;
+use MityDigital\Feedamic\Abstracts\AbstractFeedamicEntry;
 use MityDigital\Feedamic\Facades\Feedamic;
 use MityDigital\Feedamic\Models\FeedamicAuthor;
 use MityDigital\Feedamic\Models\FeedamicConfig;

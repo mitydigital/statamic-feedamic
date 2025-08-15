@@ -2,6 +2,6 @@
 
 namespace MityDigital\Feedamic\Models;
 
-use MityDigital\Feedamic\AbstractFeedamicEntry;
+use MityDigital\Feedamic\Abstracts\AbstractFeedamicEntry;
 
 class FeedamicEntry extends AbstractFeedamicEntry {}

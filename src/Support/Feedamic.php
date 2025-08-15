@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\LazyCollection;
 use Illuminate\Support\Str;
 use Illuminate\Support\Uri;
-use MityDigital\Feedamic\AbstractFeedamicEntry;
+use MityDigital\Feedamic\Abstracts\AbstractFeedamicEntry;
 use MityDigital\Feedamic\Exceptions\CollectionMissingRouteException;
 use MityDigital\Feedamic\Exceptions\InconsistentSortFieldException;
 use MityDigital\Feedamic\Exceptions\ModifierCallbackException;

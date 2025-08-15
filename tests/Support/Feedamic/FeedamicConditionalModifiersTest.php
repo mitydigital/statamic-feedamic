@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Str;
-use MityDigital\Feedamic\AbstractFeedamicEntry;
+use MityDigital\Feedamic\Abstracts\AbstractFeedamicEntry;
 use MityDigital\Feedamic\Facades\Feedamic as FeedamicFacade;
 use MityDigital\Feedamic\Models\FeedamicEntry;
 use Statamic\Facades\YAML;

@@ -1,6 +1,6 @@
 <?php
 
-namespace MityDigital\Feedamic;
+namespace MityDigital\Feedamic\Abstracts;
 
 use Exception;
 use Illuminate\Support\Str;

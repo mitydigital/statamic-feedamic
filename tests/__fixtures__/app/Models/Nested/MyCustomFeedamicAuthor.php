@@ -2,6 +2,6 @@
 
 namespace App\Models\Nested;
 
-use MityDigital\Feedamic\AbstractFeedamicAuthor;
+use MityDigital\Feedamic\Abstracts\AbstractFeedamicAuthor;
 
 class MyCustomFeedamicAuthor extends AbstractFeedamicAuthor {}

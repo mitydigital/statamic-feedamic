@@ -2,7 +2,7 @@
 
 namespace MityDigital\Feedamic\Dictionaries;
 
-use MityDigital\Feedamic\AbstractFeedamicEntry;
+use MityDigital\Feedamic\Abstracts\AbstractFeedamicEntry;
 use MityDigital\Feedamic\Facades\Feedamic;
 use Statamic\Dictionaries\BasicDictionary;
 

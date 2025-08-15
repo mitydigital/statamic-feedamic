@@ -1,6 +1,6 @@
 <?php
 
-namespace MityDigital\Feedamic;
+namespace MityDigital\Feedamic\Abstracts;
 
 use Carbon\Carbon;
 use Exception;

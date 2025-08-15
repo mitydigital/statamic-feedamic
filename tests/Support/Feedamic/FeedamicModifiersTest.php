@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Collection;
-use MityDigital\Feedamic\AbstractFeedamicEntry;
+use MityDigital\Feedamic\Abstracts\AbstractFeedamicEntry;
 use MityDigital\Feedamic\Exceptions\ModifierCallbackException;
 use MityDigital\Feedamic\Facades\Feedamic;
 use MityDigital\Feedamic\Models\FeedamicEntry;

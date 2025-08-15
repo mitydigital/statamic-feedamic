@@ -1,13 +1,13 @@
 <?php
 
 use Illuminate\Support\Traits\ForwardsCalls;
-use MityDigital\Feedamic\AbstractFeedamicEntry;
+use MityDigital\Feedamic\Abstracts\AbstractFeedamicAuthor;
 
 it('uses the forwards calls trait', function () {
-    expect(AbstractFeedamicEntry::class)
+    expect(AbstractFeedamicAuthor::class)
         ->toUse(ForwardsCalls::class);
 });
 
 it('is abstract', function () {
-    expect(AbstractFeedamicEntry::class)->toBeAbstract();
+    expect(AbstractFeedamicAuthor::class)->toBeAbstract();
 });
