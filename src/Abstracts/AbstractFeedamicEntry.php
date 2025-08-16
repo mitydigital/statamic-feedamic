@@ -87,7 +87,9 @@ abstract class AbstractFeedamicEntry
                 ]));
             }
 
-            $value = app(CoreModifiers::class)->bardHtml($value);
+            $value = app(CoreModifiers::class)->fullUrls(app(CoreModifiers::class)->bardHtml($value));
+        } elseif (is_string($value)) {
+            $value = app(CoreModifiers::class)->fullUrls($value);
         }
 
         return $value;
