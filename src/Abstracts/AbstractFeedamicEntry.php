@@ -20,8 +20,6 @@ abstract class AbstractFeedamicEntry
 {
     use ForwardsCalls;
 
-    protected static array $modifiers = [];
-
     protected static bool $ignoreBardSets = false;
 
     protected string|Value $title;
