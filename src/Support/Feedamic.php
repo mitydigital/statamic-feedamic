@@ -45,7 +45,7 @@ class Feedamic
 
     public function blueprint(): \Statamic\Fields\Blueprint
     {
-        return Blueprint::find('feedamic::config');
+        return Blueprint::find('feedamic::settings');
     }
 
     public function save(array $payload): void
