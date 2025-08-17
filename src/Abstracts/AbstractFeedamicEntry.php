@@ -28,7 +28,7 @@ abstract class AbstractFeedamicEntry
 
     protected null|string|Value $content;
 
-    protected null|Asset|Value $image;
+    protected null|Asset|Value|string $image;
 
     protected ?AbstractFeedamicAuthor $author;
 
@@ -48,19 +48,18 @@ abstract class AbstractFeedamicEntry
         return ! empty($this->image());
     }
 
-    public function image(): null|Asset|Value
+    public function image(): null|Asset|Value|string
     {
         if (! $this->config->hasImage()) {
             $this->image = null;
         } elseif (! isset($this->image)) {
-            $image = $this->processField(
-                handle: 'image',
-                value: $this->getMappingValue($this->config->getImageMappings())
-            );
+            $image = $this->processField($this->config->getImageMappings(), 'image');
 
             $this->image = null;
             if ($image) {
-                if ($image->value() instanceof Asset) {
+                if (is_string($image)) {
+                    $this->image = $image;
+                } elseif ($image->value() instanceof Asset) {
                     $this->image = $image->value();
                 } elseif ($image->value()?->get() instanceof AssetCollection) {
                     $this->image = $image->value()->get()->first();
@@ -71,41 +70,53 @@ abstract class AbstractFeedamicEntry
         return $this->image;
     }
 
-    protected function processField(string $handle, mixed $value): mixed
+    protected function processField(array $map, string $property): mixed
     {
-        if ($modifier = Feedamic::getModifier($this, $handle, $value)) {
-            $value = $modifier($this, $value);
-        }
+        // set our values
+        $fieldHandle = null;
+        $fieldValue = null;
 
-        // we may have bard here
-        if ($value instanceof Value && $value->fieldtype() instanceof Bard) {
-            $hasSets = collect($value->raw())
-                ->first(fn (mixed $block) => is_array($block) && Arr::get($block, 'type', 'paragraph') === 'set');
-            if (! static::$ignoreBardSets && $hasSets) {
-                throw new BardContainsSetsException(__('feedamic::exceptions.bard_contains_sets', [
-                    'handle' => $handle,
-                ]));
-            }
-
-            $value = app(CoreModifiers::class)->fullUrls(app(CoreModifiers::class)->bardHtml($value));
-        } elseif (is_string($value)) {
-            $value = app(CoreModifiers::class)->fullUrls($value);
-        }
-
-        return $value;
-    }
-
-    protected function getMappingValue(array $map, mixed $default = null): mixed
-    {
+        // look at the map
         foreach ($map as $handle) {
+            $fieldHandle = $handle; // always set
             if ($this->entry->has($handle)) {
                 if ($value = $this->entry->augmentedValue($handle)) {
-                    return $value;
+                    $fieldValue = $value;
+                    break;
                 }
             }
         }
 
-        return $default;
+        if (! $fieldHandle) {
+            return null;
+        }
+
+        // get a processor
+        if ($processor = Feedamic::getProcessor($this, $fieldHandle, $fieldValue)) {
+            $fieldValue = $processor($this, $fieldValue);
+        }
+
+        // we may have bard here
+        if ($fieldValue instanceof Value && $fieldValue->fieldtype() instanceof Bard) {
+            $hasSets = collect($fieldValue->raw())
+                ->first(fn (mixed $block) => is_array($block) && Arr::get($block, 'type', 'paragraph') === 'set');
+            if (! static::$ignoreBardSets && $hasSets) {
+                throw new BardContainsSetsException(__('feedamic::exceptions.bard_contains_sets', [
+                    'handle' => $fieldHandle,
+                ]));
+            }
+
+            $fieldValue = app(CoreModifiers::class)->fullUrls(app(CoreModifiers::class)->bardHtml($fieldValue));
+        } elseif (is_string($fieldValue)) {
+            $fieldValue = app(CoreModifiers::class)->fullUrls($fieldValue);
+        }
+
+        // get a modifier
+        if ($modifier = Feedamic::getModifier($this, $property, $fieldValue)) {
+            $fieldValue = $modifier($this, $fieldValue);
+        }
+
+        return $fieldValue;
     }
 
     public function hasSummary(): bool
@@ -118,10 +129,7 @@ abstract class AbstractFeedamicEntry
         if (! $this->config->hasSummary()) {
             $this->summary = null;
         } elseif (! isset($this->summary)) {
-            $this->summary = $this->processField(
-                handle: 'summary',
-                value: $this->getMappingValue($this->config->getSummaryMappings())
-            );
+            $this->summary = $this->processField($this->config->getSummaryMappings(), 'summary');
         }
 
         return $this->summary;
@@ -163,10 +171,7 @@ abstract class AbstractFeedamicEntry
         if (! $this->config->hasContent()) {
             $this->content = null;
         } elseif (! isset($this->content)) {
-            $this->content = $this->processField(
-                handle: 'content',
-                value: $this->getMappingValue($this->config->getContentMappings())
-            );
+            $this->content = $this->processField($this->config->getContentMappings(), 'content');
         }
 
         return $this->content;
@@ -184,10 +189,7 @@ abstract class AbstractFeedamicEntry
     public function title(): string|Value
     {
         if (! isset($this->title)) {
-            $this->title = $this->processField(
-                handle: 'title',
-                value: $this->getMappingValue($this->config->getTitleMappings())
-            );
+            $this->title = $this->processField($this->config->getTitleMappings(), 'title');
         }
 
         return $this->title;

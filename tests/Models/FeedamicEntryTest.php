@@ -99,6 +99,31 @@ it('can have a custom modifier passed', function () {
     Feedamic::removeModifier('title');
 });
 
+it('can have a custom processor passed', function () {
+    Feedamic::processor('display_title', function (AbstractFeedamicEntry $entry, ?Value $value) {
+        return 'Processed Title!';
+    });
+
+    expect($this->feedamic->title())->toBe('Processed Title!');
+
+    Feedamic::removeProcessor('display_title');
+});
+
+it('can modify a custom processed value', function () {
+    Feedamic::processor('display_title', function (AbstractFeedamicEntry $entry, ?Value $value) {
+        return 'Processed Title!';
+    });
+
+    Feedamic::modify('title', function (AbstractFeedamicEntry $entry, null|Value|string $value) {
+        return \Statamic\Support\Str::limit($value, 5);
+    });
+
+    expect($this->feedamic->title())->toBe('Proce...');
+
+    Feedamic::removeModifier('title');
+    Feedamic::removeProcessor('display_title');
+});
+
 it('returns the entry', function () {
     expect($this->feedamic->entry())
         ->toBeInstanceOf(\Statamic\Entries\Entry::class)

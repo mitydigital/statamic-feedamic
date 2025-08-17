@@ -15,6 +15,7 @@ use MityDigital\Feedamic\Abstracts\AbstractFeedamicEntry;
 use MityDigital\Feedamic\Exceptions\CollectionMissingRouteException;
 use MityDigital\Feedamic\Exceptions\InconsistentSortFieldException;
 use MityDigital\Feedamic\Exceptions\ModifierCallbackException;
+use MityDigital\Feedamic\Exceptions\ProcessorCallbackException;
 use MityDigital\Feedamic\Exceptions\ViewNotFoundException;
 use MityDigital\Feedamic\Models\FeedamicConfig;
 use MityDigital\Feedamic\Models\FeedamicEntry;
@@ -36,11 +37,14 @@ class Feedamic
 
     protected Collection $config;
 
-    protected Collection $modifiers;
+    protected Collection $modifiers; // modify a FeedamicEntry value
+
+    protected Collection $processors; // process an Entry value
 
     public function __construct()
     {
         $this->modifiers = collect();
+        $this->processors = collect();
     }
 
     public function blueprint(): \Statamic\Fields\Blueprint
@@ -413,8 +417,84 @@ class Feedamic
         return ['atom', 'rss'];
     }
 
-    public function modify(string $fieldHandle, Closure $modifier, ?Closure $when = null, ?array $feeds = null): void
+    public function processor(
+        string $fieldHandle,
+        Closure $processor,
+        ?Closure $when = null,
+        ?array $feeds = null
+    ): void {
+        foreach (['modifier' => $processor, 'when' => $when] as $callback => $closure) {
+            if (! $closure) {
+                continue;
+            }
+
+            $reflection = new ReflectionFunction($closure);
+            $parameters = $reflection->getParameters();
+
+            // 0 - AbstractFeedamicEntry
+            $entry = Arr::get($parameters, 0);
+            if (! $entry || ($entry->getType() && $entry->getType()->getName() !== AbstractFeedamicEntry::class)) {
+                throw new ProcessorCallbackException(__('feedamic::exceptions.processor_callback', [
+                    'handle' => $fieldHandle,
+                    'callback' => $callback,
+                    'argument' => 'MityDigital\Feedamic\AbstractFeedamicEntry $entry',
+                ]));
+            }
+
+            // 1 - $value, whatever you want it to be, just needs to exist
+            if (! array_key_exists(1, $parameters)) {
+                throw new ProcessorCallbackException(__('feedamic::exceptions.processor_callback', [
+                    'handle' => $fieldHandle,
+                    'callback' => $callback,
+                    'argument' => '$value',
+                ]));
+            }
+        }
+
+        $this->processors->add([
+            'feeds' => $feeds,
+            'handle' => $fieldHandle,
+            'processor' => $processor,
+            'when' => $when,
+        ]);
+    }
+
+    public function removeProcessor(string $fieldHandle): void
     {
+        $this->processors =
+            $this->processors->reject(fn (array $modifier) => Arr::get($modifier, 'handle') === $fieldHandle);
+    }
+
+    public function getProcessor(AbstractFeedamicEntry $feedamicEntry, string $fieldHandle, mixed $value): ?Closure
+    {
+        $processor = $this->processors
+            ->first(function (array $processor) use ($feedamicEntry, $value, $fieldHandle) {
+                if (Arr::get($processor, 'handle') === $fieldHandle) {
+                    if ($processor['feeds'] === null
+                        || in_array($feedamicEntry->config()->handle, $processor['feeds'])
+                    ) {
+                        if ($when = $processor['when']) {
+                            if (! $when($feedamicEntry, $value)) {
+                                return false;
+                            }
+                        }
+
+                        return true;
+                    }
+                }
+
+                return false;
+            });
+
+        return $processor ? $processor['processor'] : null;
+    }
+
+    public function modify(
+        string $feedamicEntryProperty,
+        Closure $modifier,
+        ?Closure $when = null,
+        ?array $feeds = null
+    ): void {
         foreach (['modifier' => $modifier, 'when' => $when] as $callback => $closure) {
             if (! $closure) {
                 continue;
@@ -427,7 +507,7 @@ class Feedamic
             $entry = Arr::get($parameters, 0);
             if (! $entry || ($entry->getType() && $entry->getType()->getName() !== AbstractFeedamicEntry::class)) {
                 throw new ModifierCallbackException(__('feedamic::exceptions.modifier_callback', [
-                    'handle' => $fieldHandle,
+                    'handle' => $feedamicEntryProperty,
                     'callback' => $callback,
                     'argument' => 'MityDigital\Feedamic\AbstractFeedamicEntry $entry',
                 ]));
@@ -436,7 +516,7 @@ class Feedamic
             // 1 - $value, whatever you want it to be, just needs to exist
             if (! array_key_exists(1, $parameters)) {
                 throw new ModifierCallbackException(__('feedamic::exceptions.modifier_callback', [
-                    'handle' => $fieldHandle,
+                    'handle' => $feedamicEntryProperty,
                     'callback' => $callback,
                     'argument' => '$value',
                 ]));
@@ -445,23 +525,27 @@ class Feedamic
 
         $this->modifiers->add([
             'feeds' => $feeds,
-            'handle' => $fieldHandle,
             'modifier' => $modifier,
+            'property' => $feedamicEntryProperty,
             'when' => $when,
         ]);
     }
 
-    public function removeModifier(string $fieldHandle): void
+    public function removeModifier(string $feedamicEntryProperty): void
     {
         $this->modifiers =
-            $this->modifiers->reject(fn (array $modifier) => Arr::get($modifier, 'handle') === $fieldHandle);
+            $this->modifiers->reject(fn (array $modifier) => Arr::get($modifier, 'property')
+                === $feedamicEntryProperty);
     }
 
-    public function getModifier(AbstractFeedamicEntry $feedamicEntry, string $fieldHandle, mixed $value): ?Closure
-    {
+    public function getModifier(
+        AbstractFeedamicEntry $feedamicEntry,
+        string $feedamicEntryProperty,
+        mixed $value
+    ): ?Closure {
         $modifier = $this->modifiers
-            ->first(function (array $modifier) use ($feedamicEntry, $value, $fieldHandle) {
-                if (Arr::get($modifier, 'handle') === $fieldHandle) {
+            ->first(function (array $modifier) use ($feedamicEntry, $value, $feedamicEntryProperty) {
+                if (Arr::get($modifier, 'property') === $feedamicEntryProperty) {
                     if ($modifier['feeds'] === null || in_array($feedamicEntry->config()->handle, $modifier['feeds'])) {
                         if ($when = $modifier['when']) {
                             if (! $when($feedamicEntry, $value)) {

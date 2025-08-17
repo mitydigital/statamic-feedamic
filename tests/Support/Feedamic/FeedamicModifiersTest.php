@@ -9,7 +9,7 @@ use Statamic\Facades\Entry;
 
 it('can register a new modifier', function () {
     Feedamic::modify(
-        fieldHandle: 'handle',
+        feedamicEntryProperty: 'handle',
         modifier: function (AbstractFeedamicEntry $entry, $value) {},
         when: function (AbstractFeedamicEntry $entry, $value) {},
         feeds: ['feeds']);
@@ -23,8 +23,8 @@ it('can register a new modifier', function () {
 
     $modifier = $modifiers->first();
     expect($modifier)
-        ->toBeArray()->toHaveKeys(['handle', 'modifier', 'when', 'feeds'])
-        ->and($modifier['handle'])->toBe('handle')
+        ->toBeArray()->toHaveKeys(['property', 'modifier', 'when', 'feeds'])
+        ->and($modifier['property'])->toBe('handle')
         ->and($modifier['modifier'])->toBeInstanceOf(Closure::class)
         ->and($modifier['when'])->toBeInstanceOf(Closure::class)
         ->and($modifier['feeds'])->toBeArray()
@@ -97,7 +97,7 @@ it('throws the modifier callback exception when the modifier method signature is
 it('throws the modifier callback exception when the "when" method signature is wrong', function () {
     $this->withoutExceptionHandling();
     Feedamic::modify(
-        fieldHandle: 'handle',
+        feedamicEntryProperty: 'handle',
         modifier: function (AbstractFeedamicEntry $entry, $value) {},
         when: function ($value) {}
     );
@@ -105,7 +105,7 @@ it('throws the modifier callback exception when the "when" method signature is w
 
 it('can get a modifier', function () {
     Feedamic::modify(
-        fieldHandle: 'title',
+        feedamicEntryProperty: 'title',
         modifier: function (AbstractFeedamicEntry $entry, $value) {
             return 'My Modifier';
         }
@@ -131,7 +131,7 @@ it('returns null when not found', function () {
 
 it('correctly executes the "when" check', function () {
     Feedamic::modify(
-        fieldHandle: 'title',
+        feedamicEntryProperty: 'title',
         modifier: function (AbstractFeedamicEntry $entry, $value) {},
         when: fn (AbstractFeedamicEntry $entry, $value) => config('feedamic.when_test', false)
     );

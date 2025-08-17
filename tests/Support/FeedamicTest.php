@@ -67,6 +67,6 @@ it('loads the config', function () {
 it('loads the blueprint', function () {
     $blueprint = app(Feedamic::class)->blueprint();
     expect($blueprint)->toBeInstanceOf(Blueprint::class)
-        ->and($blueprint->handle())->toBe('config')
+        ->and($blueprint->handle())->toBe('settings')
         ->and($blueprint->namespace())->toBe('feedamic');
 });
