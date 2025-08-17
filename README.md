@@ -2,7 +2,8 @@
 
 <!-- statamic:hide -->
 
-![Statamic 5.0](https://img.shields.io/badge/Statamic-5.0-FF269E?style=for-the-badge&link=https://statamic.com)
+![Statamic 5.59](https://img.shields.io/badge/Statamic-5.59-FF269E?style=for-the-badge&link=https://statamic.com)
+![Statamic 6.0](https://img.shields.io/badge/Statamic-6.0-FF269E?style=for-the-badge&link=https://statamic.com)
 [![Feedamic on Packagist](https://img.shields.io/packagist/v/mitydigital/feedamic?style=for-the-badge)](https://packagist.org/packages/mitydigital/feedamic/stats)
 
 ---
@@ -29,6 +30,9 @@ help you. So be awesome - it'll feel fantastic.
 ## Credits
 
 - [Marty Friedel](https://github.com/martyf)
+
+Feedamic 3 wouldn't be what it is without the input and assistance from these developers with Feedamic 1 and 2:
+
 - [Jack Sleight](https://github.com/jacksleight) for input, chats and ideas
 - [Sm1lEE](https://github.com/Sm1lEE) for locale support
 - [Thomas van der Westen](https://github.com/tdwesten) for alternate feed model support
