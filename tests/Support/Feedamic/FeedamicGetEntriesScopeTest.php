@@ -5,7 +5,7 @@ use MityDigital\Feedamic\Facades\Feedamic;
 use Statamic\Facades\YAML;
 
 it('does not call the scope when it is not configured', function () {
-    $default = collect(YAML::file(base_path('content/feedamic.yaml'))->parse());
+    $default = collect(YAML::file(resource_path('addons/feedamic.yaml'))->parse());
 
     // add the "content" feed
     Feedamic::save(array_merge($default->toArray(), [
@@ -52,7 +52,7 @@ it('does not call the scope when it is not configured', function () {
 });
 
 it('calls the scope when it configured', function () {
-    $default = collect(YAML::file(base_path('content/feedamic.yaml'))->parse());
+    $default = collect(YAML::file(resource_path('addons/feedamic.yaml'))->parse());
 
     // add the "content" feed
     Feedamic::save(array_merge($default->toArray(), [

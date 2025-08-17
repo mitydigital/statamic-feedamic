@@ -6,7 +6,7 @@ use Statamic\Facades\Collection;
 use Statamic\Facades\YAML;
 
 beforeEach(function () {
-    $default = collect(YAML::file(base_path('content/feedamic.yaml'))->parse());
+    $default = collect(YAML::file(resource_path('addons/feedamic.yaml'))->parse());
 
     // add the "content" feed
     Feedamic::save(array_merge($default->toArray(), [

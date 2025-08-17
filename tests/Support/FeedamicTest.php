@@ -15,7 +15,7 @@ it('has the correct feed types', function () {
 it('returns the configured path', function () {
     // get the default route
     expect(app(Feedamic::class)->getPath())
-        ->toBe(base_path('content').'/feedamic.yaml');
+        ->toBe(resource_path('addons').'/feedamic.yaml');
 
     //
     // allow configurations
@@ -33,7 +33,7 @@ it('returns the configured path', function () {
 
 it('saves the config', function () {
     // force remove
-    File::delete(base_path('content/feedamic.yaml'));
+    File::delete(resource_path('addons/feedamic.yaml'));
 
     // file doesn't exist
     expect(File::exists(app(Feedamic::class)->getPath()))

@@ -11,7 +11,7 @@ return [
 
     'inconsistent_sort_field' => 'All Collections in a feed configuration must have the same sort field. In the :collection Collection, ":thisField" does not match the existing sort field of ":field".',
 
-    'modifier_callback' => 'Callback ":callback" for ":handle" does not have the correct method signature: missing :argument.',
+    'modifier_callback' => 'Callback ":callback" for ":property" does not have the correct method signature: missing :argument.',
 
     'processor_callback' => 'Callback ":callback" for ":handle" does not have the correct processor signature: missing :argument.',
 

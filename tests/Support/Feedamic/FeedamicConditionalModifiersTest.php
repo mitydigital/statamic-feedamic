@@ -7,7 +7,7 @@ use MityDigital\Feedamic\Models\FeedamicEntry;
 use Statamic\Facades\YAML;
 
 it('correctly and conditionally uses modifiers with no sets or sets excluded', function () {
-    $default = collect(YAML::file(base_path('content/feedamic.yaml'))->parse());
+    $default = collect(YAML::file(resource_path('addons/feedamic.yaml'))->parse());
 
     FeedamicEntry::ignoreBardSets(true);
 
@@ -50,7 +50,7 @@ it('correctly and conditionally uses modifiers with no sets or sets excluded', f
 });
 
 it('correctly and conditionally throws an exception when sets are present but not processed', function () {
-    $default = collect(YAML::file(base_path('content/feedamic.yaml'))->parse());
+    $default = collect(YAML::file(resource_path('addons/feedamic.yaml'))->parse());
 
     FeedamicEntry::ignoreBardSets(false);
 

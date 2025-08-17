@@ -57,7 +57,7 @@ it('updates the feedamic configuration', function () {
     $role = createFeedamicRole();
     $user->explicitRoles([$role->handle()]);
 
-    File::delete(base_path('content/feedamic.yaml'));
+    File::delete(resource_path('addons/feedamic.yaml'));
 
     // we need a blog collection
     Collection::make('blog')->save();

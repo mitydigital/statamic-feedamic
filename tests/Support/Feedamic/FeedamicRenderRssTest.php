@@ -5,7 +5,7 @@ use MityDigital\Feedamic\Facades\Feedamic;
 use Statamic\Facades\YAML;
 
 beforeEach(function () {
-    $default = collect(YAML::file(base_path('content/feedamic.yaml'))->parse());
+    $default = collect(YAML::file(resource_path('addons/feedamic.yaml'))->parse());
 
     $this->route = '/render-atom/feed';
 

@@ -7,7 +7,7 @@ use MityDigital\Feedamic\Models\FeedamicEntry;
 use Statamic\Facades\YAML;
 
 it('correctly and conditionally uses processors', function () {
-    $default = collect(YAML::file(base_path('content/feedamic.yaml'))->parse());
+    $default = collect(YAML::file(resource_path('addons/feedamic.yaml'))->parse());
 
     // add the "content" feed
     FeedamicFacade::save(array_merge($default->toArray(), [

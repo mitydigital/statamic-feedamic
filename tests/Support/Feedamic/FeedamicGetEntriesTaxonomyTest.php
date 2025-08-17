@@ -4,7 +4,7 @@ use MityDigital\Feedamic\Facades\Feedamic;
 use Statamic\Facades\YAML;
 
 it('correctly returns 4 entries with no taxonomies', function () {
-    $default = collect(YAML::file(base_path('content/feedamic.yaml'))->parse());
+    $default = collect(YAML::file(resource_path('addons/feedamic.yaml'))->parse());
 
     // add the "content" feed
     Feedamic::save(array_merge($default->toArray(), [
@@ -43,7 +43,7 @@ it('correctly returns 4 entries with no taxonomies', function () {
 });
 
 it('correctly returns the "apple" entries', function () {
-    $default = collect(YAML::file(base_path('content/feedamic.yaml'))->parse());
+    $default = collect(YAML::file(resource_path('addons/feedamic.yaml'))->parse());
 
     // add the "content" feed
     Feedamic::save(array_merge($default->toArray(), [
@@ -96,7 +96,7 @@ it('correctly returns the "apple" entries', function () {
 });
 
 it('correctly returns the "Banana" entries', function () {
-    $default = collect(YAML::file(base_path('content/feedamic.yaml'))->parse());
+    $default = collect(YAML::file(resource_path('addons/feedamic.yaml'))->parse());
 
     // add the "content" feed
     Feedamic::save(array_merge($default->toArray(), [
@@ -149,7 +149,7 @@ it('correctly returns the "Banana" entries', function () {
 });
 
 it('correctly returns ANY "Apple" or "Banana" entries', function () {
-    $default = collect(YAML::file(base_path('content/feedamic.yaml'))->parse());
+    $default = collect(YAML::file(resource_path('addons/feedamic.yaml'))->parse());
 
     // add the "content" feed
     Feedamic::save(array_merge($default->toArray(), [
@@ -204,7 +204,7 @@ it('correctly returns ANY "Apple" or "Banana" entries', function () {
 });
 
 it('correctly returns ONLY "Apple" AND "Banana" entries', function () {
-    $default = collect(YAML::file(base_path('content/feedamic.yaml'))->parse());
+    $default = collect(YAML::file(resource_path('addons/feedamic.yaml'))->parse());
 
     // add the "content" feed
     Feedamic::save(array_merge($default->toArray(), [

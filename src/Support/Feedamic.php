@@ -462,7 +462,7 @@ class Feedamic
     public function removeProcessor(string $fieldHandle): void
     {
         $this->processors =
-            $this->processors->reject(fn (array $modifier) => Arr::get($modifier, 'handle') === $fieldHandle);
+            $this->processors->reject(fn (array $processor) => Arr::get($processor, 'handle') === $fieldHandle);
     }
 
     public function getProcessor(AbstractFeedamicEntry $feedamicEntry, string $fieldHandle, mixed $value): ?Closure
@@ -507,7 +507,7 @@ class Feedamic
             $entry = Arr::get($parameters, 0);
             if (! $entry || ($entry->getType() && $entry->getType()->getName() !== AbstractFeedamicEntry::class)) {
                 throw new ModifierCallbackException(__('feedamic::exceptions.modifier_callback', [
-                    'handle' => $feedamicEntryProperty,
+                    'property' => $feedamicEntryProperty,
                     'callback' => $callback,
                     'argument' => 'MityDigital\Feedamic\AbstractFeedamicEntry $entry',
                 ]));
@@ -516,7 +516,7 @@ class Feedamic
             // 1 - $value, whatever you want it to be, just needs to exist
             if (! array_key_exists(1, $parameters)) {
                 throw new ModifierCallbackException(__('feedamic::exceptions.modifier_callback', [
-                    'handle' => $feedamicEntryProperty,
+                    'property' => $feedamicEntryProperty,
                     'callback' => $callback,
                     'argument' => '$value',
                 ]));
