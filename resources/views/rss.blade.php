@@ -20,9 +20,13 @@
                 <pubDate>{{ $entry->getUpdatedAt()->toRfc2822String() }}</pubDate>
                 @if ($entry->hasSummary() && $entry->hasImage())
                 <description><![CDATA[
+                @if (is_string($entry->image()))
+                <p><img src="{{ $entry->image() }}" width="{{ $config->getImageWidth() }}" height="{{ $config->getImageHeight() }}" alt="{{ $entry->title() }}"></p>
+                @else
                 <s:glide src="{{ $entry->image() }}" width="{{ $config->getImageWidth() }}" height="{{ $config->getImageHeight() }}">
                 <p><img src="{{ $config->makeUrlAbsolute($url) }}" width="{{ $width }}" height="{{ $height }}" alt="{{ $entry->title() }}"></p>
                 </s:glide>
+                @endif
                 <p>{!! $entry->summary() !!}</p>
                 ]]></description>
                 @elseif ($entry->hasSummary())
