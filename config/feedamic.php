@@ -6,15 +6,17 @@ return [
     | Path and Filename
     |--------------------------------------------------------------------------
     |
+    | Applies to Statamic 5 only.
+    |
     | Your Feedamic config gets stored in a YAML file, and by default is
-    | in your 'content' folder, '/content/feedamic.yaml'. We love
-    | this because it means it gets included in Statamic's Git Automation.
+    | in your 'resources/addons' folder for Statamic 6 support,
+    | '/resources/addons/feedamic.yaml'.
     |
     | You can change the path and filename here, if required.
     |
     */
 
-    'path' => base_path('content'),
+    'path' => resource_path('addons'),
 
     'filename' => 'feedamic',
 
