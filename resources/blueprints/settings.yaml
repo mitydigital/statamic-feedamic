@@ -1,7 +1,7 @@
-title: 'feedamic::config.title'
+title: 'feedamic::settings.title'
 tabs:
   main:
-    display: 'feedamic::config.main'
+    display: 'feedamic::settings.main'
     sections:
       -
         fields:
@@ -9,20 +9,20 @@ tabs:
             handle: feeds
             field:
               type: replicator
-              display: 'feedamic::config.feeds.display'
+              display: 'feedamic::settings.feeds.display'
               localizable: false
               hide_display: false
-              button_label: 'feedamic::config.feeds.button_label'
+              button_label: 'feedamic::settings.feeds.button_label'
               validate:
                 - required
                 - array
                 - 'min:1'
               sets:
                 types:
-                  display: 'feedamic::config.feeds.sets.type'
+                  display: 'feedamic::settings.feeds.sets.type'
                   sets:
                     feed:
-                      display: 'feedamic::config.feeds.sets.feed'
+                      display: 'feedamic::settings.feeds.sets.feed'
                       fields:
                         -
                           handle: sites
@@ -30,13 +30,13 @@ tabs:
                             options:
                               -
                                 key: all
-                                value: 'feedamic::config.feeds.sites.options.all'
+                                value: 'feedamic::settings.feeds.sites.options.all'
                               -
                                 key: specific
-                                value: 'feedamic::config.feeds.sites.options.specific'
+                                value: 'feedamic::settings.feeds.sites.options.specific'
                             default: all
                             type: select
-                            display: 'feedamic::config.feeds.sites.display'
+                            display: 'feedamic::settings.feeds.sites.display'
                             localizable: false
                             width: 33
                             validate:
@@ -46,7 +46,7 @@ tabs:
                           field:
                             mode: select
                             type: sites
-                            display: 'feedamic::config.feeds.sites_specific'
+                            display: 'feedamic::settings.feeds.sites_specific'
                             localizable: false
                             validate:
                               - 'exclude_unless:{this}.sites,specific'
@@ -67,8 +67,8 @@ tabs:
                           handle: title
                           field:
                             type: text
-                            display: 'feedamic::config.feeds.title.display'
-                            instructions: 'feedamic::config.feeds.title.instructions'
+                            display: 'feedamic::settings.feeds.title.display'
+                            instructions: 'feedamic::settings.feeds.title.instructions'
                             localizable: false
                             instructions_position: below
                             width: 66
@@ -78,8 +78,8 @@ tabs:
                           handle: handle
                           field:
                             type: text
-                            display: 'feedamic::config.feeds.handle.display'
-                            instructions: 'feedamic::config.feeds.handle.instructions'
+                            display: 'feedamic::settings.feeds.handle.display'
+                            instructions: 'feedamic::settings.feeds.handle.instructions'
                             localizable: false
                             instructions_position: below
                             width: 33
@@ -90,8 +90,8 @@ tabs:
                           handle: description
                           field:
                             type: textarea
-                            display: 'feedamic::config.feeds.description.display'
-                            instructions: 'feedamic::config.feeds.description.instructions'
+                            display: 'feedamic::settings.feeds.description.display'
+                            instructions: 'feedamic::settings.feeds.description.instructions'
                             localizable: false
                             instructions_position: below
                             validate:
@@ -100,8 +100,8 @@ tabs:
                           handle: routes
                           field:
                             type: group
-                            display: 'feedamic::config.feeds.routes.display'
-                            instructions: 'feedamic::config.feeds.routes.instructions'
+                            display: 'feedamic::settings.feeds.routes.display'
+                            instructions: 'feedamic::settings.feeds.routes.instructions'
                             localizable: false
                             validate:
                               - 'new \MityDigital\Feedamic\Rules\RequiresAtLeastOneRouteRule'
@@ -111,8 +111,8 @@ tabs:
                                 field:
                                   default: /feed/atom
                                   type: text
-                                  display: 'feedamic::config.feeds.routes.atom.display'
-                                  instructions: 'feedamic::config.feeds.routes.atom.instructions'
+                                  display: 'feedamic::settings.feeds.routes.atom.display'
+                                  instructions: 'feedamic::settings.feeds.routes.atom.instructions'
                                   localizable: false
                                   validate:
                                     - nullable
@@ -122,8 +122,8 @@ tabs:
                                 handle: atom_view
                                 field:
                                   type: template
-                                  display: 'feedamic::config.feeds.routes.atom_view.display'
-                                  instructions: 'feedamic::config.feeds.routes.atom_view.instructions'
+                                  display: 'feedamic::settings.feeds.routes.atom_view.display'
+                                  instructions: 'feedamic::settings.feeds.routes.atom_view.instructions'
                                   localizable: false
                                   width: 50
                               -
@@ -131,8 +131,8 @@ tabs:
                                 field:
                                   default: /feed
                                   type: text
-                                  display: 'feedamic::config.feeds.routes.rss.display'
-                                  instructions: 'feedamic::config.feeds.routes.rss.instructions'
+                                  display: 'feedamic::settings.feeds.routes.rss.display'
+                                  instructions: 'feedamic::settings.feeds.routes.rss.instructions'
                                   localizable: false
                                   validate:
                                     - nullable
@@ -142,8 +142,8 @@ tabs:
                                 handle: rss_view
                                 field:
                                   type: template
-                                  display: 'feedamic::config.feeds.routes.rss_view.display'
-                                  instructions: 'feedamic::config.feeds.routes.rss_view.instructions'
+                                  display: 'feedamic::settings.feeds.routes.rss_view.display'
+                                  instructions: 'feedamic::settings.feeds.routes.rss_view.instructions'
                                   localizable: false
                                   width: 50
                         -
@@ -152,7 +152,7 @@ tabs:
                             dictionary: dated_collections_dictionary
                             type: collections
                             mode: select
-                            display: 'feedamic::config.feeds.collections'
+                            display: 'feedamic::settings.feeds.collections'
                             localizable: false
                             validate:
                               - required
@@ -161,8 +161,8 @@ tabs:
                           handle: taxonomies
                           field:
                             type: grid
-                            display: 'feedamic::config.feeds.taxonomies.display'
-                            instructions: 'feedamic::config.feeds.taxonomies.instructions'
+                            display: 'feedamic::settings.feeds.taxonomies.display'
+                            instructions: 'feedamic::settings.feeds.taxonomies.instructions'
                             localizable: false
                             add_row: 'Add set...'
                             fields:
@@ -172,7 +172,7 @@ tabs:
                                   mode: select
                                   create: false
                                   type: terms
-                                  display: 'feedamic::config.feeds.taxonomies.fields.terms'
+                                  display: 'feedamic::settings.feeds.taxonomies.fields.terms'
                                   localizable: false
                                   width: 75
                                   validate:
@@ -184,13 +184,13 @@ tabs:
                                   options:
                                     -
                                       key: and
-                                      value: 'feedamic::config.feeds.taxonomies.fields.logic.options.and'
+                                      value: 'feedamic::settings.feeds.taxonomies.fields.logic.options.and'
                                     -
                                       key: or
-                                      value: 'feedamic::config.feeds.taxonomies.fields.logic.options.or'
+                                      value: 'feedamic::settings.feeds.taxonomies.fields.logic.options.or'
                                   default: and
                                   type: select
-                                  display: 'feedamic::config.feeds.taxonomies.fields.logic.display'
+                                  display: 'feedamic::settings.feeds.taxonomies.fields.logic.display'
                                   localizable: false
                                   width: 25
                                   validate:
@@ -201,20 +201,20 @@ tabs:
                             options:
                               -
                                 key: all
-                                value: 'feedamic::config.feeds.show.options.all'
+                                value: 'feedamic::settings.feeds.show.options.all'
                               -
                                 key: limit
-                                value: 'feedamic::config.feeds.show.options.limit'
+                                value: 'feedamic::settings.feeds.show.options.limit'
                             default: all
                             type: select
-                            display: 'feedamic::config.feeds.show.display'
+                            display: 'feedamic::settings.feeds.show.display'
                             localizable: false
                             width: 33
                         -
                           handle: show_limit
                           field:
                             type: integer
-                            display: 'feedamic::config.feeds.show_limit'
+                            display: 'feedamic::settings.feeds.show_limit'
                             localizable: false
                             width: 66
                             if:
@@ -228,15 +228,15 @@ tabs:
                           field:
                             mode: toggle
                             type: revealer
-                            display: 'feedamic::config.feeds.advanced'
+                            display: 'feedamic::settings.feeds.advanced'
                             localizable: false
                         -
                           handle: mappings
                           field:
                             type: group
-                            display: 'feedamic::config.feeds.mappings.display'
+                            display: 'feedamic::settings.feeds.mappings.display'
                             localizable: false
-                            instructions: 'feedamic::config.feeds.mappings.instructions'
+                            instructions: 'feedamic::settings.feeds.mappings.instructions'
                             always_save: true
                             if:
                               advanced: 'equals true'
@@ -247,20 +247,20 @@ tabs:
                                   options:
                                     -
                                       key: custom
-                                      value: 'feedamic::config.feeds.override_options.custom'
+                                      value: 'feedamic::settings.feeds.override_options.custom'
                                     -
                                       key: default
-                                      value: 'feedamic::config.feeds.override_options.default'
+                                      value: 'feedamic::settings.feeds.override_options.default'
                                   default: default
                                   type: select
-                                  display: 'feedamic::config.feeds.mappings.title_mode'
+                                  display: 'feedamic::settings.feeds.mappings.title_mode'
                                   localizable: false
                                   width: 33
                               -
                                 handle: title
                                 field:
                                   type: list
-                                  display: 'feedamic::config.feeds.mappings.title'
+                                  display: 'feedamic::settings.feeds.mappings.title'
                                   localizable: false
                                   validate:
                                     - 'exclude_unless:{this}.mappings.title_mode,custom'
@@ -285,23 +285,23 @@ tabs:
                                   options:
                                     -
                                       key: custom
-                                      value: 'feedamic::config.feeds.override_options.custom'
+                                      value: 'feedamic::settings.feeds.override_options.custom'
                                     -
                                       key: default
-                                      value: 'feedamic::config.feeds.override_options.default'
+                                      value: 'feedamic::settings.feeds.override_options.default'
                                     -
                                       key: disabled
-                                      value: 'feedamic::config.feeds.override_options.disabled'
+                                      value: 'feedamic::settings.feeds.override_options.disabled'
                                   default: default
                                   type: select
-                                  display: 'feedamic::config.feeds.mappings.summary_mode'
+                                  display: 'feedamic::settings.feeds.mappings.summary_mode'
                                   localizable: false
                                   width: 33
                               -
                                 handle: summary
                                 field:
                                   type: list
-                                  display: 'feedamic::config.feeds.mappings.summary'
+                                  display: 'feedamic::settings.feeds.mappings.summary'
                                   localizable: false
                                   validate:
                                     - 'exclude_unless:{this}.mappings.summary_mode,custom'
@@ -326,24 +326,24 @@ tabs:
                                   options:
                                     -
                                       key: custom
-                                      value: 'feedamic::config.feeds.override_options.custom'
+                                      value: 'feedamic::settings.feeds.override_options.custom'
                                     -
                                       key: default
-                                      value: 'feedamic::config.feeds.override_options.default'
+                                      value: 'feedamic::settings.feeds.override_options.default'
                                     -
                                       key: disabled
-                                      value: 'feedamic::config.feeds.override_options.disabled'
+                                      value: 'feedamic::settings.feeds.override_options.disabled'
                                   default: default
                                   type: select
-                                  display: 'feedamic::config.feeds.mappings.content_mode'
-                                  instructions: 'feedamic::config.feeds.mappings.content_instructions'
+                                  display: 'feedamic::settings.feeds.mappings.content_mode'
+                                  instructions: 'feedamic::settings.feeds.mappings.content_instructions'
                                   localizable: false
                                   width: 33
                               -
                                 handle: content
                                 field:
                                   type: list
-                                  display: 'feedamic::config.feeds.mappings.content'
+                                  display: 'feedamic::settings.feeds.mappings.content'
                                   localizable: false
                                   validate:
                                     - 'exclude_unless:{this}.mappings.content_mode,custom'
@@ -368,23 +368,23 @@ tabs:
                                   options:
                                     -
                                       key: custom
-                                      value: 'feedamic::config.feeds.override_options.custom'
+                                      value: 'feedamic::settings.feeds.override_options.custom'
                                     -
                                       key: default
-                                      value: 'feedamic::config.feeds.override_options.default'
+                                      value: 'feedamic::settings.feeds.override_options.default'
                                     -
                                       key: disabled
-                                      value: 'feedamic::config.feeds.override_options.disabled'
+                                      value: 'feedamic::settings.feeds.override_options.disabled'
                                   default: default
                                   type: select
-                                  display: 'feedamic::config.feeds.mappings.image_mode'
+                                  display: 'feedamic::settings.feeds.mappings.image_mode'
                                   localizable: false
                                   width: 33
                               -
                                 handle: image
                                 field:
                                   type: list
-                                  display: 'feedamic::config.feeds.mappings.image'
+                                  display: 'feedamic::settings.feeds.mappings.image'
                                   localizable: false
                                   validate:
                                     - sometimes
@@ -410,13 +410,13 @@ tabs:
                                   options:
                                     -
                                       key: custom
-                                      value: 'feedamic::config.feeds.override_options.custom'
+                                      value: 'feedamic::settings.feeds.override_options.custom'
                                     -
                                       key: default
-                                      value: 'feedamic::config.feeds.override_options.default'
+                                      value: 'feedamic::settings.feeds.override_options.default'
                                   default: default
                                   type: select
-                                  display: 'feedamic::config.feeds.mappings.image_dimensions_mode'
+                                  display: 'feedamic::settings.feeds.mappings.image_dimensions_mode'
                                   localizable: false
                                   width: 33
                                   if:
@@ -436,7 +436,7 @@ tabs:
                                 field:
                                   input_type: number
                                   type: text
-                                  display: 'feedamic::config.feeds.mappings.image_width'
+                                  display: 'feedamic::settings.feeds.mappings.image_width'
                                   localizable: false
                                   width: 33
                                   validate:
@@ -451,7 +451,7 @@ tabs:
                                 field:
                                   input_type: number
                                   type: text
-                                  display: 'feedamic::config.feeds.mappings.image_height'
+                                  display: 'feedamic::settings.feeds.mappings.image_height'
                                   localizable: false
                                   width: 33
                                   validate:
@@ -467,31 +467,31 @@ tabs:
                                   options:
                                     -
                                       key: custom
-                                      value: 'feedamic::config.feeds.override_options.custom'
+                                      value: 'feedamic::settings.feeds.override_options.custom'
                                     -
                                       key: default
-                                      value: 'feedamic::config.feeds.override_options.default'
+                                      value: 'feedamic::settings.feeds.override_options.default'
                                     -
                                       key: disabled
-                                      value: 'feedamic::config.feeds.override_options.disabled'
+                                      value: 'feedamic::settings.feeds.override_options.disabled'
                                   default: default
                                   type: select
-                                  display: 'feedamic::config.feeds.mappings.author_mode'
+                                  display: 'feedamic::settings.feeds.mappings.author_mode'
                                   localizable: false
                                   width: 33
                               -
                                 handle: author_type
                                 field:
                                   type: select
-                                  display: 'feedamic::config.author_type.display'
+                                  display: 'feedamic::settings.author_type.display'
                                   localizable: false
                                   options:
                                     -
                                       key: entry
-                                      value: 'feedamic::config.author_type.options.entry'
+                                      value: 'feedamic::settings.author_type.options.entry'
                                     -
                                       key: field
-                                      value: 'feedamic::config.author_type.options.field'
+                                      value: 'feedamic::settings.author_type.options.field'
                                   default: entry
                                   width: 33
                                   validate:
@@ -511,7 +511,7 @@ tabs:
                                 handle: author_field
                                 field:
                                   type: text
-                                  display: 'feedamic::config.author_type.field.display'
+                                  display: 'feedamic::settings.author_type.field.display'
                                   localizable: false
                                   validate:
                                     - 'exclude_unless:{this}.mappings.author_mode,custom'
@@ -543,7 +543,7 @@ tabs:
                                 handle: author_name
                                 field:
                                   type: text
-                                  display: 'feedamic::config.author_type.name.display'
+                                  display: 'feedamic::settings.author_type.name.display'
                                   localizable: false
                                   default: entry
                                   width: 33
@@ -556,7 +556,7 @@ tabs:
                                 handle: author_email
                                 field:
                                   type: text
-                                  display: 'feedamic::config.author_type.email.display'
+                                  display: 'feedamic::settings.author_type.email.display'
                                   localizable: false
                                   default: entry
                                   width: 33
@@ -572,16 +572,16 @@ tabs:
                             options:
                               -
                                 key: custom
-                                value: 'feedamic::config.feeds.override_options.custom'
+                                value: 'feedamic::settings.feeds.override_options.custom'
                               -
                                 key: default
-                                value: 'feedamic::config.feeds.override_options.default'
+                                value: 'feedamic::settings.feeds.override_options.default'
                               -
                                 key: disabled
-                                value: 'feedamic::config.feeds.override_options.disabled'
+                                value: 'feedamic::settings.feeds.override_options.disabled'
                             default: default
                             type: select
-                            display: 'feedamic::config.feeds.copyright_mode'
+                            display: 'feedamic::settings.feeds.copyright_mode'
                             localizable: false
                             width: 33
                             if:
@@ -600,7 +600,7 @@ tabs:
                           handle: copyright
                           field:
                             type: text
-                            display: 'feedamic::config.feeds.copyright'
+                            display: 'feedamic::settings.feeds.copyright'
                             localizable: false
                             validate:
                               - 'exclude_unless:{this}.copyright_mode,custom'
@@ -615,13 +615,13 @@ tabs:
                             options:
                               -
                                 key: custom
-                                value: 'feedamic::config.feeds.override_options.custom'
+                                value: 'feedamic::settings.feeds.override_options.custom'
                               -
                                 key: default
-                                value: 'feedamic::config.feeds.override_options.default'
+                                value: 'feedamic::settings.feeds.override_options.default'
                             default: default
                             type: select
-                            display: 'feedamic::config.feeds.author_fallback_mode'
+                            display: 'feedamic::settings.feeds.author_fallback_mode'
                             localizable: false
                             width: 33
                             if:
@@ -640,7 +640,7 @@ tabs:
                           handle: author_fallback_name
                           field:
                             type: text
-                            display: 'feedamic::config.feeds.author_fallback_name'
+                            display: 'feedamic::settings.feeds.author_fallback_name'
                             localizable: false
                             validate:
                               - 'exclude_unless:{this}.author_fallback_mode,custom'
@@ -653,7 +653,7 @@ tabs:
                           handle: author_fallback_email
                           field:
                             type: text
-                            display: 'feedamic::config.feeds.author_fallback_email'
+                            display: 'feedamic::settings.feeds.author_fallback_email'
                             localizable: false
                             width: 50
                             validate:
@@ -669,8 +669,8 @@ tabs:
                             dictionary: feedamic_scopes_dictionary
                             max_items: 1
                             type: dictionary
-                            display: 'feedamic::config.feeds.scope.display'
-                            instructions: 'feedamic::config.feeds.scope.instructions'
+                            display: 'feedamic::settings.feeds.scope.display'
+                            instructions: 'feedamic::settings.feeds.scope.instructions'
                             localizable: false
                             instructions_position: below
                             width: 50
@@ -692,8 +692,8 @@ tabs:
                             dictionary: feedamic_entry_models_dictionary
                             max_items: 1
                             type: dictionary
-                            display: 'feedamic::config.feeds.entry_model.display'
-                            instructions: 'feedamic::config.feeds.entry_model.instructions'
+                            display: 'feedamic::settings.feeds.entry_model.display'
+                            instructions: 'feedamic::settings.feeds.entry_model.instructions'
                             localizable: false
                             instructions_position: below
                             width: 50
@@ -709,8 +709,8 @@ tabs:
                             dictionary: feedamic_author_models_dictionary
                             max_items: 1
                             type: dictionary
-                            display: 'feedamic::config.feeds.author_model.display'
-                            instructions: 'feedamic::config.feeds.author_model.instructions'
+                            display: 'feedamic::settings.feeds.author_model.display'
+                            instructions: 'feedamic::settings.feeds.author_model.instructions'
                             localizable: false
                             instructions_position: below
                             width: 50
@@ -724,8 +724,8 @@ tabs:
                           handle: alt_url
                           field:
                             type: text
-                            display: 'feedamic::config.feeds.alt_url.display'
-                            instructions: 'feedamic::config.feeds.alt_url.instructions'
+                            display: 'feedamic::settings.feeds.alt_url.display'
+                            instructions: 'feedamic::settings.feeds.alt_url.instructions'
                             localizable: false
                             instructions_position: below
                             validate:
@@ -734,16 +734,16 @@ tabs:
                             if:
                               advanced: 'equals true'
   defaults:
-    display: 'feedamic::config.defaults.title'
+    display: 'feedamic::settings.defaults.title'
     sections:
       -
-        display: 'feedamic::config.defaults.sections.title.display'
+        display: 'feedamic::settings.defaults.sections.title.display'
         fields:
           -
             handle: default_title
             field:
               type: list
-              display: 'feedamic::config.defaults.sections.title.default_title.display'
+              display: 'feedamic::settings.defaults.sections.title.default_title.display'
               hide_display: true
               localizable: false
               default:
@@ -753,15 +753,15 @@ tabs:
                 - array
                 - 'min:1'
                 - 'new \MityDigital\Feedamic\Rules\ListContainsHandlesRule'
-              instructions: 'feedamic::config.defaults.sections.title.default_title.instructions'
+              instructions: 'feedamic::settings.defaults.sections.title.default_title.instructions'
       -
-        display: 'feedamic::config.defaults.sections.summary.display'
+        display: 'feedamic::settings.defaults.sections.summary.display'
         fields:
           -
             handle: default_summary
             field:
               type: list
-              display: 'feedamic::config.defaults.sections.summary.default_summary.display'
+              display: 'feedamic::settings.defaults.sections.summary.default_summary.display'
               hide_display: true
               localizable: false
               validate:
@@ -769,15 +769,15 @@ tabs:
                 - array
                 - 'min:0'
                 - 'new \MityDigital\Feedamic\Rules\ListContainsHandlesRule'
-              instructions: 'feedamic::config.defaults.sections.summary.default_summary.instructions'
+              instructions: 'feedamic::settings.defaults.sections.summary.default_summary.instructions'
       -
-        display: 'feedamic::config.defaults.sections.content.display'
+        display: 'feedamic::settings.defaults.sections.content.display'
         fields:
           -
             handle: default_content
             field:
               type: list
-              display: 'feedamic::config.defaults.sections.content.default_content.display'
+              display: 'feedamic::settings.defaults.sections.content.default_content.display'
               hide_display: true
               localizable: false
               validate:
@@ -785,16 +785,16 @@ tabs:
                 - array
                 - 'min:0'
                 - 'new \MityDigital\Feedamic\Rules\ListContainsHandlesRule'
-              instructions: 'feedamic::config.defaults.sections.content.default_content.instructions'
+              instructions: 'feedamic::settings.defaults.sections.content.default_content.instructions'
       -
-        display: 'feedamic::config.defaults.sections.image.display'
+        display: 'feedamic::settings.defaults.sections.image.display'
         fields:
           -
             handle: default_image_enabled
             field:
-              inline_label: 'feedamic::config.defaults.sections.image.default_image_enabled.inline_label'
+              inline_label: 'feedamic::settings.defaults.sections.image.default_image_enabled.inline_label'
               type: toggle
-              display: 'feedamic::config.defaults.sections.image.default_image_enabled.display'
+              display: 'feedamic::settings.defaults.sections.image.default_image_enabled.display'
               localizable: false
               default: true
               hide_display: true
@@ -803,7 +803,7 @@ tabs:
             handle: default_image
             field:
               type: list
-              display: 'feedamic::config.defaults.sections.image.default_image.display'
+              display: 'feedamic::settings.defaults.sections.image.default_image.display'
               hide_display: true
               localizable: false
               validate:
@@ -811,7 +811,7 @@ tabs:
                 - array
                 - 'min:1'
                 - 'new \MityDigital\Feedamic\Rules\ListContainsHandlesRule'
-              instructions: 'feedamic::config.defaults.sections.image.default_image.instructions'
+              instructions: 'feedamic::settings.defaults.sections.image.default_image.instructions'
               if:
                 default_image_enabled: 'equals true'
           -
@@ -819,7 +819,7 @@ tabs:
             field:
               input_type: number
               type: text
-              display: 'feedamic::config.image.width'
+              display: 'feedamic::settings.image.width'
               localizable: false
               width: 33
               default: 1280
@@ -834,7 +834,7 @@ tabs:
             field:
               input_type: number
               type: text
-              display: 'feedamic::config.image.height'
+              display: 'feedamic::settings.image.height'
               localizable: false
               width: 33
               default: 720
@@ -845,37 +845,37 @@ tabs:
               if:
                 default_image_enabled: 'equals true'
       -
-        display: 'feedamic::config.defaults.sections.author.display'
+        display: 'feedamic::settings.defaults.sections.author.display'
         fields:
           -
             handle: default_author_fallback_name
             field:
               type: text
-              display: 'feedamic::config.author_type.fallback_name.display'
+              display: 'feedamic::settings.author_type.fallback_name.display'
               localizable: false
               validate:
                 - required
               width: 50
-              instructions: 'feedamic::config.author_type.fallback_name.instructions'
+              instructions: 'feedamic::settings.author_type.fallback_name.instructions'
               instructions_position: below
           -
             handle: default_author_fallback_email
             field:
               type: text
-              display: 'feedamic::config.author_type.fallback_email.display'
+              display: 'feedamic::settings.author_type.fallback_email.display'
               localizable: false
               width: 50
               validate:
                 - nullable
                 - email
-              instructions: 'feedamic::config.author_type.fallback_email.instructions'
+              instructions: 'feedamic::settings.author_type.fallback_email.instructions'
               instructions_position: below
           -
             handle: default_author_enabled
             field:
-              inline_label: 'feedamic::config.defaults.sections.author.default_author_enabled.inline_label'
+              inline_label: 'feedamic::settings.defaults.sections.author.default_author_enabled.inline_label'
               type: toggle
-              display: 'feedamic::config.defaults.sections.author.default_author_enabled.display'
+              display: 'feedamic::settings.defaults.sections.author.default_author_enabled.display'
               localizable: false
               hide_display: true
               default: true
@@ -886,18 +886,18 @@ tabs:
               options:
                 -
                   key: entry
-                  value: 'feedamic::config.author_type.options.entry'
+                  value: 'feedamic::settings.author_type.options.entry'
                 -
                   key: field
-                  value: 'feedamic::config.author_type.options.field'
+                  value: 'feedamic::settings.author_type.options.field'
               default: entry
               type: select
-              display: 'feedamic::config.author_type.display'
+              display: 'feedamic::settings.author_type.display'
               localizable: false
               width: 50
               if:
                 default_author_enabled: 'equals true'
-              instructions: 'feedamic::config.author_type.instructions'
+              instructions: 'feedamic::settings.author_type.instructions'
           -
             handle: default_author_type_spacer
             field:
@@ -911,7 +911,7 @@ tabs:
             handle: default_author_field
             field:
               type: text
-              display: 'feedamic::config.author_type.field.display'
+              display: 'feedamic::settings.author_type.field.display'
               localizable: false
               validate:
                 - 'exclude_unless:{this}.default_author_enabled,true'
@@ -920,13 +920,13 @@ tabs:
               if:
                 default_author_enabled: 'equals true'
                 default_author_type: 'equals entry'
-              instructions: 'feedamic::config.author_type.field.instructions'
+              instructions: 'feedamic::settings.author_type.field.instructions'
               instructions_position: above
           -
             handle: default_author_name
             field:
               type: text
-              display: 'feedamic::config.author_type.name.display'
+              display: 'feedamic::settings.author_type.name.display'
               localizable: false
               validate:
                 - 'exclude_unless:{this}.default_author_enabled,true'
@@ -935,13 +935,13 @@ tabs:
               width: 50
               if:
                 default_author_enabled: 'equals true'
-              instructions: 'feedamic::config.author_type.name.instructions'
+              instructions: 'feedamic::settings.author_type.name.instructions'
               instructions_position: below
           -
             handle: default_author_email
             field:
               type: text
-              display: 'feedamic::config.author_type.email.display'
+              display: 'feedamic::settings.author_type.email.display'
               localizable: false
               width: 50
               if:
@@ -949,22 +949,22 @@ tabs:
               validate:
                 - nullable
                 - 'new \Statamic\Rules\Slug'
-              instructions: 'feedamic::config.author_type.email.instructions'
+              instructions: 'feedamic::settings.author_type.email.instructions'
               instructions_position: below
       -
-        display: 'feedamic::config.defaults.sections.copyright.display'
+        display: 'feedamic::settings.defaults.sections.copyright.display'
         fields:
           -
             handle: default_copyright
             field:
               type: text
-              display: 'feedamic::config.defaults.sections.copyright.default_copyright.display'
+              display: 'feedamic::settings.defaults.sections.copyright.default_copyright.display'
               hide_display: true
               localizable: false
-              instructions: 'feedamic::config.defaults.sections.copyright.default_copyright.instructions'
+              instructions: 'feedamic::settings.defaults.sections.copyright.default_copyright.instructions'
               instructions_position: below
       -
-        display: 'feedamic::config.defaults.sections.model.display'
+        display: 'feedamic::settings.defaults.sections.model.display'
         fields:
           -
             handle: default_entry_model
@@ -972,8 +972,8 @@ tabs:
               dictionary: feedamic_entry_models_dictionary
               max_items: 1
               type: dictionary
-              display: 'feedamic::config.defaults.sections.model.default_entry_model.display'
-              instructions: 'feedamic::config.defaults.sections.model.default_entry_model.instructions'
+              display: 'feedamic::settings.defaults.sections.model.default_entry_model.display'
+              instructions: 'feedamic::settings.defaults.sections.model.default_entry_model.instructions'
               localizable: false
               instructions_position: below
               width: 50
@@ -986,8 +986,8 @@ tabs:
               dictionary: feedamic_author_models_dictionary
               max_items: 1
               type: dictionary
-              display: 'feedamic::config.defaults.sections.model.default_author_model.display'
-              instructions: 'feedamic::config.defaults.sections.model.default_author_model.instructions'
+              display: 'feedamic::settings.defaults.sections.model.default_author_model.display'
+              instructions: 'feedamic::settings.defaults.sections.model.default_author_model.instructions'
               localizable: false
               instructions_position: below
               width: 50
