@@ -27,6 +27,7 @@ use Statamic\Facades\File;
 use Statamic\Facades\Path;
 use Statamic\Facades\YAML;
 use Statamic\Sites\Site;
+use Statamic\Statamic;
 use Stringy\StaticStringy;
 use XMLReader;
 use XMLWriter;
@@ -651,5 +652,17 @@ class Feedamic
     public function version(): string
     {
         return Addon::get('mitydigital/feedamic')->version();
+    }
+
+    public function includeCpRoutes(): bool
+    {
+        // $version = Statamic::version();
+        $version = '6.0.0';
+
+        if (Str::before($version, '.') === '5') {
+            return true;
+        }
+
+        return false;
     }
 }

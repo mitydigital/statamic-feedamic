@@ -11,7 +11,7 @@ it('can show the feedamic configuration view', function () {
     $this->get(route('statamic.cp.feedamic.config.show'))
         ->assertOk()
         ->assertViewIs('feedamic::cp.show');
-});
+})->skip(getStatamicVersion() !== 5, 'Only runs on Statamic 5');
 
 it('requires the correct permission to view the configuration', function () {
     // not logged in
@@ -30,7 +30,7 @@ it('requires the correct permission to view the configuration', function () {
     $this->get(route('statamic.cp.feedamic.config.show'))
         ->assertOk()
         ->assertViewIs('feedamic::cp.show');
-});
+})->skip(getStatamicVersion() !== 5, 'Only runs on Statamic 5');
 
 it('requires the correct permission to update the configuration', function () {
     // not logged in
@@ -50,7 +50,7 @@ it('requires the correct permission to update the configuration', function () {
     $this->post(route('statamic.cp.feedamic.config.update'))
         ->assertRedirect()
         ->assertSessionHasErrors('feeds'); // expect "feeds" in the error array
-});
+})->skip(getStatamicVersion() !== 5, 'Only runs on Statamic 5');
 
 it('updates the feedamic configuration', function () {
     $user = createCpUser();
@@ -110,4 +110,4 @@ it('updates the feedamic configuration', function () {
         ->and($config['feeds'][0]['title'])->toBe('Blog')
         ->and($config['feeds'][0]['description'])->toBe('My Blog Description')
         ->and($config['default_title'])->toBe(['heading', 'title']);
-});
+})->skip(getStatamicVersion() !== 5, 'Only runs on Statamic 5');

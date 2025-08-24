@@ -14,6 +14,7 @@
 use MityDigital\Feedamic\Tests\TestCase;
 use Statamic\Facades\Role;
 use Statamic\Facades\User;
+use Statamic\Statamic;
 
 use function Pest\Laravel\actingAs;
 
@@ -83,4 +84,15 @@ function getPrivateProperty($className, $propertyName): ReflectionProperty
     $property->setAccessible(true);
 
     return $property;
+}
+
+function getStatamicVersion()
+{
+    if (! class_exists(Statamic::class)) {
+        return 0;
+    }
+
+    $version = Statamic::version(); // returns string like "5.9.0"
+
+    return (int) explode('.', $version)[0];
 }

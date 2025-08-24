@@ -50,16 +50,27 @@ class ServiceProvider extends AddonServiceProvider
             __DIR__.'/../resources/views' => resource_path('views/vendor/mitydigital/feedamic'),
         ], 'feedamic-views');
 
-        Nav::extend(function ($nav) {
-            $nav->tools(__('feedamic::cp.nav'))
-                ->route('feedamic.config.show')
-                ->icon(Facades\Feedamic::svg('feedamic'))
-                ->can('feedamic.config');
-        });
+        if (Facades\Feedamic::includeCpRoutes()) {
+            Nav::extend(function ($nav) {
+                $nav->tools(__('feedamic::cp.nav'))
+                    ->route('feedamic.config.show')
+                    ->icon(Facades\Feedamic::svg('feedamic'))
+                    ->can('feedamic.config');
+            });
 
-        // register permission
-        Permission::register('feedamic.config')
-            ->label(__('feedamic::cp.permission.label'))
-            ->description(__('feedamic::cp.permission.description'));
+            // register permission
+            Permission::register('feedamic.config')
+                ->label(__('feedamic::cp.permission.label'))
+                ->description(__('feedamic::cp.permission.description'));
+        }
+    }
+
+    protected function bootRoutes()
+    {
+        if (! Facades\Feedamic::includeCpRoutes()) {
+            unset($this->routes['cp']);
+        }
+
+        return parent::bootRoutes();
     }
 }
