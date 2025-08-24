@@ -85,6 +85,7 @@ abstract class TestCase extends AddonTestCase
             $assets->save();
 
             File::ensureDirectoryExists(base_path('content'));
+            File::ensureDirectoryExists(resource_path('addons'));
 
             File::copy(__DIR__.'/__fixtures__/resources/addons/feedamic.yaml', resource_path('addons/feedamic.yaml'));
             File::copyDirectory(__DIR__.'/__fixtures__/content/collections', base_path('content/collections'));

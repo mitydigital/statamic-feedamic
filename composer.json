@@ -25,7 +25,7 @@
     }
   ],
   "require": {
-    "statamic/cms": "^5.59"
+    "statamic/cms": "^5.59|^6.0"
   },
   "require-dev": {
     "laravel/pint": "^1.10",

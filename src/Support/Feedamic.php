@@ -4,6 +4,7 @@ namespace MityDigital\Feedamic\Support;
 
 use Carbon\Carbon;
 use Closure;
+use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
@@ -656,8 +657,11 @@ class Feedamic
 
     public function includeCpRoutes(): bool
     {
-        // $version = Statamic::version();
-        $version = '6.0.0';
+        try {
+            $version = Statamic::version();
+        } catch (Exception $e) {
+            return false;
+        }
 
         if (Str::before($version, '.') === '5') {
             return true;
