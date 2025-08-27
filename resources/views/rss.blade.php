@@ -17,7 +17,11 @@
                 <title><![CDATA[{!! $entry->title() !!}]]></title>
                 <link>{{ $entry->url() }}</link>
                 <guid isPermaLink="true">{{ $entry->url() }}</guid>
+                @if ($entry->date)
+                <pubDate>{{ $entry->date->toRfc3339String() }}</pubDate>
+                @else
                 <pubDate>{{ $entry->getUpdatedAt()->toRfc2822String() }}</pubDate>
+                @endif
                 @if ($entry->hasSummary() && $entry->hasImage())
                 <description><![CDATA[
                 @if (is_string($entry->image()))
