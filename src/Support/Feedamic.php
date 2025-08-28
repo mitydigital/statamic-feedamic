@@ -162,10 +162,12 @@ class Feedamic
         foreach ($config->collections as $collection) {
             $collection = \Statamic\Facades\Collection::find($collection);
 
-            if (! $collection->route(\Statamic\Facades\Site::current()->handle())) {
-                throw new CollectionMissingRouteException(__('feedamic::exceptions.collection_missing_route', [
-                    'collection' => $collection->title,
-                ]));
+            if (! $config->bypass_route_checking) {
+                if (! $collection->route(\Statamic\Facades\Site::current()->handle())) {
+                    throw new CollectionMissingRouteException(__('feedamic::exceptions.collection_missing_route', [
+                        'collection' => $collection->title,
+                    ]));
+                }
             }
 
             $thisSortField = $collection->sortField() ? $collection->sortField() : null;

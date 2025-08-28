@@ -205,6 +205,11 @@ abstract class AbstractFeedamicEntry
         return $this->entry->augmentedValue('updated_at')->raw();
     }
 
+    public function hasUrl(): bool
+    {
+        return $this->entry->uri() ? true : false;
+    }
+
     public function url(): string
     {
         return $this->config->makeUrlAbsolute($this->entry->uri());
