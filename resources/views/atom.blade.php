@@ -20,8 +20,12 @@
     @foreach ($entries as $entry)
     <entry>
         <title type="{{ $entry->isHtml($entry->title()) ? 'html' : 'text' }}">{!! $entry->encode($entry->title()) !!}</title>
+        @if ($entry->hasUrl())
         <link href="{{ $entry->url() }}"/>
         <id>{{ $entry->url() }}</id>
+        @else
+        <id>{{ $entry->id }}</id>
+        @endif
         @if ($entry->date)
         <published>{{ $entry->date->toRfc3339String() }}</published>
         @endif
@@ -47,8 +51,10 @@
             <content type="{{ $entry->isHtml($entry->content()) ? 'html' : 'text' }}">
             {{ $entry->content() }}
             </content>
-        @else
+        @elseif ($entry->hasUrl())
             <content src="{{ $entry->url() }}" type="text/html"></content>
+        @else
+            <content></content>
         @endif
 
         <author>

@@ -202,6 +202,11 @@ See https://statamic.dev/extending/query-scopes-and-filters#scopes',
             'display' => 'Alt URL',
             'instructions' => "The alternative link used. If omitted, will be the Site's URL.",
         ],
+
+        'bypass_route_checking' => [
+            'display' => 'Bypass Route Checking',
+            'instructions' => 'By default, Feedamic will require your entries have a URL, and will throw an error if your Collection is not configured this way. With this enabled, this checking is bypassed, and a URL will be excluded in your feeds.',
+        ],
     ],
 
     'defaults' => [

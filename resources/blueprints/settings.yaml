@@ -733,6 +733,17 @@ tabs:
                             always_save: true
                             if:
                               advanced: 'equals true'
+                        -
+                          handle: bypass_route_checking
+                          field:
+                            type: toggle
+                            display: 'feedamic::settings.feeds.bypass_route_checking.display'
+                            instructions: 'feedamic::settings.feeds.bypass_route_checking.instructions'
+                            localizable: false
+                            instructions_position: below
+                            always_save: true
+                            if:
+                              advanced: 'equals true'
   defaults:
     display: 'feedamic::settings.defaults.title'
     sections:

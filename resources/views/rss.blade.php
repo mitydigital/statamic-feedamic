@@ -15,8 +15,10 @@
         @foreach ($entries as $entry)
             <item>
                 <title><![CDATA[{!! $entry->title() !!}]]></title>
+                @if ($entry->hasUrl())
                 <link>{{ $entry->url() }}</link>
                 <guid isPermaLink="true">{{ $entry->url() }}</guid>
+                @endif
                 @if ($entry->date)
                 <pubDate>{{ $entry->date->toRfc3339String() }}</pubDate>
                 @else

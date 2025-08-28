@@ -36,6 +36,8 @@ class FeedamicConfig
 
     public ?string $author_fallback_email;
 
+    public bool $bypass_route_checking = false;
+
     public array $mappings = [
         'title' => [],
         'summary' => [],
@@ -62,6 +64,8 @@ class FeedamicConfig
         $this->description = Arr::get($feed, 'description');
         $this->collections = Arr::get($feed, 'collections', []);
         $this->alt_url = Arr::get($feed, 'alt_url');
+
+        $this->bypass_route_checking = Arr::get($feed, 'bypass_route_checking', false);
 
         if ($author_model = Arr::get($feed, 'author_model')) {
             $this->author_model = $author_model;
