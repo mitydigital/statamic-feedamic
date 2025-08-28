@@ -155,6 +155,7 @@ class Feedamic
     public function getEntries(FeedamicConfig $config)
     {
         $sortField = null;
+        $sortOrder = 'desc';
 
         $limit = $config->limit;
 
@@ -173,6 +174,9 @@ class Feedamic
             $thisSortField = $collection->sortField() ? $collection->sortField() : null;
             if ($collection->dated()) {
                 $thisSortField = 'date';
+                $sortOrder = 'desc';
+            } else {
+                $sortOrder = 'asc';
             }
             if (! $sortField) {
                 $sortField = $thisSortField; // just set the sort field
@@ -190,7 +194,7 @@ class Feedamic
                 ->where('site', \Statamic\Facades\Site::current()->handle())
                 ->where('collection', $collection->handle())
                 ->where('published', true)
-                ->orderBy($sortField, 'desc');
+                ->orderBy($sortField, $sortOrder);
 
             if ($collection->dated()) {
                 $now = Carbon::now();

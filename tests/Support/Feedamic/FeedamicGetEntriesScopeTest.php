@@ -46,8 +46,8 @@ it('does not call the scope when it is not configured', function () {
         collect($entries)->map(fn ($entry) => $entry->title()->value())->toArray();
 
     expect($entryTitles)->toBe([
-        'Banana',
         'Apple',
+        'Banana',
     ]);
 });
 
