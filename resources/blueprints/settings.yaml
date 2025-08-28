@@ -109,10 +109,10 @@ tabs:
                               -
                                 handle: atom
                                 field:
-                                  default: /feed/atom
                                   type: text
                                   display: 'feedamic::settings.feeds.routes.atom.display'
                                   instructions: 'feedamic::settings.feeds.routes.atom.instructions'
+                                  instructions_position: below
                                   localizable: false
                                   validate:
                                     - nullable
@@ -124,15 +124,16 @@ tabs:
                                   type: template
                                   display: 'feedamic::settings.feeds.routes.atom_view.display'
                                   instructions: 'feedamic::settings.feeds.routes.atom_view.instructions'
+                                  instructions_position: below
                                   localizable: false
                                   width: 50
                               -
                                 handle: rss
                                 field:
-                                  default: /feed
                                   type: text
                                   display: 'feedamic::settings.feeds.routes.rss.display'
                                   instructions: 'feedamic::settings.feeds.routes.rss.instructions'
+                                  instructions_position: below
                                   localizable: false
                                   validate:
                                     - nullable
@@ -144,6 +145,7 @@ tabs:
                                   type: template
                                   display: 'feedamic::settings.feeds.routes.rss_view.display'
                                   instructions: 'feedamic::settings.feeds.routes.rss_view.instructions'
+                                  instructions_position: below
                                   localizable: false
                                   width: 50
                         -

@@ -91,7 +91,7 @@ Leave **blank** to exclude the email.",
 
             'atom' => [
                 'display' => 'Atom',
-                'instructions' => 'Leave blank to disable the Atom feed.',
+                'instructions' => 'The Atom route, such as `/feed/atom`: make sure each feed route is unique.<br>Leave blank to disable the Atom feed.',
             ],
 
             'atom_view' => [
@@ -101,7 +101,7 @@ Leave **blank** to exclude the email.",
 
             'rss' => [
                 'display' => 'RSS',
-                'instructions' => 'Leave blank to disable the RSS feed.',
+                'instructions' => 'The RSS route, such as `/feed`: make sure each feed route is unique.<br>Leave blank to disable the RSS feed.',
             ],
 
             'rss_view' => [
