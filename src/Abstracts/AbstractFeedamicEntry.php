@@ -83,6 +83,11 @@ abstract class AbstractFeedamicEntry
                 if ($value = $this->entry->augmentedValue($handle)) {
                     $fieldValue = $value;
                     break;
+                } elseif ($this->entry->computedKeys()->contains($handle)) {
+                    if ($value = $this->entry->getComputed($handle)) {
+                        $fieldValue = $value;
+                        break;
+                    }
                 }
             }
         }
