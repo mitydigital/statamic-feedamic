@@ -200,13 +200,11 @@ class Feedamic
                 $now = Carbon::now();
                 // collection date behaviour
                 if ($collection->futureDateBehavior() !== 'public') {
-                    $query->whereDate('date', '<=', $now->format('Y-m-d'))
-                        ->whereTime('date', '<=', $now->format('H:i:s'));
+                    $query->where('date', '<=', $now->format('Y-m-d H:i:s'));
                 }
 
                 if ($collection->pastDateBehavior() !== 'public') {
-                    $query->whereDate('date', '>=', $now->format('Y-m-d'))
-                        ->whereTime('date', '>=', $now->format('H:i:s'));
+                    $query->where('date', '>=', $now->format('Y-m-d H:i:s'));
                 }
             }
 
