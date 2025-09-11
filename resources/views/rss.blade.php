@@ -29,7 +29,7 @@
                 @if (is_string($entry->image()))
                 <p><img src="{{ $entry->image() }}" width="{{ $config->getImageWidth() }}" height="{{ $config->getImageHeight() }}" alt="{{ $entry->title() }}"></p>
                 @else
-                <s:glide src="{{ $entry->image() }}" width="{{ $config->getImageWidth() }}" height="{{ $config->getImageHeight() }}">
+                <s:glide src="{{ $entry->image() }}" width="{{ $config->getImageWidth() }}" height="{{ $config->getImageHeight() }}" fit="crop_focal">
                 <p><img src="{{ $config->makeUrlAbsolute($url) }}" width="{{ $width }}" height="{{ $height }}" alt="{{ $entry->title() }}"></p>
                 </s:glide>
                 @endif
