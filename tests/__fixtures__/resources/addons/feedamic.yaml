@@ -47,8 +47,8 @@ feeds:
     copyright: null
     scope: null
     scope_spacer: null
-    entry_model: MityDigital\Feedamic\Models\FeedEntry
-    author_model: MityDigital\Feedamic\Models\FeedAuthor
+    entry_model: MityDigital\Feedamic\Models\FeedamicEntry
+    author_model: MityDigital\Feedamic\Models\FeedamicAuthor
     alt_url: null
     _id: me6q3oip
     type: feed
@@ -102,8 +102,8 @@ feeds:
     copyright: null
     scope: null
     scope_spacer: null
-    entry_model: MityDigital\Feedamic\Models\FeedEntry
-    author_model: MityDigital\Feedamic\Models\FeedAuthor
+    entry_model: MityDigital\Feedamic\Models\FeedamicEntry
+    author_model: MityDigital\Feedamic\Models\FeedamicAuthor
     alt_url: null
     _id: me6q3zcr
     type: feed
@@ -127,5 +127,5 @@ default_author_field: author_entry
 default_author_name: '[name_first] [name_last]'
 default_author_email: email
 default_copyright: 'Default Copyright Stataement'
-default_entry_model: MityDigital\Feedamic\Models\FeedEntry
+default_entry_model: MityDigital\Feedamic\Models\FeedamicEntry
 default_author_model: MityDigital\Feedamic\Models\FeedamicAuthor
