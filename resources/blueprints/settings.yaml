@@ -702,7 +702,7 @@ tabs:
                             always_save: true
                             validate:
                               - required
-                            default: MityDigital\Feedamic\Models\FeedEntry
+                            default: MityDigital\Feedamic\Models\FeedamicEntry
                             if:
                               advanced: 'equals true'
                         -
@@ -719,7 +719,7 @@ tabs:
                             always_save: true
                             validate:
                               - required
-                            default: MityDigital\Feedamic\Models\FeedAuthor
+                            default: MityDigital\Feedamic\Models\FeedamicAuthor
                             if:
                               advanced: 'equals true'
                         -
@@ -992,7 +992,7 @@ tabs:
               width: 50
               validate:
                 - required
-              default: MityDigital\Feedamic\Models\FeedEntry
+              default: MityDigital\Feedamic\Models\FeedamicEntry
           -
             handle: default_author_model
             field:
