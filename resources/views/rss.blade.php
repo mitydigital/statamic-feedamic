@@ -20,7 +20,7 @@
                 <guid isPermaLink="true">{{ $entry->url() }}</guid>
                 @endif
                 @if ($entry->date)
-                <pubDate>{{ $entry->date->toRfc3339String() }}</pubDate>
+                <pubDate>{{ $entry->date->toRfc2822String() }}</pubDate>
                 @else
                 <pubDate>{{ $entry->getUpdatedAt()->toRfc2822String() }}</pubDate>
                 @endif
