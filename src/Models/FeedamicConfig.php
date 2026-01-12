@@ -80,7 +80,7 @@ class FeedamicConfig
         }
 
         if ($taxonomies = Arr::get($feed, 'taxonomies')) {
-            if (is_array($taxonomies) && ! empty($taxonomies)) {
+            if (is_array($taxonomies) && !empty($taxonomies)) {
                 $this->taxonomies = $taxonomies;
             }
         }
@@ -92,7 +92,7 @@ class FeedamicConfig
 
         // update site config
         if (Arr::get($feed, 'sites') === 'all') {
-            $this->sites = \Statamic\Facades\Site::all()->map(fn (Site $site) => $site->handle())->values()->toArray();
+            $this->sites = \Statamic\Facades\Site::all()->map(fn(Site $site) => $site->handle())->values()->toArray();
         } else {
             $this->sites = Arr::get($feed, 'sites_specific', []);
         }
@@ -149,7 +149,7 @@ class FeedamicConfig
             };
 
             // image
-            if (! Arr::get($feed['mappings'], 'image_mode') || Arr::get($feed['mappings'], 'image_mode') === 'disabled'
+            if (!Arr::get($feed['mappings'], 'image_mode') || Arr::get($feed['mappings'], 'image_mode') === 'disabled'
             ) {
                 $this->mappings['image'] = null;
             } else {
@@ -220,22 +220,22 @@ class FeedamicConfig
 
     public function hasImage(): bool
     {
-        return ! ($this->mappings['image'] === null);
+        return !($this->mappings['image'] === null);
     }
 
     public function hasSummary(): bool
     {
-        return ! ($this->mappings['summary'] === null);
+        return !($this->mappings['summary'] === null);
     }
 
     public function hasContent(): bool
     {
-        return ! ($this->mappings['content'] === null);
+        return !($this->mappings['content'] === null);
     }
 
     public function hasAuthor(): bool
     {
-        return ! ($this->mappings['author_type'] === null);
+        return !($this->mappings['author_type'] === null);
     }
 
     public function getImageMappings(): array
@@ -296,7 +296,17 @@ class FeedamicConfig
         foreach (Feedamic::getFeedTypes() as $type) {
             $configured = Arr::get($this->routes, $type, null);
             if ($configured === $route) {
-                return Arr::get($this->routes, $type.'_view');
+                $view = Arr::get($this->routes, $type.'_view');
+
+                if (Str::startsWith($view, 'feedamic::')) {
+                    // does a published view exist
+                    $override = 'vendor.mitydigital.feedamic.'.$type;
+                    if (view()->exists($override)) {
+                        $view = $override;
+                    }
+                }
+
+                return $view;
             }
         }
 
@@ -305,7 +315,7 @@ class FeedamicConfig
 
     public function makeUrlAbsolute(string $url): string
     {
-        if (! Str::startsWith($url, '/')) {
+        if (!Str::startsWith($url, '/')) {
             return $url;
         }
 
@@ -322,7 +332,7 @@ class FeedamicConfig
             }
         }
 
-        if (! $type) {
+        if (!$type) {
             throw new FeedNotConfiguredException(__('feedamic::exceptions.feed_not_configured', ['route' => $route]));
         }
 

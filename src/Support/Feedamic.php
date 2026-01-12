@@ -571,19 +571,20 @@ class Feedamic
 
     public function render(FeedamicConfig $config, string $route): string
     {
-        $view = $config->getViewForRoute($route);
-        if (! View::exists($view)) {
-            throw new ViewNotFoundException(__('feedamic::exceptions.view_not_found', [
-                'view' => $view,
-            ]));
-        }
-
         $cacheKey = $config->getCacheKey($route, \Statamic\Facades\Site::current());
 
         // do we have a cached version?
         if (config('feedamic.cache_enabled', true) && Cache::has($cacheKey)) {
             $feed = Cache::get($cacheKey);
         } else {
+            $view = $config->getViewForRoute($route);
+
+            if (! View::exists($view)) {
+                throw new ViewNotFoundException(__('feedamic::exceptions.view_not_found', [
+                    'view' => $view,
+                ]));
+            }
+
             // it could be a while...
             set_time_limit(0);
 
