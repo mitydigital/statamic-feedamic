@@ -13,6 +13,7 @@ tabs:
               localizable: false
               hide_display: false
               button_label: 'feedamic::settings.feeds.button_label'
+              full_width_setting: true
               validate:
                 - required
                 - array
