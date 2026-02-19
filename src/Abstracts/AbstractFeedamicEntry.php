@@ -79,7 +79,7 @@ abstract class AbstractFeedamicEntry
         // look at the map
         foreach ($map as $handle) {
             $fieldHandle = $handle; // always set
-            if ($this->entry->has($handle)) {
+            if ($this->entry->value($handle)) {
                 if ($value = $this->entry->augmentedValue($handle)) {
                     $fieldValue = $value;
                     break;
