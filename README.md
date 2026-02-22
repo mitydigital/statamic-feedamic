@@ -30,6 +30,7 @@ help you. So be awesome - it'll feel fantastic.
 ## Credits
 
 - [Marty Friedel](https://github.com/martyf)
+- [Sm1lEE](https://github.com/Sm1lEE) for improving multi-site support
 
 Feedamic 3 wouldn't be what it is without the input and assistance from these developers with Feedamic 1 and 2:
 
