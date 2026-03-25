@@ -11,9 +11,9 @@ tabs:
               type: replicator
               display: 'feedamic::settings.feeds.display'
               localizable: false
+              full_width_setting: true
               hide_display: false
               button_label: 'feedamic::settings.feeds.button_label'
-              full_width_setting: true
               validate:
                 - required
                 - array
@@ -39,6 +39,7 @@ tabs:
                             type: select
                             display: 'feedamic::settings.feeds.sites.display'
                             localizable: false
+                            full_width_setting: true
                             width: 33
                             validate:
                               - required
@@ -49,6 +50,7 @@ tabs:
                             type: sites
                             display: 'feedamic::settings.feeds.sites_specific'
                             localizable: false
+                            full_width_setting: true
                             validate:
                               - 'exclude_unless:{this}.sites,specific'
                               - 'min:1'
@@ -61,6 +63,7 @@ tabs:
                             type: spacer
                             display: 'Sites Specific Spacer'
                             localizable: false
+                            full_width_setting: true
                             width: 66
                             if:
                               sites: 'equals all'
@@ -71,6 +74,7 @@ tabs:
                             display: 'feedamic::settings.feeds.title.display'
                             instructions: 'feedamic::settings.feeds.title.instructions'
                             localizable: false
+                            full_width_setting: true
                             instructions_position: below
                             width: 66
                             validate:
@@ -82,6 +86,7 @@ tabs:
                             display: 'feedamic::settings.feeds.handle.display'
                             instructions: 'feedamic::settings.feeds.handle.instructions'
                             localizable: false
+                            full_width_setting: true
                             instructions_position: below
                             width: 33
                             validate:
@@ -94,6 +99,7 @@ tabs:
                             display: 'feedamic::settings.feeds.description.display'
                             instructions: 'feedamic::settings.feeds.description.instructions'
                             localizable: false
+                            full_width_setting: true
                             instructions_position: below
                             validate:
                               - required
@@ -104,6 +110,7 @@ tabs:
                             display: 'feedamic::settings.feeds.routes.display'
                             instructions: 'feedamic::settings.feeds.routes.instructions'
                             localizable: false
+                            full_width_setting: true
                             validate:
                               - 'new \MityDigital\Feedamic\Rules\RequiresAtLeastOneRouteRule'
                             fields:
@@ -115,6 +122,7 @@ tabs:
                                   instructions: 'feedamic::settings.feeds.routes.atom.instructions'
                                   instructions_position: below
                                   localizable: false
+                                  full_width_setting: true
                                   validate:
                                     - nullable
                                     - 'new \MityDigital\Feedamic\Rules\FeedRouteFormatRule'
@@ -127,6 +135,7 @@ tabs:
                                   instructions: 'feedamic::settings.feeds.routes.atom_view.instructions'
                                   instructions_position: below
                                   localizable: false
+                                  full_width_setting: true
                                   width: 50
                               -
                                 handle: rss
@@ -136,6 +145,7 @@ tabs:
                                   instructions: 'feedamic::settings.feeds.routes.rss.instructions'
                                   instructions_position: below
                                   localizable: false
+                                  full_width_setting: true
                                   validate:
                                     - nullable
                                     - 'new \MityDigital\Feedamic\Rules\FeedRouteFormatRule'
@@ -148,6 +158,7 @@ tabs:
                                   instructions: 'feedamic::settings.feeds.routes.rss_view.instructions'
                                   instructions_position: below
                                   localizable: false
+                                  full_width_setting: true
                                   width: 50
                         -
                           handle: collections
@@ -157,6 +168,7 @@ tabs:
                             mode: select
                             display: 'feedamic::settings.feeds.collections'
                             localizable: false
+                            full_width_setting: true
                             validate:
                               - required
                               - 'new \MityDigital\Feedamic\Rules\CollectionsOrderedTheSameWayRule'
@@ -167,6 +179,7 @@ tabs:
                             display: 'feedamic::settings.feeds.taxonomies.display'
                             instructions: 'feedamic::settings.feeds.taxonomies.instructions'
                             localizable: false
+                            full_width_setting: true
                             add_row: 'Add set...'
                             fields:
                               -
@@ -177,6 +190,7 @@ tabs:
                                   type: terms
                                   display: 'feedamic::settings.feeds.taxonomies.fields.terms'
                                   localizable: false
+                                  full_width_setting: true
                                   width: 75
                                   validate:
                                     - required
@@ -195,6 +209,7 @@ tabs:
                                   type: select
                                   display: 'feedamic::settings.feeds.taxonomies.fields.logic.display'
                                   localizable: false
+                                  full_width_setting: true
                                   width: 25
                                   validate:
                                     - required
@@ -212,6 +227,7 @@ tabs:
                             type: select
                             display: 'feedamic::settings.feeds.show.display'
                             localizable: false
+                            full_width_setting: true
                             width: 33
                         -
                           handle: show_limit
@@ -219,6 +235,7 @@ tabs:
                             type: integer
                             display: 'feedamic::settings.feeds.show_limit'
                             localizable: false
+                            full_width_setting: true
                             width: 66
                             if:
                               show: 'equals limit'
@@ -233,12 +250,14 @@ tabs:
                             type: revealer
                             display: 'feedamic::settings.feeds.advanced'
                             localizable: false
+                            full_width_setting: true
                         -
                           handle: mappings
                           field:
                             type: group
                             display: 'feedamic::settings.feeds.mappings.display'
                             localizable: false
+                            full_width_setting: true
                             instructions: 'feedamic::settings.feeds.mappings.instructions'
                             always_save: true
                             if:
@@ -258,6 +277,7 @@ tabs:
                                   type: select
                                   display: 'feedamic::settings.feeds.mappings.title_mode'
                                   localizable: false
+                                  full_width_setting: true
                                   width: 33
                               -
                                 handle: title
@@ -265,6 +285,7 @@ tabs:
                                   type: list
                                   display: 'feedamic::settings.feeds.mappings.title'
                                   localizable: false
+                                  full_width_setting: true
                                   validate:
                                     - 'exclude_unless:{this}.mappings.title_mode,custom'
                                     - array
@@ -278,6 +299,7 @@ tabs:
                                 field:
                                   type: spacer
                                   localizable: false
+                                  full_width_setting: true
                                   display: 'Title Spacer'
                                   width: 66
                                   if:
@@ -299,6 +321,7 @@ tabs:
                                   type: select
                                   display: 'feedamic::settings.feeds.mappings.summary_mode'
                                   localizable: false
+                                  full_width_setting: true
                                   width: 33
                               -
                                 handle: summary
@@ -306,6 +329,7 @@ tabs:
                                   type: list
                                   display: 'feedamic::settings.feeds.mappings.summary'
                                   localizable: false
+                                  full_width_setting: true
                                   validate:
                                     - 'exclude_unless:{this}.mappings.summary_mode,custom'
                                     - array
@@ -320,6 +344,7 @@ tabs:
                                   type: spacer
                                   display: 'Summary Spacer'
                                   localizable: false
+                                  full_width_setting: true
                                   width: 66
                                   if:
                                     summary_mode: 'not custom'
@@ -341,6 +366,7 @@ tabs:
                                   display: 'feedamic::settings.feeds.mappings.content_mode'
                                   instructions: 'feedamic::settings.feeds.mappings.content_instructions'
                                   localizable: false
+                                  full_width_setting: true
                                   width: 33
                               -
                                 handle: content
@@ -348,6 +374,7 @@ tabs:
                                   type: list
                                   display: 'feedamic::settings.feeds.mappings.content'
                                   localizable: false
+                                  full_width_setting: true
                                   validate:
                                     - 'exclude_unless:{this}.mappings.content_mode,custom'
                                     - array
@@ -362,6 +389,7 @@ tabs:
                                   type: spacer
                                   display: 'Content Spacer'
                                   localizable: false
+                                  full_width_setting: true
                                   width: 66
                                   if:
                                     content_mode: 'not custom'
@@ -382,6 +410,7 @@ tabs:
                                   type: select
                                   display: 'feedamic::settings.feeds.mappings.image_mode'
                                   localizable: false
+                                  full_width_setting: true
                                   width: 33
                               -
                                 handle: image
@@ -389,6 +418,7 @@ tabs:
                                   type: list
                                   display: 'feedamic::settings.feeds.mappings.image'
                                   localizable: false
+                                  full_width_setting: true
                                   validate:
                                     - sometimes
                                     - 'exclude_unless:{this}.mappings.image_mode,custom'
@@ -404,6 +434,7 @@ tabs:
                                   type: spacer
                                   display: 'Image Spacer'
                                   localizable: false
+                                  full_width_setting: true
                                   width: 66
                                   if:
                                     image_mode: 'not custom'
@@ -421,6 +452,7 @@ tabs:
                                   type: select
                                   display: 'feedamic::settings.feeds.mappings.image_dimensions_mode'
                                   localizable: false
+                                  full_width_setting: true
                                   width: 33
                                   if:
                                     image_mode: 'not disabled'
@@ -430,6 +462,7 @@ tabs:
                                   type: spacer
                                   display: 'Image Dimensions Spacer'
                                   localizable: false
+                                  full_width_setting: true
                                   width: 66
                                   if:
                                     image_dimensions_mode: 'equals default'
@@ -441,6 +474,7 @@ tabs:
                                   type: text
                                   display: 'feedamic::settings.feeds.mappings.image_width'
                                   localizable: false
+                                  full_width_setting: true
                                   width: 33
                                   validate:
                                     - 'exclude_unless:{this}.mappings.image_dimensions_mode,custom'
@@ -456,6 +490,7 @@ tabs:
                                   type: text
                                   display: 'feedamic::settings.feeds.mappings.image_height'
                                   localizable: false
+                                  full_width_setting: true
                                   width: 33
                                   validate:
                                     - 'exclude_unless:{this}.mappings.image_dimensions_mode,custom'
@@ -481,6 +516,7 @@ tabs:
                                   type: select
                                   display: 'feedamic::settings.feeds.mappings.author_mode'
                                   localizable: false
+                                  full_width_setting: true
                                   width: 33
                               -
                                 handle: author_type
@@ -488,6 +524,7 @@ tabs:
                                   type: select
                                   display: 'feedamic::settings.author_type.display'
                                   localizable: false
+                                  full_width_setting: true
                                   options:
                                     -
                                       key: entry
@@ -507,6 +544,7 @@ tabs:
                                   type: spacer
                                   display: 'Default Author Type Spacer'
                                   localizable: false
+                                  full_width_setting: true
                                   width: 50
                                   if:
                                     default_author_type: 'equals field'
@@ -516,6 +554,7 @@ tabs:
                                   type: text
                                   display: 'feedamic::settings.author_type.field.display'
                                   localizable: false
+                                  full_width_setting: true
                                   validate:
                                     - 'exclude_unless:{this}.mappings.author_mode,custom'
                                     - required
@@ -529,6 +568,7 @@ tabs:
                                   type: spacer
                                   display: 'Author Name Spacer 1'
                                   localizable: false
+                                  full_width_setting: true
                                   width: 33
                                   if:
                                     author_mode: 'equals custom'
@@ -539,6 +579,7 @@ tabs:
                                   type: spacer
                                   display: 'Author Name Spacer 2'
                                   localizable: false
+                                  full_width_setting: true
                                   width: 33
                                   if:
                                     author_mode: 'equals custom'
@@ -548,6 +589,7 @@ tabs:
                                   type: text
                                   display: 'feedamic::settings.author_type.name.display'
                                   localizable: false
+                                  full_width_setting: true
                                   default: entry
                                   width: 33
                                   validate:
@@ -561,6 +603,7 @@ tabs:
                                   type: text
                                   display: 'feedamic::settings.author_type.email.display'
                                   localizable: false
+                                  full_width_setting: true
                                   default: entry
                                   width: 33
                                   validate:
@@ -586,6 +629,7 @@ tabs:
                             type: select
                             display: 'feedamic::settings.feeds.copyright_mode'
                             localizable: false
+                            full_width_setting: true
                             width: 33
                             if:
                               advanced: 'equals true'
@@ -595,6 +639,7 @@ tabs:
                             type: spacer
                             display: 'Copyright Spacer'
                             localizable: false
+                            full_width_setting: true
                             width: 66
                             if:
                               advanced: 'equals true'
@@ -605,6 +650,7 @@ tabs:
                             type: text
                             display: 'feedamic::settings.feeds.copyright'
                             localizable: false
+                            full_width_setting: true
                             validate:
                               - 'exclude_unless:{this}.copyright_mode,custom'
                               - string
@@ -626,6 +672,7 @@ tabs:
                             type: select
                             display: 'feedamic::settings.feeds.author_fallback_mode'
                             localizable: false
+                            full_width_setting: true
                             width: 33
                             if:
                               advanced: 'equals true'
@@ -635,10 +682,11 @@ tabs:
                             type: spacer
                             display: 'Author Fallback Spacer'
                             localizable: false
+                            full_width_setting: true
                             width: 66
                             if:
                               advanced: 'equals true'
-                              copyright_mode: 'equals default'
+                              author_fallback_mode: 'equals default'
                         -
                           handle: author_fallback_name
                           field:
@@ -647,7 +695,6 @@ tabs:
                             localizable: false
                             validate:
                               - 'exclude_unless:{this}.author_fallback_mode,custom'
-                            width: 50
                             instructions_position: below
                             if:
                               advanced: 'equals true'
@@ -658,7 +705,6 @@ tabs:
                             type: text
                             display: 'feedamic::settings.feeds.author_fallback_email'
                             localizable: false
-                            width: 50
                             validate:
                               - nullable
                               - email
@@ -676,17 +722,7 @@ tabs:
                             instructions: 'feedamic::settings.feeds.scope.instructions'
                             localizable: false
                             instructions_position: below
-                            width: 50
                             always_save: true
-                            if:
-                              advanced: 'equals true'
-                        -
-                          handle: scope_spacer
-                          field:
-                            type: spacer
-                            display: 'Scope Spacer'
-                            localizable: false
-                            width: 50
                             if:
                               advanced: 'equals true'
                         -
@@ -699,7 +735,6 @@ tabs:
                             instructions: 'feedamic::settings.feeds.entry_model.instructions'
                             localizable: false
                             instructions_position: below
-                            width: 50
                             always_save: true
                             validate:
                               - required
@@ -716,7 +751,6 @@ tabs:
                             instructions: 'feedamic::settings.feeds.author_model.instructions'
                             localizable: false
                             instructions_position: below
-                            width: 50
                             always_save: true
                             validate:
                               - required
@@ -810,6 +844,7 @@ tabs:
               type: toggle
               display: 'feedamic::settings.defaults.sections.image.default_image_enabled.display'
               localizable: false
+              full_width_setting: true
               default: true
               hide_display: true
               instructions_position: below
@@ -891,6 +926,7 @@ tabs:
               type: toggle
               display: 'feedamic::settings.defaults.sections.author.default_author_enabled.display'
               localizable: false
+              full_width_setting: true
               hide_display: true
               default: true
               instructions_position: below
@@ -975,6 +1011,7 @@ tabs:
               display: 'feedamic::settings.defaults.sections.copyright.default_copyright.display'
               hide_display: true
               localizable: false
+              full_width_setting: true
               instructions: 'feedamic::settings.defaults.sections.copyright.default_copyright.instructions'
               instructions_position: below
       -
