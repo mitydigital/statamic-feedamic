@@ -359,8 +359,8 @@ class Feedamic
 
         \Statamic\Facades\Site::all()->each(function (Site $site) use ($config, &$data) {
             $siteUrl = $site->url();
-            if ($siteUrl === '/') {
-                $siteUrl = config('app.url');
+            if ($siteUrl === '/' || Str::startsWith($siteUrl, '/')) {
+                $siteUrl = Str::replaceFirst('/', config('app.url').'/', $siteUrl);
             }
             $uri = Uri::of($siteUrl);
 
