@@ -1,9 +1,29 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use MityDigital\Feedamic\Facades\Feedamic;
 use MityDigital\Feedamic\Models\FeedamicAuthor;
 use MityDigital\Feedamic\Models\FeedamicEntry;
 use Statamic\Facades\Collection;
+use Statamic\Facades\Permission;
+
+beforeEach(function () {
+    if (statamicMajorVersion() !== 5) {
+        $this->markTestSkipped('Feedamic only has its own configuration routes in Statamic 5.');
+    }
+});
+
+it('includes the cp routes', function () {
+    expect(Feedamic::includeCpRoutes())->toBeTrue()
+        ->and(Route::has('statamic.cp.feedamic.config.show'))->toBeTrue()
+        ->and(Route::has('statamic.cp.feedamic.config.update'))->toBeTrue();
+});
+
+it('registers the permission', function () {
+    Permission::boot();
+
+    expect(Permission::get('feedamic.config'))->not()->toBeNull();
+});
 
 it('can show the feedamic configuration view', function () {
     createSuperUser();

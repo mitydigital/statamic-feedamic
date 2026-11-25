@@ -37,6 +37,10 @@ abstract class TestCase extends AddonTestCase
     {
         parent::getEnvironmentSetUp($app);
 
+        // read content from the copies made below, so that tests never touch the real fixtures
+        $app['config']->set('statamic.stache.stores.collections.directory', base_path('content/collections'));
+        $app['config']->set('statamic.stache.stores.entries.directory', base_path('content/collections'));
+
         foreach ($this->fixtures as $folder) {
             File::copyDirectory(__DIR__.'/__fixtures__/app/'.$folder, app_path($folder));
         }
