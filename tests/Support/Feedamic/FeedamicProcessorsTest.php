@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Collection;
 use MityDigital\Feedamic\Abstracts\AbstractFeedamicEntry;
-use MityDigital\Feedamic\Exceptions\processorCallbackException;
+use MityDigital\Feedamic\Exceptions\ProcessorCallbackException;
 use MityDigital\Feedamic\Facades\Feedamic;
 use MityDigital\Feedamic\Models\FeedamicEntry;
 use Statamic\Facades\Entry;
@@ -101,7 +101,7 @@ it('throws the processor callback exception when the "when" method signature is 
         processor: function (AbstractFeedamicEntry $entry, $value) {},
         when: function ($value) {}
     );
-})->throws(processorCallbackException::class);
+})->throws(ProcessorCallbackException::class);
 
 it('can get a processor', function () {
     Feedamic::processor(
