@@ -33,23 +33,23 @@
         @if ($entry->hasSummary() && $entry->hasImage())
             <summary type="html">
             @if (is_string($entry->image()))
-            {{ '<p><img src="'.$entry->image().'" width="'.$config->getImageWidth().'" height="'.$config->getImageHeight().'" alt="'.$entry->title().'"></p>' }}
+            {{ '<p><img src="'.$entry->image().'" width="'.$config->getImageWidth().'" height="'.$config->getImageHeight().'" alt="'.$entry->imageAlt().'"></p>' }}
             @else
             <s:glide src="{{ $entry->image() }}" width="{{ $config->getImageWidth() }}" height="{{ $config->getImageHeight() }}" fit="crop_focal">
-            {{ '<p><img src="'.$config->makeUrlAbsolute($url).'" width="'.$width.'" height="'.$height.'" alt="'.$entry->title().'"></p>' }}
+            {{ '<p><img src="'.$config->makeUrlAbsolute($url).'" width="'.$width.'" height="'.$height.'" alt="'.$entry->imageAlt().'"></p>' }}
             </s:glide>
             @endif
-            {{ '<p>'.$entry->summary().'</p>' }}
+            {{ '<div>'.$entry->toHtml($entry->summary()).'</div>' }}
             </summary>
         @elseif ($entry->hasSummary())
-            <summary type="text">{{ $entry->summary() }}</summary>
+            <summary type="html">{{ $entry->toHtml($entry->summary()) }}</summary>
         @else
             <summary></summary>
         @endif
 
         @if ($entry->hasContent())
-            <content type="{{ $entry->isHtml($entry->content()) ? 'html' : 'text' }}">
-            {{ $entry->content() }}
+            <content type="html">
+            {{ $entry->toHtml($entry->content()) }}
             </content>
         @elseif ($entry->hasUrl())
             <content src="{{ $entry->url() }}" type="text/html"></content>
