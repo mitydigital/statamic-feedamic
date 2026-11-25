@@ -27,16 +27,16 @@
                 @if ($entry->hasSummary() && $entry->hasImage())
                 <description><![CDATA[
                 @if (is_string($entry->image()))
-                <p><img src="{{ $entry->image() }}" width="{{ $config->getImageWidth() }}" height="{{ $config->getImageHeight() }}" alt="{{ $entry->title() }}"></p>
+                <p><img src="{{ $entry->image() }}" width="{{ $config->getImageWidth() }}" height="{{ $config->getImageHeight() }}" alt="{!! $entry->imageAlt() !!}"></p>
                 @else
                 <s:glide src="{{ $entry->image() }}" width="{{ $config->getImageWidth() }}" height="{{ $config->getImageHeight() }}" fit="crop_focal">
-                <p><img src="{{ $config->makeUrlAbsolute($url) }}" width="{{ $width }}" height="{{ $height }}" alt="{{ $entry->title() }}"></p>
+                <p><img src="{{ $config->makeUrlAbsolute($url) }}" width="{{ $width }}" height="{{ $height }}" alt="{!! $entry->imageAlt() !!}"></p>
                 </s:glide>
                 @endif
-                <p>{!! $entry->summary() !!}</p>
+                <div>{!! $entry->toHtml($entry->summary()) !!}</div>
                 ]]></description>
                 @elseif ($entry->hasSummary())
-                <description><![CDATA[{!! $entry->summary() !!}]]></description>
+                <description><![CDATA[{!! $entry->toHtml($entry->summary()) !!}]]></description>
                 @endif
 
                 @if ($entry->hasAuthor())

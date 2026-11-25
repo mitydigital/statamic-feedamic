@@ -225,6 +225,32 @@ abstract class AbstractFeedamicEntry
         return htmlspecialchars($html, ENT_XML1, 'UTF-8', false);
     }
 
+    /**
+     * Get a value as HTML. Values without markup are treated as plain text: existing entities are
+     * kept, anything else is escaped, and line breaks are preserved.
+     */
+    public function toHtml(null|string|Value $value): string
+    {
+        $value = (string) $value;
+
+        return $this->isHtml($value)
+            ? $value
+            : nl2br($this->escapeHtml(trim($value)), false);
+    }
+
+    /**
+     * Get the title as plain text, escaped for use in an image's "alt" attribute.
+     */
+    public function imageAlt(): string
+    {
+        return $this->escapeHtml(trim(strip_tags((string) $this->title())));
+    }
+
+    protected function escapeHtml(string $value): string
+    {
+        return htmlspecialchars($value, ENT_QUOTES | ENT_HTML5, 'UTF-8', false);
+    }
+
     public function entry(): Entry
     {
         return $this->entry;
