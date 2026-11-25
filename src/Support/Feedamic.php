@@ -4,7 +4,7 @@ namespace MityDigital\Feedamic\Support;
 
 use Carbon\Carbon;
 use Closure;
-use Exception;
+use Composer\InstalledVersions;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
@@ -660,18 +660,11 @@ class Feedamic
         return Addon::get('mitydigital/feedamic')->version();
     }
 
+    /**
+     * Statamic 6 has its own addon settings, so the CP routes are only for Statamic 5.
+     */
     public function includeCpRoutes(): bool
     {
-        try {
-            $version = Statamic::version();
-        } catch (Exception $e) {
-            return false;
-        }
-
-        if (Str::before($version, '.') === '5') {
-            return true;
-        }
-
-        return false;
+        return Str::startsWith(InstalledVersions::getVersion(Statamic::PACKAGE) ?? '', '5.');
     }
 }

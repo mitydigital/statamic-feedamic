@@ -3,6 +3,7 @@
 namespace MityDigital\Feedamic;
 
 use MityDigital\Feedamic\Commands\ClearCacheCommand;
+use MityDigital\Feedamic\Listeners\AddonSettingsSaved;
 use MityDigital\Feedamic\Listeners\ClearFeedamicCache;
 use MityDigital\Feedamic\Listeners\ScheduledCacheInvalidated;
 use MityDigital\Feedamic\Tags\Feedamic;
@@ -20,6 +21,9 @@ class ServiceProvider extends AddonServiceProvider
     ];
 
     protected $listen = [
+        \Statamic\Events\AddonSettingsSaved::class => [ // Statamic 6+
+            AddonSettingsSaved::class,
+        ],
         EntrySaved::class => [
             ClearFeedamicCache::class,
         ],
@@ -68,7 +72,8 @@ class ServiceProvider extends AddonServiceProvider
     protected function bootRoutes()
     {
         if (! Facades\Feedamic::includeCpRoutes()) {
-            unset($this->routes['cp']);
+            // must be false: when the key is missing, Statamic falls back to loading routes/cp.php
+            $this->routes['cp'] = false;
         }
 
         return parent::bootRoutes();

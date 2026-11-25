@@ -11,6 +11,7 @@
 |
 */
 
+use Composer\InstalledVersions;
 use MityDigital\Feedamic\Tests\TestCase;
 use Statamic\Facades\Role;
 use Statamic\Facades\User;
@@ -40,6 +41,11 @@ uses(TestCase::class)->in('.');
 | global functions to help you to reduce the number of lines of code in your test files.
 |
 */
+function statamicMajorVersion(): int
+{
+    return (int) InstalledVersions::getVersion('statamic/cms');
+}
+
 function createSuperUser()
 {
     $user = User::make()
